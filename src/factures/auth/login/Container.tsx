@@ -1,0 +1,177 @@
+import styled from "styled-components";
+interface CamposProps {
+  hasError?: boolean;
+}
+
+export const Container = styled.section`
+display: flex;
+position: relative;
+flex-direction: column;
+align-items: center;
+padding:30px 0;
+
+height:var(--height);
+  @media screen and (min-width: 560px){
+background-color:var(--cor-auth);
+justify-content: center;
+padding:30px 20px;
+
+  width: 100%;
+
+  }
+`;
+export const Img = styled.img` 
+height: 24px;
+margin: 0;
+margin-right: 6rem;
+
+`;
+
+export const Form = styled.div`
+display: flex;
+width: 100%;
+flex-direction: column;
+align-items: center;
+border-radius: 10px;
+padding: 20px 10px;
+gap: 20px;
+  @media screen and (min-width:430px){
+      width: 490px;
+      background-color: #FFF;
+      /* box-shadow: 0 0 10px rgba(0, 0, 0, 0.05); */
+          box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+
+      padding: 40px 30px;
+
+
+
+  }
+
+`;
+
+
+export const Logo = styled.h1`
+font-size: 28px;
+font-family:Arial, Helvetica, sans-serif;
+font-weight: bold;
+height: 50px;
+color: var(--cor-titulo);
+cursor: pointer;
+
+
+`;
+export const Btn = styled.button`
+display: flex;
+align-items: center;
+margin: 5px 0;
+padding: 10px 0;
+width: 100%;
+height: 35px;
+border:1px solid #d6d6d6;
+background-color:transparent;
+border-radius: 5px;
+cursor: pointer;
+&:active {
+    transform: scale(0.95);
+    font-size: 12px;
+
+  }
+  &:hover{
+   background-color: #e8eef3;
+
+  }
+
+
+
+`;
+export const Campos = styled.input.withConfig({
+  shouldForwardProp: (prop) => prop !== "hasError",
+})<CamposProps>`
+width: 100%;
+height: 42px;
+border:1px solid #d6d6d6;
+background-color:transparent;
+border-radius: 5px;
+  border: 1px solid ${({ hasError }) => (hasError ? '#ff4d4f' : '#ccc')};
+&:focus {
+    outline: none;
+    border-color: ${({ hasError }) => (hasError ? '#ff4d4f' : '#007BFF')};
+  }
+padding:5px;
+
+
+`;
+export const Or = styled.div`
+
+
+
+`;
+export const BtnLogin = styled.button`
+margin: 5px 0;
+width: 100%;
+height: 35px;
+border:1px solid #d6d6d6;
+background-color:#007BFF;
+border-radius: 5px;
+color: #DDD;
+font-size: 14px;
+font-weight: bold;
+    transition: background-color 0.3s ease;
+
+&:active {
+    transform: scale(0.95);
+    font-size: 12px;
+
+  }
+  &:hover {
+    background-color: #0056b3;
+    color: white; 
+  }
+
+`;
+export const Select = styled.div`
+position: relative;
+margin: 5px 0;
+
+
+`
+export const Text = styled.div`
+color: blue;
+font-size: 16px;
+font-family: Arial, Helvetica, sans-serif;
+font-weight:400;
+
+`;
+export const FormSub = styled.form`
+width: 100%;
+display: flex;
+flex-direction: column;
+gap: 20px;
+
+`;
+export const Erros = styled.div`
+position: absolute;
+color:#ff4d4f;
+ color: #ff4d4f;
+  font-size: 13px;
+  margin: 0 0 10px;
+ 
+
+`;
+
+export const Foooter = styled.footer`
+position: absolute;
+margin: 5px 0;
+color: #888;
+bottom: 0;
+
+
+`
+export const EsquceuSenha = styled.div`
+margin: 5px 0;
+display: flex;
+align-items: center;
+justify-content: end;
+
+
+`

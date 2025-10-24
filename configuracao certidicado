@@ -1,0 +1,12 @@
+
+sudo apt install libnss3-tools
+sudo apt install mkcert
+mkcert -install
+
+
+mkdir certs
+mv 192.168.0.105+3.pem certs/
+mv 192.168.0.105+3-key.pem certs/
+
+
+mkcert 192.168.100.95 localhost 127.0.0.1 ::1
