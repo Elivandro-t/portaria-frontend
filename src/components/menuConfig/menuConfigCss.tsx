@@ -2,7 +2,6 @@ import styled from "styled-components";
 
 export default {
   continer: styled.section`
-
     display: flex;
     background: var(--header-background);
     width: 100%;
@@ -11,7 +10,7 @@ export default {
     justify-content: space-between;
     align-items:center;
      @media screen  and (min-width: 760px){
-             padding: 0 20px;
+             padding:5px 20px;
 
     }
   `,
@@ -65,21 +64,21 @@ export default {
       transform: translateY(0);
     }
   `,
- tituloLogo:styled.div`
-  text-shadow:
-    1px 1px 0 white,
-    -1px -1px 0 white,
-    1px -1px 0 white,
-    -1px 1px 0 white;
-                  font-size: 14px;
+  logo: styled.img`
+    padding: 0 5px;
+    color: var(--cor-texto-header);
+     object-fit: contain;
+     height:38px;
+  /* azul suave */
 
-     @media screen  and (min-width: 760px){
-              font-size: 16px;
+    cursor: pointer;
+    @media screen and (min-width: 560px){
+         font-size: 14px;
+        font-weight: 600;
 
 
     }
-    
- `,
+    `,
   submenu: styled.ul`
     display: none;
     position: absolute;

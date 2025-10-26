@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import Template from "./visitantesCss"
 import Api from "../../service/api"
 import type { Visitante } from "../../types/visitante";
@@ -19,15 +19,6 @@ export const VisitantesListaComponets = () => {
      onSubmit()
    }
   }, [busca])
-  const senhaRef = useRef<HTMLInputElement>(null);
-  const focus = (
-    event: React.KeyboardEvent<HTMLInputElement>,
-    nextRef?: React.RefObject<HTMLInputElement | null>
-  ) => {
-    if (event.key === "Enter") {
-      nextRef?.current?.focus();
-    }
-  };
   return (
     <>
       <Template.container>

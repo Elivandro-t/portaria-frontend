@@ -19,16 +19,13 @@ export default {
 
     `,
 
-  logo: styled.a`
-  width: 40%;
-    text-align: center;
-    font-family: 'Poppins', sans-serif; /* fonte moderna e legível */
-    font-size: 13px;
-    font-weight: 500;
+  logo: styled.img`
+    padding: 0 5px;
     color: var(--cor-texto-header);
+     object-fit: contain;
+     height:35px;
   /* azul suave */
-    text-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); /* sombra leve para destaque */
-    letter-spacing: 0.5px;
+
     cursor: pointer;
     @media screen and (min-width: 560px){
          font-size: 14px;

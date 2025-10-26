@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import Template from "./ListaHistorcss"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TextField, IconButton } from '@mui/material';
-import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import Api from "../../../service/api"
 import { PopupComponent } from "../../../components/popup/popupComponent";

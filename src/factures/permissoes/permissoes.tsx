@@ -9,7 +9,7 @@ type FormData = {
 };
 export const PermissoesComponets = () => {
 
-    const { register, handleSubmit, formState: { errors }, reset, watch } = useForm<FormData>()
+    const { register, handleSubmit, formState: { errors }, reset } = useForm<FormData>()
 
     const onSubmit = async (data: FormData) => {
         const resposta = await Api.cadastroUsuaro(data);

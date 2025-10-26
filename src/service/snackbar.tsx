@@ -27,7 +27,7 @@ export const SnackbarProvider = ({ children }: Props) => {
   return (
     <>
       {children}
-      <Snackbar open={open} autoHideDuration={4000 }  anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // aqui
+      <Snackbar open={open} autoHideDuration={8000 }  anchorOrigin={{ vertical: 'top', horizontal: 'right' }} // aqui
  onClose={handleClose}>
         <Alert onClose={handleClose} severity={severity} variant="filled" sx={{ width: '100%' }}>
           {message}

@@ -1,6 +1,5 @@
 import Template from "./popupcss";
-import CloseIcon from "@mui/icons-material/Close";
-import { IconButton, Button, Typography } from "@mui/material";
+import { Button, Typography } from "@mui/material";
 
 type Props = {
   ID: any;
@@ -10,7 +9,7 @@ type Props = {
     ativoBtn:boolean
 };
 
-export const PopupComponent = ({ ID, handleConfirm, handleCancel,message,ativoBtn }: Props) => {
+export const PopupComponent = ({ handleConfirm, handleCancel,message,ativoBtn }: Props) => {
   return (
     <Template.container>
       <Template.container_int>

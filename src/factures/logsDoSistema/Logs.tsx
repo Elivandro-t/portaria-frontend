@@ -1,17 +1,14 @@
 import { useEffect, useState } from "react";
-import Template from "./UsuariosCss"
+import Template from "./logsCss"
 import Api from "../../service/api"
 import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TextField, IconButton } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
-
-import { PopupComponent } from "../../components/popup/popupComponent";
 import { useNavigate } from "react-router-dom";
-export const UsuarioListaComponets = () => {
+export const LogsComponets = () => {
   const [lista, setLista] = useState<any[]>([])
-  const [ativo, setAtivo] = useState(false);
   const [id, setId] = useState(false);
   const [busca, setBusca] = useState("")
   const nativete = useNavigate()
@@ -25,14 +22,12 @@ export const UsuarioListaComponets = () => {
     if (busca.trim() === "") {
       onSubmit(); // se o campo estiver vazio, busca toda a lista
     }
-  }, [busca])
+  }, [busca]);
 
   const hendleDelete = (id: any) => {
-    setAtivo(true);
     setId(id)
   }
   const hendleUpdate = () => {
-    setAtivo(true);
     setId(id)
   }
   const handleNovoUsuario = () => {
@@ -41,6 +36,7 @@ export const UsuarioListaComponets = () => {
   return (
     <>
       <Template.container>
+         <Template.titulo>Logs do Sistema</Template.titulo>
         <Template.FormSub >
           <Template.CamposInput>
             <TextField
@@ -128,11 +124,11 @@ export const UsuarioListaComponets = () => {
             </Template.Table>
           </Template.TableContainer>
         </Template.FormSub>
-        {ativo &&
+        {/* {ativo &&
           <PopupComponent ID={id} handleCancel={() => setAtivo(false)} handleConfirm={function (): void {
-          throw new Error("Function not implemented.");
-        } } message={"Deseja realmente atualizar o item com ID"} ativoBtn={ativo} />
-        }
+            throw new Error("Function not implemented.");
+          }} message={"Deseja realmente atualizar o item com ID"} />
+        } */}
       </Template.container>
     </>
   )

@@ -60,12 +60,11 @@ axios.interceptors.response.use(response => {
         notify(msg)
         break
       case 403:
-        // removeToken()
-        notify(data.message)
-        //  setTimeout(()=>{
-        //           window.location.href = "/";
+        removeToken()
+        setTimeout(()=>{
+             window.location.href = "/";
 
-        //  },1000)
+         },1000)
         break
       case 500:
         removeToken()
@@ -146,6 +145,27 @@ const deletar = async (endpoint: string,id:any,usuarioId:any) => {
     throw error;
   }
 }
+const BuscaPefilUsuario = async (endpoint: string,email:any) => {
+  try {
+    const params = new URLSearchParams();
+    params.append("email",email)
+    const response = await axios.get(base + endpoint,{params:Object.fromEntries(params)});
+    return response.data;
+  } catch (error: any) {
+    throw error;
+  }
+}
+const AdicionarPefil = async(endpoint:any,usuarioId:any,perfilId:any)=>{
+  try{
+  const params = new URLSearchParams()
+  params.append("usuarioId",usuarioId)
+  params.append("perfilId",perfilId)
+  const response  = await axios.get(base+endpoint,{params:Object.fromEntries(params)});
+  return response.data;
+  }catch(erro:any){
+    throw erro;
+  }
+}
 ////////////////////////////
 const api = {
   //api de login
@@ -179,6 +199,14 @@ const api = {
   },
   deletar: async (id:any,usuarioId:any) => {
     const json = await deletar("/historico/delete",id,usuarioId)
+    return json;
+  },
+  BuscaPefilUsuario: async (email:any) => {
+    const json = await BuscaPefilUsuario("/portaria/v1/usuario/usuario-lista-perfil",email)
+    return json;
+  },
+  AdicionarPefil: async (usuarioId:any,perfilId:any) => {
+    const json = await AdicionarPefil("/portaria/v1/usuario/usuario-add-perfil",usuarioId,perfilId)
     return json;
   }
 }

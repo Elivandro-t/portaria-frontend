@@ -20,11 +20,9 @@ import { PermissoesComponets } from "./factures/permissoes/permissoes";
 import { VisitantesListaComponets } from "./factures/Visitantes/visitantes";
 import { UsuarioListaComponets } from "./factures/Usuarios/Usuarios";
 import { ListahistoryComponent } from "./factures/history/lista/ListaHistory";
-import { subjet } from "./service/jwt/jwtservice";
+import { LogsComponets } from "./factures/logsDoSistema/Logs";
 const App = () => {
   const [appKey, setAppKey] = useState(0);
-   const user = subjet();
-   const perfil = user?.permissoes.filter(e=>e);
   const handleReset = () => setAppKey((k) => k + 1);
   return (
     //  <LoadingR></LoadingR>
@@ -126,6 +124,12 @@ const App = () => {
               <Route path="historico" element={
                 <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
                   <ListahistoryComponent key={Date.now()}
+                  />
+                </ProtectedRoute>
+              } />
+              <Route path="logs" element={
+                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                  <LogsComponets key={Date.now()}
                   />
                 </ProtectedRoute>
               } />

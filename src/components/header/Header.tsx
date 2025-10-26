@@ -5,12 +5,12 @@ import { Logued } from "../../service/Logued"
 import { useContext } from "react";
 import { contextProvider } from "../../reducer/userProvider/userProvider";
 import { subjet } from "../../service/jwt/jwtservice";
-
+import logo from "../../assets/logo portaria (1).png"
 export const HeaderComponent = () => {
-    const {setBusca} = useContext(contextProvider) as any;
+    const { setBusca } = useContext(contextProvider) as any;
     const usuario = subjet();
     const navigate = useNavigate()
-  
+
     const hendleHome = () => {
         navigate("/portaria")
     }
@@ -19,18 +19,17 @@ export const HeaderComponent = () => {
         <>
             <Header.areaHeader>
                 <Header.container>
-                    
-                    <Header.logo onClick={() => hendleHome()}>
-                         Portaria - Controle de Acesso
+
+                    <Header.logo src={logo} onClick={() => hendleHome()}>
                     </Header.logo>
 
-                    <Header.busca placeholder="Buscar..." type="search" onChange={e=>setBusca(e.target.value)}/>
-                     
+                    <Header.busca placeholder="Buscar..." type="search" onChange={e => setBusca(e.target.value)} />
+
                     {Logued() && (
                         <Header.perfil>
                             {usuario && usuario?.nome &&
-                              <Header.nomeUsuario><strong>Olá</strong> {usuario?.nome.split(" ")[0]}</Header.nomeUsuario>
-                             }
+                                <Header.nomeUsuario><strong>Olá</strong> {usuario?.nome.split(" ")[0]}</Header.nomeUsuario>
+                            }
                             <PerfilComponet />
                         </Header.perfil>
                     )

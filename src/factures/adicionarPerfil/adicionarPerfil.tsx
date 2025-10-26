@@ -1,63 +1,130 @@
-import { useRef } from "react";
 import Template from "./adicionarPerfilCss"
-import { useForm } from "react-hook-form";
 import Api from "../../service/api"
+import { useState } from "react"
+// import { notify } from "../../service/snackbarService";
+import DeleteIcon from '@mui/icons-material/Delete';
+import { IconButton } from '@mui/material';
+import EditIcon from "@mui/icons-material/Edit";
+import { PopupUpdatePerfilComponent } from "../../components/updatePerfilComponent/popup/updatePerfil";
+import { PopupComponent } from "../../components/popup/popupComponent";
+import api from "../../service/api";
 import { notify } from "../../service/snackbarService";
-type FormData = {
-    nome: string,
-
-};
 export const AdicionarPerfilRouter = () => {
+    const [busca, setBusca] = useState("")
+    const [item, setItem] = useState<any>(null);
+    const [updateModal, setUpdateModal] = useState(false)
+    const [DeleteModal, setDeleteModal] = useState(false)
 
-    const { register, handleSubmit, formState: { errors }, reset, watch } = useForm<FormData>()
-
-    const onSubmit = async (data: FormData) => {
-        const resposta = await Api.cadastroUsuaro(data);
+    const [id, setId] = useState("")
+    const onSubmit = async () => {
+        const resposta = await Api.BuscaPefilUsuario(busca);
         if (resposta) {
-            notify(resposta.msg, "success")
-            reset()
+            setItem(resposta?.usuario)
         }
     }
 
-    const senhaRef = useRef<HTMLInputElement>(null);
-    const focus = (
-        event: React.KeyboardEvent<HTMLInputElement>,
-        nextRef?: React.RefObject<HTMLInputElement | null>
-    ) => {
-        if (event.key === "Enter") {
-            // event.preventDefault();
-            nextRef?.current?.focus();
-        }
-    };
+    const hendleUpdate = (usuarioId: any) => {
+        setId(usuarioId)
+        setDeleteModal(false)
+        setUpdateModal(true)
+    }
+    const hendleDelete = (perfilId: any) => {
+        setId(perfilId)
+        setDeleteModal(true)
+        setUpdateModal(false)
 
+    }
+    const hendleBuscaApi = async (data: any) => {
+            const response = await api.AdicionarPefil(id, data.idPerfil);
+            if (response) {
+                setUpdateModal(false)
+                notify(response.msg, "success")
+                 setTimeout(()=>{
+                 onSubmit()
+                 },1000)
+
+            }
+
+
+
+    }
     return (
         <>
             <Template.container>
-                <Template.titulo>Criar Perfil</Template.titulo>
-                <Template.FormSub onSubmit={handleSubmit(onSubmit)}>
-                                        <Template.CamposInput>
-                        <Template.label>Senha *</Template.label>
+                <Template.titulo>Perfil Usuario</Template.titulo>
+                <Template.FormSub  >
+                    <Template.CamposInput>
+                        <Template.label>Email</Template.label>
                         <Template.Campos
-                            hasError={!!errors.nome} type="text"
-                            autoComplete="current-password"
-                            placeholder="Senha"
-
-                            {...register("nome", {
-                                required: "Senha E obrigatorio",
-                                pattern: {
-                                    value: /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[!@#$%^&*])[A-Za-z\d!@#$%^&*]{8,}$/,
-                                    message: "Senha deve ter no mínimo 8 caracteres, incluindo letra maiúscula, minúscula, número e caractere especial"
+                            placeholder="@exmplo.com"
+                            type="email"
+                            onChange={(e) => setBusca(e.target.value)}
+                            onKeyDown={(e) => {
+                                if (e.key === 'Enter') {
+                                    onSubmit()
                                 }
-                            })}
-                            onKeyDown={(e) => focus(e, senhaRef)}
+                            }}
                         />
-                        <Template.Erros>
-                            {errors.nome && <p>{errors.nome.message}</p>}
-                        </Template.Erros>
                     </Template.CamposInput>
-                    <Template.BtnLogin>Cria Perfil</Template.BtnLogin>
-                </Template.FormSub>
-            </Template.container>
+
+                    {item ? (
+                        <Template.TableContainer>
+                            <Template.Table>
+                                <thead>
+                                    <tr>
+                                        <th>ID</th>
+                                        <th>Nome</th>
+                                        <th>Perfil</th>
+                                        <th>Status</th>
+                                        <th></th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>{item?.id}</td>
+                                        <td>{item?.nome}</td>
+                                        <td>{item?.perfil.nome}</td>
+                                        <td>{item?.ativo ?  <Template.ativo ativo={item?.ativo}></Template.ativo> : "DESTIVADO"}</td>
+                                        <td>
+                                            <Template.trBTN>
+                                                <IconButton
+                                                    onClick={() => hendleDelete(item?.id)}
+                                                    sx={{
+                                                        color: 'black', '&:hover': {
+                                                            backgroundColor: '#f0f0f0',
+                                                        },
+                                                    }}>
+                                                    <DeleteIcon />
+                                                </IconButton>
+                                                <IconButton
+
+                                                    onClick={() => hendleUpdate(item?.id)}
+                                                    sx={{
+                                                        color: 'black', '&:hover': {
+                                                            backgroundColor: '#f0f0f0',
+                                                        },
+                                                    }}>
+                                                    <EditIcon />
+                                                </IconButton>
+                                            </Template.trBTN>
+                                        </td>
+                                    </tr>
+                                </tbody>
+                            </Template.Table>
+
+                        </Template.TableContainer>
+                    ) : ("Nada encontrado...")
+                    }
+                </Template.FormSub >
+                {updateModal &&
+                    <PopupUpdatePerfilComponent ID={undefined} handleConfirm={hendleBuscaApi} handleCancel={() => setUpdateModal(false)} message={""} ativoBtn={false}></PopupUpdatePerfilComponent>
+                }
+                {DeleteModal &&
+                    <PopupComponent ID={undefined} handleConfirm={function (): void {
+                        throw new Error("Function not implemented.");
+                    }} handleCancel={() => setDeleteModal(false)} message={""} ativoBtn={false} />
+                }
+            </Template.container >
         </>
     )
 }

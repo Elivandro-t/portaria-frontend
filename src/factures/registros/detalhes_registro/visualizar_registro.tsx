@@ -7,7 +7,6 @@ import { subjet } from "../../../service/jwt/jwtservice";
 import type { AtualizaStatus } from "../../../types/stualizaStatus";
 import { notify } from "../../../service/snackbarService";
 import { useEffect, useState } from "react";
-import { HeaderSecundarioComponent } from "../../../components/headerSecundario/HeaderSecundario";
 import { ImageModal } from "../../../components/Galeria/Galeria";
 
 const VisualizarRegistro = () => {
@@ -178,7 +177,7 @@ const VisualizarRegistro = () => {
             </Template.SummaryRow>
             <Template.SummaryRow>
               <Template.AreaItemJustCenter>
-                <Template.Label>Bloco:</Template.Label>
+                     <Template.Label>Destino visita:</Template.Label>
                 <Template.LabelSubtitulo>{item?.bloco}</Template.LabelSubtitulo>
               </Template.AreaItemJustCenter>
               <Template.AreaItemJustCenter>

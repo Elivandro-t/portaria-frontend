@@ -29,7 +29,7 @@ export const LoginComponen = () => {
         const resposta = await Api.login(data)
         if (resposta && resposta.acessToken) {
             salve.salva_token(resposta.acessToken)
-            localStorage.setItem("order",resposta.usuario.id as any)
+            localStorage.setItem("order", resposta.usuario.id as any)
             setTimeout(() => {
                 setLoading(false);
                 window.location.href = "/"
@@ -50,10 +50,10 @@ export const LoginComponen = () => {
         }, 2000);
     };
 
-const senhaRef = useRef<HTMLInputElement>(null);
+    const senhaRef = useRef<HTMLInputElement>(null);
     const focus = (
         event: React.KeyboardEvent<HTMLInputElement>,
-        nextRef?: React.RefObject<HTMLInputElement|null>
+        nextRef?: React.RefObject<HTMLInputElement | null>
     ) => {
         if (event.key === "Enter") {
             // event.preventDefault();
@@ -64,7 +64,7 @@ const senhaRef = useRef<HTMLInputElement>(null);
         <Container>
             <Form>
                 <Logo onClick={handleMarckClick} >
-                   Controle de Acesso
+                    Controle de Acesso
                 </Logo>
                 <Text></Text>
                 <Or></Or>
@@ -83,7 +83,7 @@ const senhaRef = useRef<HTMLInputElement>(null);
 
                                 }
                             })}
-                            onKeyDown={(e) => focus(e,senhaRef)}
+                            onKeyDown={(e) => focus(e, senhaRef)}
                         />
                         <Erros>
                             {errors.email && <p>{errors.email.message}</p>}

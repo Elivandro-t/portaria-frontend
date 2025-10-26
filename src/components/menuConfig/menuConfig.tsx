@@ -1,12 +1,12 @@
-import { Outlet } from "react-router-dom";
 import Template from "./menuConfigCss";
 import { Link } from "react-router-dom";
 import { BotaoVoltar } from "../voltar/BotaoVoltar";
+import logo from "../../assets/logo portaria (1).png"
 export const MenuConfig = () => {
     return (
         <Template.continer>
             <BotaoVoltar/> 
-            <Template.tituloLogo>Controle de Acesso</Template.tituloLogo>
+            <Template.logo src={logo}/>
             <Template.menu>
                 <Template.menu_nav>
                     <Template.menu_ul>
