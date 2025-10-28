@@ -12,6 +12,7 @@ import {
     Select,
     EsquceuSenha,
 } from "./Container"
+import logo from "../../../assets/ptcontrole (1).png"
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,7 +33,7 @@ export const LoginComponen = () => {
             localStorage.setItem("order", resposta.usuario.id as any)
             setTimeout(() => {
                 setLoading(false);
-                window.location.href = "/"
+                window.location.href = "/verify"
             }, 1000);
         }
 
@@ -63,8 +64,8 @@ export const LoginComponen = () => {
     return (
         <Container>
             <Form>
-                <Logo onClick={handleMarckClick} >
-                    Controle de Acesso
+                <Logo src={logo} onClick={handleMarckClick} >
+                    
                 </Logo>
                 <Text></Text>
                 <Or></Or>

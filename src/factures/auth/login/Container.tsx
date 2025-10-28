@@ -33,7 +33,7 @@ width: 100%;
 flex-direction: column;
 align-items: center;
 border-radius: 10px;
-padding: 20px 10px;
+padding: 10px 10px;
 gap: 20px;
   @media screen and (min-width:430px){
       width: 490px;
@@ -50,13 +50,20 @@ gap: 20px;
 `;
 
 
-export const Logo = styled.h1`
-font-size: 28px;
+export const Logo = styled.img`
 font-family:Arial, Helvetica, sans-serif;
 font-weight: bold;
-height: 50px;
+height: 60px;
+object-fit: contain;
+width: 160px;
 color: var(--cor-titulo);
 cursor: pointer;
+ @media screen and (min-width:430px){
+height: 80px;
+width: 200px;
+
+
+  }
 
 
 `;
@@ -86,7 +93,7 @@ cursor: pointer;
 `;
 export const Campos = styled.input.withConfig({
   shouldForwardProp: (prop) => prop !== "hasError",
-})<CamposProps>`
+}) <CamposProps>`
 width: 100%;
 height: 42px;
 border:1px solid #d6d6d6;
