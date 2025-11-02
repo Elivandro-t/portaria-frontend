@@ -67,11 +67,11 @@ export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visib
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Nome: </Template.Span>
-                                            <Template.Infor>{item?.visitante.nomeCompleto}</Template.Infor>
+                                            <Template.Infor>{item?.visitante.nomeCompleto.toUpperCase()}</Template.Infor>
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Tipo Pessoa: </Template.Span>
-                                            <Template.Infor>{item.tipPessoa}</Template.Infor>
+                                            <Template.Infor>{item.tipPessoa.toUpperCase()}</Template.Infor>
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Acesso: </Template.Span>
