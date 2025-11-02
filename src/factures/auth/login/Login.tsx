@@ -116,7 +116,7 @@ export const LoginComponen = () => {
 
                     </Select>
                     <EsquceuSenha>
-                        <Link to={""} >Esqueceu a senha</Link>
+                        {/* <Link to={""} >Esqueceu a senha</Link> */}
                     </EsquceuSenha>
                     <BtnLogin>Entrar</BtnLogin>
 

@@ -6,7 +6,10 @@ import { useContext } from "react";
 import { contextProvider } from "../../reducer/userProvider/userProvider";
 import { subjet } from "../../service/jwt/jwtservice";
 import logo from "../../assets/logo portaria (1).png"
-export const HeaderComponent = () => {
+type props = {
+    ativoBusca?: any
+}
+export const HeaderComponent = ({ ativoBusca }: props) => {
     const { setBusca } = useContext(contextProvider) as any;
     const usuario = subjet();
     const navigate = useNavigate()
@@ -22,8 +25,9 @@ export const HeaderComponent = () => {
 
                     <Header.logo src={logo} onClick={() => hendleHome()}>
                     </Header.logo>
-
-                    <Header.busca placeholder="Buscar..." type="search" onChange={e => setBusca(e.target.value)} />
+                    {ativoBusca &&
+                        <Header.busca placeholder="Buscar..." type="search" onChange={e => setBusca(e.target.value)} />
+                    }
 
                     {Logued() && (
                         <Header.perfil>

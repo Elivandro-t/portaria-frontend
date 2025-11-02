@@ -33,7 +33,8 @@ export const BtnLogin = styled.button<Props>`
   height: 35px;
   border:0;
   border-radius: 5px;
-  font-size: 14px;
+  padding: 0 5px;
+  font-size: 12px;
   font-weight: bold;
   transition: background-color 0.3s ease, color 0.3s ease;
   transform: scale(0.97);
@@ -44,7 +45,7 @@ export const BtnLogin = styled.button<Props>`
 
   &:active {
     transform: scale(0.95);
-    font-size: 12px;
+    font-size: 11px;
   }
 
   &:hover {

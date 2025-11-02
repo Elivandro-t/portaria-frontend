@@ -1,4 +1,4 @@
-import axios, { Axios } from "axios"
+import axios from "axios"
 const base = import.meta.env.VITE_API_URL;
 const rotasPublicas = ["/portaria/v1/usuario/login",
 ];
@@ -63,11 +63,11 @@ axios.interceptors.response.use(response => {
         notify(msg)
         break
       case 403:
-        removeToken()
-        setTimeout(()=>{
-             window.location.href = "/verify";
+        // removeToken()
+        // setTimeout(()=>{
+        //      window.location.href = "/verify";
 
-         },1000)
+        //  },1000)
         break
       case 500:
         removeToken()
@@ -238,7 +238,7 @@ const Logs = async(endpoint:any,busca:any)=>{
 
 const salvaImagemUsuario = async(endpoint:any,usuarioId:any,file:File)=>{
   const formdata = new FormData();
-  formdata.append("usuarioid",usuarioId);
+  formdata.append("usuarioId",usuarioId);
   formdata.append("file",file)
 
   const resposta =  await axios.put(base+endpoint, formdata, {

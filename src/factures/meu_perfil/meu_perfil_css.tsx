@@ -1,5 +1,8 @@
 import styled from "styled-components";
 
+type props = {
+  hasError?:boolean
+}
 export default {
     container: styled.div`
         height: 100%;
@@ -56,18 +59,20 @@ export default {
     /////////ara perfil imagem/////////
 
     container_img: styled.div`
-    width:200px;
-    min-height:180px;
+    width:220px;
+    min-height:160px;
     margin: 0;
+    background-color: #e9c5c5;
     border-radius: 5px;
-    padding: 15px 10px;
+    padding:0.5px;
         color:#0f1724;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
     img{
         width: 100%;
         height: 100%;
-        object-fit: contain;
+        object-fit: cover;
+        border-radius: 5px;
     }
         
     `,
@@ -106,13 +111,18 @@ export default {
      flex-direction: column;
       gap: 10px;
      `,
-    input: styled.input`
+    input: styled.input<props>`
      width:100%;
     padding:10px 12px;
     border-radius:8px;
     border:1px solid rgba(15,23,36,0.08);
     background: #fff;
     font-size:14px;
+     border: 1px solid ${({ hasError }) => (hasError ? '#ff4d4f' : '#ccc')};
+    &:focus {
+        outline: none;
+        border-color: ${({ hasError }) => (hasError ? '#ff4d4f' : '#007BFF')};
+    }
      `,
     CamposInput: styled.div`
      display: flex;

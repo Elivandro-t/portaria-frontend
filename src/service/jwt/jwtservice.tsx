@@ -4,18 +4,25 @@ type JwtPayload = {
   nome?: string;
   exp?: number; // data de expiração em timestamp
   iat?: number;
-  id:number,
-  filial:any,
-  perfil:any,
-  permissoes:string[]// data de emissão
+  id: number,
+  filial: any,
+  perfil: any,
+  permissoes: string[]// data de emissão
 };
 
 
-const token  = localStorage.getItem("acessToken")
+const token = localStorage.getItem("acessToken")
+const usuarioId = localStorage.getItem("order")
 
-export const subjet = ()=>{
-    if(token!=null){
-   const jwtResposta = jwtDecode<JwtPayload>(token);
-   return jwtResposta;
-    }
+
+export const subjet = () => {
+  if (token != null) {
+    const jwtResposta = jwtDecode<JwtPayload>(token);
+    return jwtResposta;
+  }
+}
+export const subjetUsuarioId = () => {
+  if (usuarioId != null) {
+    return usuarioId;
+  }
 }

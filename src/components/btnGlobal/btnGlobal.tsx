@@ -1,13 +1,16 @@
+import type { ReactNode } from "react"
 import {BtnLogin} from "./btnGlobalCss"
 type props = {
-    titulo:string,
+    titulo?:string,
     nome_btn:String,
     click:()=>void,
-      isvalid:boolean
+      isvalid:boolean,
+      children?:ReactNode
 
 }
+
 export const BtnGlobal = (prop:props)=>{
     return(
-        <BtnLogin disabled={prop.isvalid} onClick={prop.click} global={prop.isvalid?"code":"default"} >{prop.titulo}</BtnLogin>
+        <BtnLogin  onClick={prop.click} global={prop.isvalid?"admin":"default"} >{prop?.titulo} {prop.children}</BtnLogin>
     )
 }

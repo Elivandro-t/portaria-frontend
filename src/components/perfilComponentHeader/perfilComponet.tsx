@@ -19,7 +19,7 @@ const settings = [
   { name: "Meus Registros", permissions: ["VISUALIZAR_REGISTRO"] },
   { name: "Criar Registro", permissions: ["CRIAR_REGISTRO"] },
   { name: "Configuraçoẽs", permissions: ["GERENCIAR_USUARIOS"] },
-  { name: "Logout" }
+  { name: "Sair" }
 ];
 
 export const PerfilComponet = () => {
@@ -77,7 +77,7 @@ export const PerfilComponet = () => {
           setLoading(false)
         }, 1000)
         break
-      case "Logout":
+      case "Sair":
         removeToken()
         window.location.href ="/verify";
         contex?.logout()
@@ -104,7 +104,7 @@ export const PerfilComponet = () => {
       (s) =>
         !s.permissions ||
         s.permissions.some((p) => userPermissions.includes(p)) ||
-        s.name === "Logout"
+        s.name === "Sair  "
     );
     setITensMenu(menu);
   }, [userPermissions]);

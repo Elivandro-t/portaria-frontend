@@ -11,7 +11,7 @@ export const HomeComponent = () => {
     }, [])
     return (
         <Makert.container>
-            <HeaderComponent />
+            <HeaderComponent  ativoBusca={outlet}/>
             <Makert.Container_int>
                 {outlet ? (
                     <Outlet />
