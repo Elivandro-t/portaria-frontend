@@ -36,5 +36,10 @@ export default {
         tr:last-child td {
           border-bottom: none;
         }
-      `
+      `,
+      trBTN:styled.div`
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+  `,
 }

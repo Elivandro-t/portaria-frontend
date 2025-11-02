@@ -8,6 +8,8 @@ type Visitante = {
     tipoAcesso: string;
     tipoMotorista: string;
     tipoPessoa: string;
+    numeroTelefone?:any
+
 };
 
 type Autorizador = {
@@ -29,6 +31,7 @@ export type RegistroVisitante = {
     dataCriacao: string; // ou Date
     status: string;
     bloco:string,
+    ocupacaoLiberada:any,
     ativo: boolean;
     filial:string,
     entrada:Entrada,

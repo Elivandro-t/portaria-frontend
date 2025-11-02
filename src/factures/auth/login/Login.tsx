@@ -11,14 +11,19 @@ import {
     Foooter,
     Select,
     EsquceuSenha,
+    Input,
+    Password
 } from "./Container"
 import logo from "../../../assets/ptcontrole (1).png"
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import salve from "../../../service/localStorage/service-localStorage"
+import VisibilityIcon from '@mui/icons-material/Visibility';         // 👁️ olho aberto
+import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';   // 🙈 olho fechado
 import Api from "../../../service/api"
 import { LoadingSecundary } from "../../../components/LoadingSecundary/LoadingSecundary";
+import IconButton from "@mui/material/IconButton";
 type FormData = {
     email: string;
     password: string;
@@ -26,6 +31,7 @@ type FormData = {
 // //npm install react-hook-form
 export const LoginComponen = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
+    const [ativaPasswd,setAtivaPasswd]=useState(false)
     const onSubmit = async (data: FormData) => {
         const resposta = await Api.login(data)
         if (resposta && resposta.acessToken) {
@@ -33,7 +39,7 @@ export const LoginComponen = () => {
             localStorage.setItem("order", resposta.usuario.id as any)
             setTimeout(() => {
                 setLoading(false);
-                window.location.href = "/verify"
+                window.location.href = "/portaria"
             }, 1000);
         }
 
@@ -50,7 +56,6 @@ export const LoginComponen = () => {
             navigate("/", { replace: true, state: { refresh: Date.now() } });
         }, 2000);
     };
-
     const senhaRef = useRef<HTMLInputElement>(null);
     const focus = (
         event: React.KeyboardEvent<HTMLInputElement>,
@@ -74,7 +79,7 @@ export const LoginComponen = () => {
                         <Campos
                             hasError={!!errors.email} type="email"
                             autoComplete="current-password"
-                            placeholder="E-mail"
+                            placeholder="@exemplo.com"
 
                             {...register("email", {
                                 required: "Email E obrigatorio",
@@ -91,18 +96,20 @@ export const LoginComponen = () => {
                         </Erros>
                     </Select>
                     <Select>
-                        <Campos hasError={!!errors.email} placeholder="Senha" type="password"
+                        <Input hasError={!!errors.password}>
+                           <Password placeholder="Senha" type={ativaPasswd?"text":"password"}
                             autoComplete="current-password"
                             {...register("password", {
                                 required: "Senha obrigatória",
-                                minLength: {
-                                    value: 4,
-                                    message: "Mínimo 6 caracteres",
-                                },
                             })}
                             onKeyDown={(e) => focus(e)}
 
                         />
+                        <IconButton onClick={()=>setAtivaPasswd(!ativaPasswd)}>
+                         {ativaPasswd ?(<VisibilityOffIcon/>):(<VisibilityIcon/>)}
+
+                        </IconButton>
+                        </Input>
                         <Erros>
                             {errors.password && <p>{errors.password.message}</p>}
                         </Erros>

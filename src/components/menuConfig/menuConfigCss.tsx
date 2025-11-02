@@ -5,8 +5,7 @@ export default {
     display: flex;
     background: var(--header-background);
     width: 100%;
-   padding: 0 10px;
-
+     padding:5px 10px;
     justify-content: space-between;
     align-items:center;
      @media screen  and (min-width: 760px){
@@ -27,12 +26,12 @@ export default {
 
   menu_ul: styled.ul`
     display: flex;
-    gap: 10px;
+    gap: 5px;
     list-style: none;
     padding: 0;
     margin: 0;
     @media screen  and (min-width: 760px){
-               gap: 20px;
+               gap: 5px;
 
 
     }
@@ -42,13 +41,13 @@ export default {
     position: relative;
     font-size: 14px;
     font-weight: bold;
-        color: white;
+    color: white;
     cursor: pointer;
     border-radius: 6px;
     transition: background 0.3s;
     @media screen  and (min-width: 760px){
-          padding: 8px 12px;
-              font-size: 16px;
+          padding: 8px 5px;
+          font-size: 16px;
 
 
     }
@@ -84,19 +83,18 @@ export default {
     position: absolute;
     top: 100%;
     left: 0;
-    margin-right: 10px;
-    background: linear-gradient(180deg, #007bff, #0056b3); /* azul moderno */
+    background: linear-gradient( #FFF); /* azul moderno */
     border-radius: 8px;
     list-style: none;
-    padding: 8px 10px;
-    min-width:90px;
+    padding: 8px 0;
+    min-width:160px;
     box-shadow: 0 2px 10px rgba(0, 0, 0, 0.4);
     opacity: 0;
     transform: translateY(-10px);
     transition: all 0.25s ease-in-out;
-    z-index: 10;
+    z-index: 1000;
     a {
-      color: #fff;
+      color: #696666;
       text-decoration: none;
       display: block;
       width: 100%;
@@ -104,15 +102,15 @@ export default {
   `,
 
   submenu_item: styled.li`
-    padding: 10px 15px;
-    color: #fff;
+    padding: 10px 5px;
+    color: #332e2e;
    
     font-weight: normal;
     cursor: pointer;
     transition: background 0.3s, padding-left 0.3s;
 
     &:hover {
-      background: rgba(255, 255, 255, 0.15);
+      background: rgba(152, 150, 250, 0.15);
       padding-left: 20px;
     }
   `,

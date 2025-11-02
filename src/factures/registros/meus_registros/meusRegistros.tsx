@@ -1,5 +1,5 @@
 import Template from "./meuRegistrosCs"
-import Api from "../../../service/api_cunsulto_produto"
+import Api from "../../../service/api_secundaria"
 import { useContext, useEffect, useState } from "react"
 import { contextProvider } from "../../../reducer/userProvider/userProvider"
 import { useNavigate } from "react-router-dom"
@@ -36,7 +36,7 @@ export const MeusRegistroComponets = () => {
         <Template.container>
             <ItensRegistro lista={lista} hendleDetalhesPedidos={hendleDetalhesPedidos} hendleBusca={function (): void {
                 throw new Error("Function not implemented.")
-            } } visibleCount={0}></ItensRegistro>
+            } } visibleCount={0} loading={loading}></ItensRegistro>
                 {loading &&
                  <LoadingSecundary></LoadingSecundary>
                 }       

@@ -1,6 +1,6 @@
-import Template from "./visulizar_registroc"
+import Template from "./visulizar_registroc";
 import { LoadingSecundary } from "../../../components/LoadingSecundary/LoadingSecundary";
-import api from "../../../service/api_cunsulto_produto";
+import api from "../../../service/api_secundaria";
 import ImageDropZone from "../../novo registro/Drop/ImageDropZone";
 import type { RegistroVisitante } from "../../../types/registros";
 import { subjet } from "../../../service/jwt/jwtservice";
@@ -8,6 +8,10 @@ import type { AtualizaStatus } from "../../../types/stualizaStatus";
 import { notify } from "../../../service/snackbarService";
 import { useEffect, useState } from "react";
 import { ImageModal } from "../../../components/Galeria/Galeria";
+import { IconButton } from "@mui/material";
+
+import EditIcon from "@mui/icons-material/Edit"
+import { PopupUpdateResgistroComponent } from "../../../components/controleDeacesso/UpdateRegistro/popup/updateRegistro";
 
 const VisualizarRegistro = () => {
   const usuario = subjet()
@@ -19,20 +23,22 @@ const VisualizarRegistro = () => {
   const handleFileSelect = (file: File | null) => {
     setSelectedFile(file);
   };
-  useEffect(() => {
-    window.scrollTo(0, 0);
-    const detalhes = async () => {
+  const detalhes = async () => {
       const resposta = await api.consuta_portaria(numeroDoRegistro);
       if (resposta != null) {
         setRegistro(resposta)
         setResetCounter(prev => prev + 1)
       }
     }
+  useEffect(() => {
+    window.scrollTo(0, 0);
+    
     detalhes()
   }, [numeroDoRegistro])
   const [loading, setLoading] = useState(false);
+   const [ativo,setAtivo] = useState(false);
   const [imagemAtivo, setImagemAtivo] = useState(false)
-  const [Imagem, setImagem] = useState("")
+  const [Imagem, setImagem] = useState("");
   // const hendlePagamentoPedidos = () => {
   //   setLoading(true);
   //   setTimeout(() => {
@@ -44,6 +50,13 @@ const VisualizarRegistro = () => {
   const hendleBTNIMG = (imagem: string) => {
     setImagemAtivo(true)
     setImagem(imagem)
+  }
+  const hendleUpdate=()=>{
+    setAtivo(true)
+  }
+    const volta=()=>{
+    setAtivo(false)
+    detalhes()
   }
   const solicitarLiberacao = async (registroId: any) => {
     setLoading(true)
@@ -80,6 +93,7 @@ const VisualizarRegistro = () => {
   // note que aqui o nome da propriedade deve bater com o payload real do seu token
   const permissions: string[] = usuario?.permissoes || [];
   const permission = permissions.includes("REGISTRAR_ENTRADA")
+    const permissionEdit = permissions.includes("EDITAR_REGISTRO")
   const SolicitarSaida = async (registroId: any) => {
     setLoading(true)
     const usuarioId = usuario?.id as any;
@@ -88,19 +102,19 @@ const VisualizarRegistro = () => {
       registroId
     }
     if (selectedFile != null) {
-        console.log("Dados enviados:", data, selectedFile);
+      console.log("Dados enviados:", data, selectedFile);
 
-        const resposta = await api.alterarSaida(data, selectedFile as any);
-        if (resposta) {
-          notify(resposta.msg, "success")
-          const detalhesAtualizados = await api.consuta_portaria(numeroDoRegistro);
-          setResetCounter(prev => prev + 1)
-          if (detalhesAtualizados) {
-            setRegistro(detalhesAtualizados);
-            setLoading(false)
-          }
+      const resposta = await api.alterarSaida(data, selectedFile as any);
+      if (resposta) {
+        notify(resposta.msg, "success")
+        const detalhesAtualizados = await api.consuta_portaria(numeroDoRegistro);
+        setResetCounter(prev => prev + 1)
+        if (detalhesAtualizados) {
+          setRegistro(detalhesAtualizados);
+          setLoading(false)
         }
-    
+      }
+
     } else {
       setTimeout(() => {
         notify("Selecione uma imagem", "error")
@@ -130,6 +144,13 @@ const VisualizarRegistro = () => {
             <Template.tituloPedido>Protocolo: #{item?.protocolo}</Template.tituloPedido>
             <Template.status>
               Status:<Template.Chip color={retornaCorStatus(item?.status)}>{item?.status.replace("_", " ")}</Template.Chip>
+              {permissionEdit &&
+                <Template.edit onClick={hendleUpdate}>
+             <IconButton aria-label="mais opções"  sx={{ color: "#000" }}>
+                <EditIcon />
+              </IconButton>
+          </Template.edit>
+              }
             </Template.status>
           </Template.heanderPedido>
           <Template.CardCentro >
@@ -161,8 +182,8 @@ const VisualizarRegistro = () => {
           <Template.Card>
             <Template.SummaryRow>
               <Template.AreaItemJustCenter>
-                <Template.Label>Tipo de Motorista:</Template.Label>
-                <Template.LabelSubtitulo>{item?.visitante?.tipoMotorista}</Template.LabelSubtitulo>
+                <Template.Label>Ocupação Liberada</Template.Label>
+                <Template.LabelSubtitulo>{item?.ocupacaoLiberada}</Template.LabelSubtitulo>
               </Template.AreaItemJustCenter>
               <Template.AreaItemJustCenter>
                 <Template.Label>Data Criacao:</Template.Label>
@@ -177,7 +198,7 @@ const VisualizarRegistro = () => {
             </Template.SummaryRow>
             <Template.SummaryRow>
               <Template.AreaItemJustCenter>
-                     <Template.Label>Destino visita:</Template.Label>
+                <Template.Label>Destino visita:</Template.Label>
                 <Template.LabelSubtitulo>{item?.bloco}</Template.LabelSubtitulo>
               </Template.AreaItemJustCenter>
               <Template.AreaItemJustCenter>
@@ -189,7 +210,7 @@ const VisualizarRegistro = () => {
             </Template.SummaryRow>
             <Template.SummaryRow>
               <Template.AreaItemJustCenter>
-                <Template.Label>Autorizado:</Template.Label>
+                <Template.Label>Autorizador:</Template.Label>
                 <Template.LabelSubtitulo>{item?.autorizador.nome}</Template.LabelSubtitulo>
               </Template.AreaItemJustCenter>
               <Template.AreaItemJustCenter>
@@ -216,19 +237,23 @@ const VisualizarRegistro = () => {
               }
 
             </Template.imagemArea>
-            {item?.ativo &&
-              <Template.ImagemItemRecebido>
-                <Template.LabelSubtitulo>Imagem do Porta-malas *</Template.LabelSubtitulo>
-                <ImageDropZone onFileSelect={handleFileSelect} resetSignal={resetCounter}></ImageDropZone>
-              </Template.ImagemItemRecebido>
-            }
-            {
+            {permission &&
+              <>
+                {item?.ativo &&
+                  <Template.ImagemItemRecebido>
+                    <Template.LabelSubtitulo>Imagem do Porta-malas *</Template.LabelSubtitulo>
+                    <ImageDropZone onFileSelect={handleFileSelect} resetSignal={resetCounter}></ImageDropZone>
+                  </Template.ImagemItemRecebido>
+                }
+                {
 
-              permission && item?.status.includes("AGUARDANDO_ENTRADA") ? (
-                <Template.Button disabled={!item?.ativo || !selectedFile} ativo={item?.ativo || !selectedFile} onClick={() => solicitarLiberacao(item?.id)}>Solicitar Liberação</Template.Button>
-              ) : (
-                <Template.Button disabled={!item?.ativo || !selectedFile} ativo={item?.ativo} onClick={() => SolicitarSaida(item?.id)}>Solicitar Saida</Template.Button>
-              )
+                  item?.status.includes("AGUARDANDO_ENTRADA") ? (
+                    <Template.Button ativo={item?.ativo || !selectedFile} onClick={() => solicitarLiberacao(item?.id)}>Solicitar Liberação</Template.Button>
+                  ) : (
+                    <Template.Button ativo={item?.ativo} onClick={() => SolicitarSaida(item?.id)}>Solicitar Saida</Template.Button>
+                  )
+                }
+              </>
             }
           </Template.Card>
         </Template.Container>
@@ -239,7 +264,16 @@ const VisualizarRegistro = () => {
         {loading &&
           <LoadingSecundary></LoadingSecundary>
         }
+        {/* {selectedFile &&
+          <PopupUpdatePerfilComponent ID={undefined} handleConfirm={} handleCancel={function (): void {
+            throw new Error("Function not implemented.");
+          } } message={""} ativoBtn={false}></PopupUpdatePerfilComponent>
+        } */}
+
       </Template.Area>
+      {permissionEdit && ativo &&
+      <PopupUpdateResgistroComponent data={item as any} handleCancel={volta} message={""} ativoBtn={false}/>
+      }
     </>
   );
 };

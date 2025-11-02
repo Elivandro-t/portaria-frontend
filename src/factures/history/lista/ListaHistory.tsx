@@ -137,7 +137,7 @@ export const ListahistoryComponent = () => {
           </Template.TableContainer>
         </Template.FormSub>
         {ativo &&
-          <PopupComponent ID={id} handleCancel={() => setAtivo(false)} handleConfirm={hendleDeleteHistory} message={msg} ativoBtn={ativoBtn} />
+          <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={hendleDeleteHistory} message={msg} ativoBtn={ativoBtn} />
         }
       </Template.container>
     </>

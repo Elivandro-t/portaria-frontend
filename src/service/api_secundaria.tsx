@@ -38,6 +38,10 @@ const solitacaoAutorizado = async (endpoint: string) => {
     const resposta = await axios.get(base + endpoint)
     return resposta.data
 }
+const listaBloco = async (endpoint:any)=>{
+    const resposta = await axios.get(base + endpoint)
+    return resposta.data
+}
 // ja integrado
 const consulta = {
     consuta_portaria: async (idRegistro: number) => {
@@ -60,6 +64,10 @@ const consulta = {
     },
     solitacaoAutorizado: async (usuarioId: number) => {
         const json = await solitacaoAutorizado(`/portaria/v1/solicitacao/autorizador?usuario_id=${usuarioId}`);
+        return json;
+    },
+    blocos: async () => {
+        const json = await listaBloco(`/bloco`);
         return json;
     },
 

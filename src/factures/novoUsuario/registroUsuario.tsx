@@ -14,6 +14,26 @@ type FormData = {
     repeteSenha?: string; // só para validação
 
 };
+const ocupacao = [
+    { nome: "GERENTE OPERACIONAL" },
+    { nome: "PRESIDENTE" },
+    { nome: "PROGRAMADOR" },
+    { nome: "FISCAL" },
+    { nome: "DIRETOR" },
+    { nome: "SUPERVISOR" },
+    { nome: "COORDENADOR" }
+
+]
+const filials = [
+    { id: 1, filial: 81 },
+    { id: 2, filial: 82 },
+    { id: 3, filial: 87 },
+    { id: 4, filial: 116 },
+    { id: 5, filial: 122 },
+    { id: 6, filial: 331 },
+    { id: 7, filial: 335 },
+    { id: 8, filial: 336 }
+]
 export const RegistroDeUsuarioComponent = () => {
 
     const { register, handleSubmit, formState: { errors }, reset, watch } = useForm<FormData>()
@@ -97,9 +117,10 @@ export const RegistroDeUsuarioComponent = () => {
                                 <Template.label>Ocupaçao</Template.label>
                                 <Template.SelectItens {...register("ocupacaoOperacional", { required: "Selecione ocupação" })}>
                                     <Template.Options value="">Selecione</Template.Options>
-                                    <Template.Options value={"GERENTE DE LOGISTICA"}>GERENTE DE LOGISTICA</Template.Options>
-                                    <Template.Options value={"FISCAL DE PREVENCAO"}>FISCAL</Template.Options>
-                                    <Template.Options value={"DIRETOR"}>DIRETOR</Template.Options>
+                                    {ocupacao.flatMap((item, index) => (
+                                        <Template.Options key={index} value={item.nome}>{item.nome}</Template.Options>
+
+                                    ))}
                                 </Template.SelectItens>
                                 {errors.ocupacaoOperacional && <Template.Erros><p>{errors.ocupacaoOperacional.message}</p></Template.Erros>}
                             </Template.CamposInput>
@@ -107,8 +128,10 @@ export const RegistroDeUsuarioComponent = () => {
                                 <Template.label >Filial</Template.label>
                                 <Template.SelectItens {...register("filial", { required: "Selecione a filial" })}>
                                     <Template.Options value="">Selecione filial</Template.Options>
-                                    <Template.Options value={116}>116</Template.Options>
-                                </Template.SelectItens>
+                                    {filials.flatMap((item) => (
+                                        <Template.Options key={item.id} value={item.filial}>{item.filial}</Template.Options>
+
+                                    ))}                                </Template.SelectItens>
                                 {errors.filial && <Template.Erros><p>{errors.filial.message}</p></Template.Erros>}
                             </Template.CamposInput>
                         </Template.leftArea>
@@ -151,7 +174,7 @@ export const RegistroDeUsuarioComponent = () => {
                         <Template.Campos
                             hasError={!!errors.repeteSenha as any} type="text"
                             autoComplete="current-password"
-                            placeholder="Repita a senha"
+                            placeholder="Confirme senha"
 
                             {...register("repeteSenha" as any, {
                                 required: "Senha E obrigatorio",

@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import { MdInbox } from "react-icons/md"; // ícone bonito de "sem itens"
 
 export default {
   container: styled.div`
@@ -146,5 +147,21 @@ buttonNext:styled.button`
         margin-top: 2px;
 
   `,
+  semItens: styled.div`
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    color: #555;
+    height: 60vh;
+    font-size: 16px;
+    gap: 10px;
+    opacity: 0.8;
+  `,
+
+  iconSemItens: styled(MdInbox)`
+    font-size: 60px;
+    color: #999;
+  `
 
 };

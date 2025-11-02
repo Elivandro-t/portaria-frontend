@@ -77,8 +77,7 @@ const ImageDropZone: React.FC<ImageDropZoneProps> = ({ onFileSelect,resetSignal,
 
   return (
     <Container {...getRootProps()} isActive={isDragActive}>
-      <input {...getInputProps()} ref={dropzoneInputRef} capture="environment" // abre a câmera traseira, "user" para frontal
-  accept="image/*"/>
+      <input {...getInputProps()} ref={dropzoneInputRef}/>
       {image ? (
         <Template.Div>
           <Template.RemoveButton onClick={removeImage}>×</Template.RemoveButton>

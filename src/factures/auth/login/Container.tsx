@@ -1,8 +1,8 @@
 import styled from "styled-components";
 interface CamposProps {
   hasError?: boolean;
+   cor?:any
 }
-
 export const Container = styled.section`
 display: flex;
 position: relative;
@@ -108,6 +108,29 @@ padding:5px;
 
 
 `;
+export const Password = styled.input`
+width: 100%;
+outline: none;
+border: 0;
+
+
+`;
+export const Input = styled.div.withConfig({
+  shouldForwardProp: (prop) => prop !== "hasError",
+})<CamposProps>`
+height: 42px;
+background-color:transparent;
+border-radius: 5px;
+  border: 1px solid ${({ hasError }) => (hasError ? '#ff4d4f' : '#ccc')};
+&:focus {
+    outline: none;
+    border-color: ${({ hasError }) => (hasError ? '#ff4d4f' : '#007BFF')};
+  }
+padding:5px;
+
+  display: flex;
+  align-items: center;
+`
 export const Or = styled.div`
 
 

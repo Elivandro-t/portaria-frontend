@@ -1,5 +1,5 @@
 import Template from "./registro_css"
-import Api from "../../../service/api_cunsulto_produto"
+import Api from "../../../service/api_secundaria"
 import { useContext, useEffect, useState } from "react"
 import { contextProvider } from "../../../reducer/userProvider/userProvider"
 import { useNavigate } from "react-router-dom"
@@ -15,7 +15,7 @@ export const MeusRegistros = () => {
     const [lista, setLista] = useState<any[]>([])
     const carregarRegistros = async (novoSize?: number) => {
         const tamanho = novoSize ?? size;
-        const resposta = await Api.Solicitacoes(116, usuario?.busca, tamanho);
+        const resposta = await Api.Solicitacoes(user?.filial, usuario?.busca, tamanho);
         if (resposta.content != null) {
             setLista(resposta.content);
             setTotalElements(resposta.totalElements);
@@ -42,7 +42,7 @@ export const MeusRegistros = () => {
 
     return (
         <Template.container>
-            <ItensRegistro lista={lista} hendleDetalhesPedidos={hendleDetalhesPedidos} hendleBusca={exibirMais} visibleCount={totalElements}></ItensRegistro>
+            <ItensRegistro lista={lista} hendleDetalhesPedidos={hendleDetalhesPedidos} hendleBusca={exibirMais} visibleCount={totalElements} loading={loading}></ItensRegistro>
                 {loading &&
                  <LoadingSecundary></LoadingSecundary>
                 }

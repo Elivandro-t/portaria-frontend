@@ -120,7 +120,7 @@ export const AdicionarPerfilRouter = () => {
                     <PopupUpdatePerfilComponent ID={undefined} handleConfirm={hendleBuscaApi} handleCancel={() => setUpdateModal(false)} message={""} ativoBtn={false}></PopupUpdatePerfilComponent>
                 }
                 {DeleteModal &&
-                    <PopupComponent ID={undefined} handleConfirm={function (): void {
+                    <PopupComponent handleConfirm={function (): void {
                         throw new Error("Function not implemented.");
                     }} handleCancel={() => setDeleteModal(false)} message={""} ativoBtn={false} />
                 }

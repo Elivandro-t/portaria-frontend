@@ -3,10 +3,11 @@ import styled from "styled-components";
 export default {
   container: styled.main`
     position: relative;
-   background-color:var(--cor-auth);
    height: 100vh;
     `,
   Container_int: styled.main`
+     background-color:var(--cor-auth);
+
       padding:0 26px;
       @media screen and (max-width: 560px) {
         padding: 0;
@@ -17,6 +18,8 @@ export default {
   `,
   container_int: styled.div`
   width: 100%;
+     height: 100vh;
+
   `,
   placeholder: styled.div`
     display: flex;

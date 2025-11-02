@@ -33,6 +33,7 @@ export default {
     }
   `,
   Container: styled.div`
+  position: relative;
     max-width: 800px;
     margin:  auto;
     box-sizing:border-box;
@@ -225,6 +226,10 @@ export default {
                font-size:12px;
     }
      
+      `,
+      edit:styled.div`
+      margin: 0;
+        
       `
 
 }

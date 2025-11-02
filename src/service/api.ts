@@ -1,4 +1,4 @@
-import axios from "axios"
+import axios, { Axios } from "axios"
 const base = import.meta.env.VITE_API_URL;
 const rotasPublicas = ["/portaria/v1/usuario/login",
 ];
@@ -24,7 +24,6 @@ const login = async (endpoint: string, body: any) => {
 const removeToken = async () => {
   localStorage.removeItem("acessToken")
   localStorage.removeItem("order")
-  localStorage.removeItem("carrinho")
 }
 
 
@@ -51,7 +50,11 @@ axios.interceptors.response.use(response => {
     const data = error.response.data;
     switch (status) {
       case 400:
-        notify(data.message)
+        if(error.message){
+          notify(data.message)
+        }else{
+          notify(data.erro)
+        }
         break
       case 401:
         const from = location.pathname + location.search + location.hash;
@@ -62,14 +65,14 @@ axios.interceptors.response.use(response => {
       case 403:
         removeToken()
         setTimeout(()=>{
-             window.location.href = "/";
+             window.location.href = "/verify";
 
          },1000)
         break
       case 500:
         removeToken()
         setTimeout(()=>{
-             window.location.href = "/";
+             window.location.href = "/verify";
 
          },1000)
         notify(data.message)
@@ -102,7 +105,21 @@ const cadastroUsario = async (endpoint: string,body:any) => {
     throw error;
   }
 }
-
+const atualizaCadastro = async (endpoint: string, body: any) => {
+  try {
+    const response = await axios.put(base + endpoint, body);
+    return response.data;
+  } catch (error: any) {
+    // Tratar todos os casos: com response e sem response
+    if (axios.isAxiosError(error)) {
+      console.error("Erro ao atualizar usuário:", error.response?.data ?? error.message);
+      throw error.response?.data ?? error.message;
+    } else {
+      console.error("Erro inesperado:", error);
+      throw error;
+    }
+  }
+}
 const listaVisistante = async (endpoint: string,busca:string) => {
   const params = new URLSearchParams();
     params.append("busca",busca)
@@ -145,6 +162,28 @@ const deletar = async (endpoint: string,id:any,usuarioId:any) => {
     throw error;
   }
 }
+const deleteItem = async (endpoint: string,id:any,usuarioId:any) => {
+  try {
+    const params = new URLSearchParams();
+    params.append("registroId",id)
+    params.append("usuarioId",usuarioId)
+    const response = await axios.delete(base + endpoint,{params:Object.fromEntries(params)});
+    return response.data;
+  } catch (error: any) {
+    throw error;
+  }
+}
+const deleteVisitante = async (endpoint: string,id:any,usuarioId:any) => {
+  try {
+    const params = new URLSearchParams();
+    params.append("visitanteId",id)
+    params.append("usuarioId",usuarioId)
+    const response = await axios.delete(base + endpoint,{params:Object.fromEntries(params)});
+    return response.data;
+  } catch (error: any) {
+    throw error;
+  }
+}
 const BuscaPefilUsuario = async (endpoint: string,email:any) => {
   try {
     const params = new URLSearchParams();
@@ -164,7 +203,50 @@ const AdicionarPefil = async(endpoint:any,usuarioId:any,perfilId:any)=>{
   return response.data;
   }catch(erro:any){
     throw erro;
+  }  
+}
+const BuscaUsuario = async(endpoint:any,usuarioId:any)=>{
+  try{
+  const params = new URLSearchParams()
+  params.append("usuarioId",usuarioId)
+  const response  = await axios.get(base+endpoint,{params:Object.fromEntries(params)});
+  return response.data;
+  }catch(erro:any){
+    throw erro;
+  }   
+}
+
+const ReseteSenha = async (endpoint: string) => {
+  try {
+    const response = await axios.post(base + endpoint);
+    return response.data;
+  } catch (error: any) {
+    throw error;
   }
+}
+const Logs = async(endpoint:any,busca:any)=>{
+  try{
+  const params = new URLSearchParams()
+  params.append("busca",busca)
+  const response  = await axios.get(base+endpoint,{params:Object.fromEntries(params)});
+  return response.data;
+  }catch(erro:any){
+    throw erro;
+  }
+}
+
+
+const salvaImagemUsuario = async(endpoint:any,usuarioId:any,file:File)=>{
+  const formdata = new FormData();
+  formdata.append("usuarioid",usuarioId);
+  formdata.append("file",file)
+
+  const resposta =  await axios.put(base+endpoint, formdata, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    }})
+  return resposta.data;
+
 }
 ////////////////////////////
 const api = {
@@ -175,6 +257,10 @@ const api = {
   },
   salvaRegistro: async (data: any,file:File) => {
     const json = await salvaRegistro("/portaria/v1/cadastro", data,file)
+    return json;
+  },
+  atualizarRegistro: async (data: any) => {
+    const json = await atualizaCadastro("/portaria/v1/update", data)
     return json;
   },
   listaPerfil: async () => {
@@ -201,6 +287,14 @@ const api = {
     const json = await deletar("/historico/delete",id,usuarioId)
     return json;
   },
+  deletarVisitante: async (id:any,usuarioId:any) => {
+    const json = await deleteVisitante("/visitante/delete/registro",id,usuarioId)
+    return json;
+  },
+   deletarPortaria: async (id:any,usuarioId:any) => {
+    const json = await deleteItem("/portaria/v1/solicitacao/delete/registro",id,usuarioId)
+    return json;
+  },
   BuscaPefilUsuario: async (email:any) => {
     const json = await BuscaPefilUsuario("/portaria/v1/usuario/usuario-lista-perfil",email)
     return json;
@@ -208,6 +302,22 @@ const api = {
   AdicionarPefil: async (usuarioId:any,perfilId:any) => {
     const json = await AdicionarPefil("/portaria/v1/usuario/usuario-add-perfil",usuarioId,perfilId)
     return json;
+  },
+  reset: async (email:any) => {
+    const json = await ReseteSenha(`/portaria/v1/usuario/alterar/senha?email=${email}`)
+    return json;
+  },
+  buscaLogs: async (busca:any) => {
+    const json = await Logs("/logs/lista",busca)
+    return json;
+  },
+   buscaUsuario: async (usuarioId:any) => {
+    const json = await BuscaUsuario("/portaria/v1/usuario/busca/unit",usuarioId)
+    return json;
+  },
+  selecionarImagem:async(usuarioId:any,file:File)=>{
+     const json = await salvaImagemUsuario("/portaria/v1/usuario/avatar",usuarioId,file);
+     return json;
   }
 }
 

@@ -1,20 +1,19 @@
 import { useEffect, useState } from "react";
 import Template from "./logsCss"
 import Api from "../../service/api"
-import AddIcon from "@mui/icons-material/Add";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TextField, IconButton } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
-import { useNavigate } from "react-router-dom";
+import { PopupComponent } from "../../components/popup/popupComponent";
 export const LogsComponets = () => {
   const [lista, setLista] = useState<any[]>([])
   const [id, setId] = useState(false);
-  const [busca, setBusca] = useState("")
-  const nativete = useNavigate()
+  const [busca, setBusca] = useState("");
+  const [ativo,setAtivo] = useState(false)
   const onSubmit = async () => {
-    const resposta = await Api.listAusuario(busca);
-    if (resposta) {
+    const resposta = await Api.buscaLogs(busca);
+    if (resposta.content) {
       setLista(resposta.content)
     }
   }
@@ -26,17 +25,16 @@ export const LogsComponets = () => {
 
   const hendleDelete = (id: any) => {
     setId(id)
+    setAtivo(true)
   }
   const hendleUpdate = () => {
     setId(id)
   }
-  const handleNovoUsuario = () => {
-    nativete("/configuracoes/cadastro/usuario")
-  }
+
   return (
     <>
       <Template.container>
-         <Template.titulo>Logs do Sistema</Template.titulo>
+        <Template.titulo>Logs do Sistema</Template.titulo>
         <Template.FormSub >
           <Template.CamposInput>
             <TextField
@@ -56,27 +54,19 @@ export const LogsComponets = () => {
             >
               <SearchIcon />
             </IconButton>
-            <IconButton
-              onClick={handleNovoUsuario} // sua função para abrir o formulário
-              sx={{
-                backgroundColor: "#4caf50",       // verde
-                color: "#fff",                     // ícone branco
-                "&:hover": { backgroundColor: "#43a047" }, // verde mais escuro no hover
-              }}
-            >
-              <AddIcon />
-            </IconButton>
-
           </Template.CamposInput>
 
           <Template.TableContainer>
             <Template.Table>
               <thead>
                 <tr>
-                  <th>Nome</th>
-                  <th>Email</th>
-                  <th>Função</th>
-                  <th>Filial</th>
+                  <th>Id</th>
+                  <th>ID_USUARIO</th>
+                  <th>USUARIO</th>
+                  <th>DESCRIÇÃO</th>
+                  <th>AÇÂO</th>
+                  <th>DATA</th>
+                  <th>FILIAL</th>
                   <th></th>
                 </tr>
               </thead>
@@ -87,10 +77,18 @@ export const LogsComponets = () => {
                 {
                   lista.flatMap((item, key) => (
                     <tr key={key}>
-                      <td>{item.nome}</td>
-                      <td>{item.email}</td>
-                      <td>{item.ocupacaoOperacional}</td>
+                      <td>{item.id}</td>
+                      <td>{item.usuarioId}</td>
+                      <td>{item.usuario}</td>
+                      <td>{item.descricao}</td>
+                      <td>{item.acao}</td>
+                      <td>{new Date(item?.dataHora as any).toLocaleDateString("pt-BR", {
+                        day: "2-digit",
+                        month: "long",
+                        year: "numeric",
+                      })}</td>
                       <td>{item.filial}</td>
+
                       <td >
                         <Template.trBTN>
                           <IconButton
@@ -124,11 +122,9 @@ export const LogsComponets = () => {
             </Template.Table>
           </Template.TableContainer>
         </Template.FormSub>
-        {/* {ativo &&
-          <PopupComponent ID={id} handleCancel={() => setAtivo(false)} handleConfirm={function (): void {
-            throw new Error("Function not implemented.");
-          }} message={"Deseja realmente atualizar o item com ID"} />
-        } */}
+        {ativo &&
+          <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={()=>{}} message={"Deseja realmente atualizar o item com ID"} ativoBtn={false} />
+        }
       </Template.container>
     </>
   )

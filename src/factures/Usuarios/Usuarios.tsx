@@ -2,21 +2,20 @@ import { useEffect, useState } from "react";
 import Template from "./UsuariosCss"
 import Api from "../../service/api"
 import AddIcon from "@mui/icons-material/Add";
-import DeleteIcon from '@mui/icons-material/Delete';
 import { TextField, IconButton } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
-
-import { PopupComponent } from "../../components/popup/popupComponent";
 import { useNavigate } from "react-router-dom";
+import { notify } from "../../service/snackbarService";
+import api from "../../service/api";
+import { PopupUpdatePerfilComponent } from "../../components/updatePerfilComponent/popup/updatePerfil";
 export const UsuarioListaComponets = () => {
   const [lista, setLista] = useState<any[]>([])
-  const [ativo, setAtivo] = useState(false);
   const [id, setId] = useState(false);
   const [busca, setBusca] = useState("")
   const nativete = useNavigate()
   const onSubmit = async () => {
-    const resposta = await Api.listAusuario(busca);
+    const resposta = await Api.listAusuario(busca.trim());
     if (resposta) {
       setLista(resposta.content)
     }
@@ -26,18 +25,28 @@ export const UsuarioListaComponets = () => {
       onSubmit(); // se o campo estiver vazio, busca toda a lista
     }
   }, [busca])
-
-  const hendleDelete = (id: any) => {
-    setAtivo(true);
-    setId(id)
-  }
-  const hendleUpdate = () => {
-    setAtivo(true);
-    setId(id)
+  const hendleUpdate = (itemResposta:any) => {
+    setId(itemResposta.id)
+    setUpdateModal(true)
+    console.log("data "+itemResposta)
   }
   const handleNovoUsuario = () => {
     nativete("/configuracoes/cadastro/usuario")
   }
+
+  const [updateAtivo,setUpdateModal]=useState(false)
+  const hendleBuscaApi = async (data: any) => {
+              const response = await api.AdicionarPefil(id, data.idPerfil);
+              if (response) {
+                  setUpdateModal(false)
+                  notify(response.msg, "success")
+                   setTimeout(()=>{
+                   onSubmit()
+                   },1000)
+  
+              }
+  
+      }
   return (
     <>
       <Template.container>
@@ -70,9 +79,7 @@ export const UsuarioListaComponets = () => {
             >
               <AddIcon />
             </IconButton>
-
           </Template.CamposInput>
-
           <Template.TableContainer>
             <Template.Table>
               <thead>
@@ -81,6 +88,7 @@ export const UsuarioListaComponets = () => {
                   <th>Email</th>
                   <th>Função</th>
                   <th>Filial</th>
+                  <th>Pefil</th>
                   <th></th>
                 </tr>
               </thead>
@@ -95,29 +103,18 @@ export const UsuarioListaComponets = () => {
                       <td>{item.email}</td>
                       <td>{item.ocupacaoOperacional}</td>
                       <td>{item.filial}</td>
+                       <td>{item?.perfil?.nome}</td>
                       <td >
                         <Template.trBTN>
                           <IconButton
                             aria-label="editar"
-                            onClick={() => hendleUpdate()}
+                            onClick={() => hendleUpdate(item)}
                             sx={{
                               color: "black",
                               "&:hover": { backgroundColor: "#e0e0e0" },
                             }}
                           >
                             <EditIcon />
-                          </IconButton>
-                          <IconButton
-                            aria-label="deletar"
-                            onClick={() => hendleDelete(item.id)}
-                            sx={{
-                              color: 'black',
-                              '&:hover': {
-                                backgroundColor: '#f0f0f0',
-                              },
-                            }}
-                          >
-                            <DeleteIcon />
                           </IconButton>
                         </Template.trBTN>
                       </td>
@@ -128,10 +125,13 @@ export const UsuarioListaComponets = () => {
             </Template.Table>
           </Template.TableContainer>
         </Template.FormSub>
-        {ativo &&
-          <PopupComponent ID={id} handleCancel={() => setAtivo(false)} handleConfirm={function (): void {
-          throw new Error("Function not implemented.");
-        } } message={"Deseja realmente atualizar o item com ID"} ativoBtn={ativo} />
+        {/* {ativo &&
+          <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={function (): void {
+            throw new Error("Function not implemented.");
+          }} message={"Deseja realmente atualizar o item com ID"} ativoBtn={ativo} />
+        } */}
+        {updateAtivo&&
+        <PopupUpdatePerfilComponent ID={undefined} handleConfirm={hendleBuscaApi} handleCancel={()=>setUpdateModal(false)} message={""} ativoBtn={false}/>
         }
       </Template.container>
     </>

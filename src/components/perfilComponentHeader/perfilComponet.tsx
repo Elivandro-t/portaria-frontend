@@ -14,7 +14,7 @@ import { useContext } from "react";
 import { LoadingSecundary } from "../LoadingSecundary/LoadingSecundary";
 import { subjet } from "../../service/jwt/jwtservice";
 const settings = [
-  { name: "Account" },
+  { name: "Minha Conta" },
    { name: "Portaria Pendentes", permissions: ["REGISTRAR_SAIDA"] },
   { name: "Meus Registros", permissions: ["VISUALIZAR_REGISTRO"] },
   { name: "Criar Registro", permissions: ["CRIAR_REGISTRO"] },
@@ -48,8 +48,12 @@ export const PerfilComponet = () => {
           setLoading(false)
         }, 1000)
         break;
-      case "Account":
-        navigate("/account");
+      case "Minha Conta":
+        setLoading(true)
+        setTimeout(() => {
+        navigate("/controle/profile");
+        setLoading(false)
+        },1000)
 
         break;
       case "Portaria Pendentes":
@@ -75,7 +79,7 @@ export const PerfilComponet = () => {
         break
       case "Logout":
         removeToken()
-        window.location.href ="/";
+        window.location.href ="/verify";
         contex?.logout()
         break;
       default:

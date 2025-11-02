@@ -2,35 +2,20 @@ import Template from "./popupcss";
 import { Button, Typography } from "@mui/material";
 
 type Props = {
-  handleConfirm: () => void;
   handleCancel: () => void;
-    message: string;
-    ativoBtn:boolean
+  message: string;
+  ativoBtn: boolean
 };
 
-export const PopupComponent = ({ handleConfirm, handleCancel,message,ativoBtn }: Props) => {
+export const AlertComponent = ({handleCancel, message}: Props) => {
   return (
     <Template.container>
       <Template.container_int>
         <Template.content>
-          <Typography variant="h6" sx={{ mb: 2 }}>
             <Typography variant="h6" sx={{ mb: 2 }}>
-  {message}
-</Typography>
-          </Typography>
-
+              {message}
+            </Typography>
           <Template.buttons>
-            {ativoBtn &&
-              <Button
-              variant="contained"
-              color="error"
-              onClick={handleConfirm}
-              sx={{ borderRadius: 2 }}
-            >
-              Excluir
-            </Button>
-            }
-
             <Button
               variant="outlined"
               onClick={handleCancel}

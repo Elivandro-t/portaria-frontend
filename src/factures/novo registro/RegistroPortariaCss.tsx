@@ -7,9 +7,8 @@ export default {
     container: styled.div`
     padding: 40px 10px;
 
-    min-height: 100vh;
+    height: 100vh;
 
-    
   `,
     area_pedidos: styled.section`
     display: flex;
@@ -92,8 +91,10 @@ export default {
     
     `,
      TextArea: styled.textarea<CamposProps>`
+    min-height:80px; 
+    resize:vertical;
     width: 100%;
-    height: 38px;
+    padding: 10px;
     border:1px solid #d6d6d6;
     background-color:transparent;
         background-color:#FFF;
@@ -102,7 +103,9 @@ export default {
     border: 1px solid ${({ hasError }) => (hasError ? '#ff4d4f' : '#ccc')};
     
     `,
-    Options: styled.option``,
+    Options: styled.option`
+    height: 100vh;
+    `,
     Erros: styled.div`
     position: absolute;
     color:#ff4d4f;

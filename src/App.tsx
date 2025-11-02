@@ -21,6 +21,8 @@ import { VisitantesListaComponets } from "./factures/Visitantes/visitantes";
 import { UsuarioListaComponets } from "./factures/Usuarios/Usuarios";
 import { ListahistoryComponent } from "./factures/history/lista/ListaHistory";
 import { LogsComponets } from "./factures/logsDoSistema/Logs";
+import { ResetComponets } from "./factures/reseteSenha/reseteRadom";
+import { MeuPerfil } from "./factures/meu_perfil/meu_Perdil";
 const App = () => {
   const [appKey, setAppKey] = useState(0);
   const handleReset = () => setAppKey((k) => k + 1);
@@ -38,10 +40,10 @@ const App = () => {
               </ProtectedRoute>
             } >
             <Route path="pendentes" element={
-                <ProtectedRoute allowedPermissions={["REGISTRAR_SAIDA"]}>
-                    <MeusRegistros   key={Date.now()}
-              />
-                </ProtectedRoute>
+              <ProtectedRoute allowedPermissions={["REGISTRAR_ENTRADA"]}>
+                <MeusRegistros key={Date.now()}
+                />
+              </ProtectedRoute>
             } />
             {/* <Route path="meus-pedidos"  element={<MainComponent />} /> */}
           </Route>
@@ -69,73 +71,94 @@ const App = () => {
                 />
               </ProtectedRoute>
             } />
+            <Route path="profile" element={
+              <ProtectedRoute allowedPermissions={["VISUALIZAR_REGISTRO"]}>
+                <MeuPerfil key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
             {/* <Route path="meus-pedidos"  element={<MainComponent />} /> */}
             <Route path="detalhes-registro" element={
-              <ProtectedRoute allowedPermissions={["REGISTRAR_SAIDA", "REGISTRAR_ENTRADA"]}>
+              <ProtectedRoute allowedPermissions={["REGISTRAR_SAIDA", "REGISTRAR_ENTRADA","VISUALIZAR_REGISTRO"]}>
                 <VisualizarRegistro key={Date.now()}
                 />
               </ProtectedRoute>
             } />
 
-            {/*cadastro de usuario*/}
+            {/*cadastro de usuario*/}LogsComponent
           </Route>
-           <Route path="configuracoes" element={
+          <Route path="configuracoes" element={
+            <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+              <ConfigComponent key={Date.now()}
+              />
+            </ProtectedRoute>
+          } >
+            <Route path="reset" element={
+                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                  <ResetComponets key={Date.now()}
+                  />
+                </ProtectedRoute>
+              }></Route>
+              
+            <Route path="cadastro/usuario" element={
               <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                <ConfigComponent key={Date.now()}
+                <RegistroDeUsuarioComponent key={Date.now()}
                 />
               </ProtectedRoute>
-            } >
-              <Route path="cadastro/usuario" element={
-                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                  <RegistroDeUsuarioComponent key={Date.now()}
-                  />
-                </ProtectedRoute>
-              } />
-              <Route path="senha/usuario" element={
-                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                  <AlterarSenhaUsuarioComponent key={Date.now()}
-                  />
-                </ProtectedRoute>
-              } />
-              <Route path="perfil" element={
-                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                  <AdicionarPerfilRouter key={Date.now()}
-                  />
-                </ProtectedRoute>
-              } />
-              <Route path="permissoes" element={
-                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                  <PermissoesComponets key={Date.now()}
-                  />
-                </ProtectedRoute>
-              } />
-              <Route path="visitantes/lista" element={
-                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                  <VisitantesListaComponets key={Date.now()}
-                  />
-                </ProtectedRoute>
-              } />
-               <Route path="usuarios/lista" element={
-                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                  <UsuarioListaComponets key={Date.now()}
-                  />
-                </ProtectedRoute>
-              } />
-              <Route path="historico" element={
-                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                  <ListahistoryComponent key={Date.now()}
-                  />
-                </ProtectedRoute>
-              } />
-              <Route path="logs" element={
-                <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
-                  <LogsComponets key={Date.now()}
-                  />
-                </ProtectedRoute>
-              } />
-            </Route>
+            } />
+            <Route path="senha/usuario" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <AlterarSenhaUsuarioComponent key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
+            <Route path="perfil" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <AdicionarPerfilRouter key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
+            <Route path="permissoes" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <PermissoesComponets key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
+            <Route path="visitantes/lista" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <VisitantesListaComponets key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
+            <Route path="usuarios/lista" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <UsuarioListaComponets key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
 
-          <Route path="/unauthorized" element={<UnauthorizedPage />} />
+            <Route path="historico" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <ListahistoryComponent key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
+            <Route path="portaria/novo" element={
+              <ProtectedRoute allowedPermissions={["CRIAR_REGISTRO"]}>
+                <RegistrosPortaria key={Date.now()}
+                />
+              </ProtectedRoute>
+            }>
+            </Route>
+            <Route path="logs" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <LogsComponets key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
+          </Route>
+
+          <Route path="/unauthorized" element={<UnauthorizedPage />} /> 
           <Route path="*" element={<NotFoundPage />} />
 
         </Routes>
