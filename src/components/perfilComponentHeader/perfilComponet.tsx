@@ -7,7 +7,7 @@ import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import { useNavigate } from "react-router-dom";
+import {  useNavigate } from "react-router-dom";
 import save from "../../service/localStorage/service-localStorage"
 import { contextProvider } from "../../reducer/userProvider/userProvider";
 import { useContext } from "react";
@@ -15,7 +15,7 @@ import { LoadingSecundary } from "../LoadingSecundary/LoadingSecundary";
 import { subjet } from "../../service/jwt/jwtservice";
 const settings = [
   { name: "Minha Conta" },
-   { name: "Portaria Pendentes", permissions: ["REGISTRAR_SAIDA"] },
+  { name: "Portaria Pendentes", permissions: ["REGISTRAR_SAIDA"] },
   { name: "Meus Registros", permissions: ["VISUALIZAR_REGISTRO"] },
   { name: "Criar Registro", permissions: ["CRIAR_REGISTRO"] },
   { name: "Configuraçoẽs", permissions: ["GERENCIAR_USUARIOS"] },
@@ -43,17 +43,16 @@ export const PerfilComponet = () => {
     switch (setting) {
       case "Meus Registros":
         setLoading(true)
-        setTimeout(() => {
-          navigate("/controle/meus-registros");
-          setLoading(false)
-        }, 1000)
+          navigate("/controle/meus-registros",{replace:false});
+        setTimeout(() => setLoading(false), 800);
+
         break;
       case "Minha Conta":
         setLoading(true)
         setTimeout(() => {
-        navigate("/controle/profile");
-        setLoading(false)
-        },1000)
+          navigate("/controle/profile");
+          setLoading(false)
+        }, 1000)
 
         break;
       case "Portaria Pendentes":
@@ -73,13 +72,13 @@ export const PerfilComponet = () => {
       case "Configuraçoẽs":
         setLoading(true)
         setTimeout(() => {
-          navigate("/configuracoes");
+          navigate("/config");
           setLoading(false)
         }, 1000)
         break
       case "Sair":
         removeToken()
-        window.location.href ="/verify";
+        window.location.href = "/verify";
         contex?.logout()
         break;
       default:
@@ -114,7 +113,14 @@ export const PerfilComponet = () => {
       <Box sx={{ flexGrow: 0 }}>
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
-            <Avatar alt={user?.nome} src="/static/images/avatar/2.jpg" />
+            {contex?.usuario?.avatar ? (
+              <Avatar style={{objectFit:"contain"}} alt={user?.nome} src={contex?.usuario?.avatar} />
+
+            ) : (
+              <Avatar alt={user?.nome} src="/static/images/avatar/2.jpg" />
+
+            )
+            }
           </IconButton>
         </Tooltip>
         <Menu
@@ -134,10 +140,10 @@ export const PerfilComponet = () => {
           onClose={handleCloseUserMenu}
         >
           {menuItens.flatMap((setting) => (
-              <MenuItem key={setting.name} onClick={() => handleCloseUserMenu(setting?.name)}>
-                <Typography sx={{ textAlign: 'center' }}>{setting?.name}</Typography>
+            <MenuItem key={setting.name} onClick={() => handleCloseUserMenu(setting?.name)}>
+              <Typography sx={{ textAlign: 'center' }}>{setting?.name}</Typography>
 
-              </MenuItem>
+            </MenuItem>
           ))}
         </Menu>
       </Box>

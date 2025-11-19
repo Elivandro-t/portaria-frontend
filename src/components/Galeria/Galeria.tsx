@@ -51,6 +51,10 @@ const ModalContent = styled.div`
   display: flex;
   flex-direction: column;
   margin-bottom: 10px;
+  @media screen and (max-width: 560px){
+    padding: 10px;
+    
+  }
 `;
 
 const Header = styled.div`
@@ -64,5 +68,5 @@ const Image = styled.img`
   max-height: 100%;
   border-radius: 8px;
   object-fit: contain;
-
+   
 `;

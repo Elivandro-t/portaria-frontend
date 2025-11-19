@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import Template from "./logsCss"
 import Api from "../../service/api"
 import DeleteIcon from '@mui/icons-material/Delete';
@@ -6,16 +6,31 @@ import { TextField, IconButton } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import { PopupComponent } from "../../components/popup/popupComponent";
+import { LoadingSecundary } from "../../components/LoadingSecundary/LoadingSecundary";
+import { Paginator } from "../../components/paginator/paginator";
 export const LogsComponets = () => {
   const [lista, setLista] = useState<any[]>([])
   const [id, setId] = useState(false);
   const [busca, setBusca] = useState("");
-  const [ativo,setAtivo] = useState(false)
-  const onSubmit = async () => {
-    const resposta = await Api.buscaLogs(busca);
+  const [loading, setLoading] = useState(false)
+  const [ativo, setAtivo] = useState(false);
+  const [totaPage, setTotalPage] = useState(0)
+  const onSubmit = async (pageNumer?: any) => {
+    const resposta = await Api.buscaLogs(busca, pageNumer);
+    setLoading(true)
     if (resposta.content) {
-      setLista(resposta.content)
+      setTimeout(() => {
+        setLoading(false);
+        setLista(resposta.content);
+        setTotalPage(resposta.totalPages);
+      }, 1000)
+
+
     }
+  }
+  const handleNextPage = (_: ChangeEvent<unknown>, value: number) => {
+    const valuePage = value - 1;
+    onSubmit(valuePage);
   }
   useEffect(() => {
     if (busca.trim() === "") {
@@ -54,6 +69,7 @@ export const LogsComponets = () => {
             >
               <SearchIcon />
             </IconButton>
+            <Paginator totalPage={totaPage} handleNextPage={handleNextPage}/>
           </Template.CamposInput>
 
           <Template.TableContainer>
@@ -123,7 +139,10 @@ export const LogsComponets = () => {
           </Template.TableContainer>
         </Template.FormSub>
         {ativo &&
-          <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={()=>{}} message={"Deseja realmente atualizar o item com ID"} ativoBtn={false} />
+          <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={() => { }} message={"Deseja realmente atualizar o item com ID"} ativoBtn={false} />
+        }
+        {loading &&
+          <LoadingSecundary />
         }
       </Template.container>
     </>

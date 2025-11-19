@@ -15,7 +15,7 @@ export const HeaderComponent = ({ ativoBusca }: props) => {
     const navigate = useNavigate()
 
     const hendleHome = () => {
-        navigate("/portaria")
+        navigate("/")
     }
 
     return (
@@ -26,7 +26,7 @@ export const HeaderComponent = ({ ativoBusca }: props) => {
                     <Header.logo src={logo} onClick={() => hendleHome()}>
                     </Header.logo>
                     {ativoBusca &&
-                        <Header.busca placeholder="Buscar..." type="search" onChange={e => setBusca(e.target.value)} />
+                        <Header.busca placeholder="Buscar por placa, visitante ou protocolo..." type="search" onChange={e => setBusca(e.target.value)} />
                     }
 
                     {Logued() && (

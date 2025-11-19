@@ -1,9 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import Template from "./registroUsuarioCss"
 import { useForm } from "react-hook-form";
-import Api from "../../service/api"
 import { notify } from "../../service/snackbarService";
 import api from "../../service/api";
+import apiFilial from "../../service/filiaisApi/filiasAPi";
+
+import { subjetUsuarioId } from "../../service/jwt/jwtservice";
 type FormData = {
     nome: string;
     email: string,
@@ -11,43 +13,57 @@ type FormData = {
     password: string,
     filial: number,
     perfilId: number,
-    repeteSenha?: string; // só para validação
+    repeteSenha?: string; 
+    usuarioLogado:any// só para validação
 
 };
 const ocupacao = [
     { nome: "GERENTE OPERACIONAL" },
-    { nome: "PRESIDENTE" },
+    { nome: "GERENTE DE LOGISTICA" },
+    { nome: "GERENTE DE TRANSPORTE" },
+    { nome: "GERENTE DE MANUTENÇÃO" },
     { nome: "PROGRAMADOR" },
     { nome: "FISCAL" },
     { nome: "DIRETOR" },
     { nome: "SUPERVISOR" },
-    { nome: "COORDENADOR" }
+    { nome: "COORDENADOR" },
+    { nome: "PRESIDENTE" }
 
 ]
-const filials = [
-    { id: 1, filial: 81 },
-    { id: 2, filial: 82 },
-    { id: 3, filial: 87 },
-    { id: 4, filial: 116 },
-    { id: 5, filial: 122 },
-    { id: 6, filial: 331 },
-    { id: 7, filial: 335 },
-    { id: 8, filial: 336 }
-]
+// const filials = [
+//     { id: 1, filial: 81 },
+//     { id: 2, filial: 82 },
+//     { id: 3, filial: 87 },
+//     { id: 4, filial: 116 },
+//     { id: 5, filial: 122 },
+//     { id: 6, filial: 331 },
+//     { id: 7, filial: 335 },
+//     { id: 8, filial: 336 }
+// ]
 export const RegistroDeUsuarioComponent = () => {
+    const usuarioLogado = subjetUsuarioId()
 
     const { register, handleSubmit, formState: { errors }, reset, watch } = useForm<FormData>()
     const senha = watch("password"); // observa o valor da senha
 
     const onSubmit = async (data: FormData) => {
+        data.usuarioLogado = usuarioLogado;
         const { repeteSenha, ...dataToSend } = data; // remove repeteSenha
-        const resposta = await Api.cadastroUsuaro(dataToSend);
+        const resposta = await api.cadastroUsuaro(dataToSend);
         if (resposta) {
             notify(resposta.msg, "success")
             reset()
         }
     }
     const [listaPerfil, setListaPerfil] = useState<any[]>();
+     const [filiais, setFiliais] = useState<any[]>([]);
+        const handleSearchFiliais = async () => {
+            const resposta = await apiFilial.lista();
+            if (resposta?.filial) {
+                setFiliais(resposta?.filial)
+            }
+    
+        }
     useEffect(() => {
         const hendleBnt = async () => {
             const resposta = await api.listaPerfil();
@@ -56,6 +72,7 @@ export const RegistroDeUsuarioComponent = () => {
             }
         }
         hendleBnt();
+        handleSearchFiliais();
 
     }, [])
 
@@ -128,8 +145,8 @@ export const RegistroDeUsuarioComponent = () => {
                                 <Template.label >Filial</Template.label>
                                 <Template.SelectItens {...register("filial", { required: "Selecione a filial" })}>
                                     <Template.Options value="">Selecione filial</Template.Options>
-                                    {filials.flatMap((item) => (
-                                        <Template.Options key={item.id} value={item.filial}>{item.filial}</Template.Options>
+                                    {filiais.flatMap((item) => (
+                                        <Template.Options key={item.id} value={item?.numeroFilial}>{item?.numeroFilial} - {item?.nome}</Template.Options>
 
                                     ))}                                </Template.SelectItens>
                                 {errors.filial && <Template.Erros><p>{errors.filial.message}</p></Template.Erros>}

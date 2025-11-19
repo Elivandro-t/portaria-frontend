@@ -2,10 +2,8 @@ import { Outlet, useOutlet } from "react-router-dom";
 import { HeaderComponent } from "../../components/header/Header"
 import Makert from "./homeCss"
 import { useEffect } from "react";
-
 export const HomeComponent = () => {
     const outlet = useOutlet();
-
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])

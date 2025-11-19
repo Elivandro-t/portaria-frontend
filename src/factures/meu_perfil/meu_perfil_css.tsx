@@ -59,19 +59,21 @@ export default {
     /////////ara perfil imagem/////////
 
     container_img: styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
     width:220px;
-    min-height:160px;
+    height:160px;
     margin: 0;
-    background-color: #e9c5c5;
-    border-radius: 5px;
+    aspect-ratio: 4 / 3;
     padding:0.5px;
         color:#0f1724;
     -webkit-font-smoothing:antialiased;
     -moz-osx-font-smoothing:grayscale;
     img{
-        width: 100%;
-        height: 100%;
-        object-fit: cover;
+        max-width: 100%;
+        max-height: 100%;
+        object-fit:contain;
         border-radius: 5px;
     }
         

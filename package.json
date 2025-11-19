@@ -1,7 +1,7 @@
 {
   "name": "portaria",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -45,8 +45,7 @@
     "@types/react-dom": "^19.1.7",
     "@types/react-slick": "^0.23.13",
     "@types/styled-components": "^5.1.34",
-    "@vitejs/plugin-react": "^5.0.4",
-    "@vitejs/plugin-react-swc": "^4.1.0",
+    "@vitejs/plugin-react": "^5.1.0",
     "eslint": "^9.33.0",
     "eslint-plugin-react-hooks": "^5.2.0",
     "eslint-plugin-react-refresh": "^0.4.20",

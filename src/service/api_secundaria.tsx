@@ -34,8 +34,12 @@ const alterarSaida = async (endpoint: string, data: AtualizaStatus, file: File) 
     });
     return resposta.data;
 }
-const solitacaoAutorizado = async (endpoint: string) => {
-    const resposta = await axios.get(base + endpoint)
+const solitacaoAutorizador = async (endpoint: string,usuarioId:any,busca:string) => {
+     const params = new URLSearchParams();
+     params.append("usuario_id",usuarioId)
+     params.append("busca",busca)
+
+    const resposta = await axios.get(base + endpoint,{params:Object.fromEntries(params)})
     return resposta.data
 }
 const listaBloco = async (endpoint:any)=>{
@@ -62,8 +66,8 @@ const consulta = {
         const json = await alterarSaida("/portaria/v1/aguardando_saida", data, file);
         return json;
     },
-    solitacaoAutorizado: async (usuarioId: number) => {
-        const json = await solitacaoAutorizado(`/portaria/v1/solicitacao/autorizador?usuario_id=${usuarioId}`);
+    solitacaoAutorizador: async (usuarioId: number,busca:string) => {
+        const json = await solitacaoAutorizador("/portaria/v1/solicitacao/autorizador",usuarioId,busca);
         return json;
     },
     blocos: async () => {

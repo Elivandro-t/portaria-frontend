@@ -1,13 +1,17 @@
 import { Outlet, useOutlet } from "react-router-dom";
 import { MenuConfig } from "../../components/menuConfig/menuConfig"
 import Template from "./ConfigCss"
-export const ConfigComponent = ()=>{
-    const outlet = useOutlet();
-    return(
-     <Template.container>
-        <MenuConfig></MenuConfig>
-        <Template.container_int>
-                {outlet ? (
+import { useEffect } from "react";
+export const ConfigComponent = () => {
+  const outlet = useOutlet();
+  useEffect(() => {
+    window.scrollTo(0, 0);
+  }, [outlet]);
+  return (
+    <Template.container>
+      <MenuConfig></MenuConfig>
+      <Template.container_int>
+        {outlet ? (
           <Outlet />
         ) : (
           <Template.placeholder>
@@ -15,8 +19,8 @@ export const ConfigComponent = ()=>{
             <p>Selecione uma opção no menu para começar.</p>
           </Template.placeholder>
         )}
-        </Template.container_int>
-     </Template.container>
-        
-    )
+      </Template.container_int>
+    </Template.container>
+
+  )
 }

@@ -3,6 +3,9 @@ interface CamposProps {
     hasError?: boolean;
 }
 
+interface ativo {
+  ativo:any
+}
 export default {
     container: styled.div`
     min-height: 70vh;
@@ -24,6 +27,7 @@ export default {
     font-size: 24px;
     font-weight: bold;
     margin-bottom: 5px;
+    margin-left: 10px;
     color: var(--cor-titulo);
   `,
     FormSub: styled.div`
@@ -99,7 +103,7 @@ export default {
       padding: 10px 15px;
       text-align: left;
       border-bottom: 1px solid #ddd;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       margin: 0;
     }
 
@@ -134,6 +138,12 @@ export default {
   erro:styled.div`
     padding: 10px;
     
+  `,
+  ativo:styled.div<ativo>`
+  width: 15px;
+  height: 15px;
+    background-color: ${({ativo}:any)=>ativo?"#22c55e":"#ef4444"};
+    border-radius: 15px;
   `
     
 }

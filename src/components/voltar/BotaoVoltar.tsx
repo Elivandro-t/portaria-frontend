@@ -7,7 +7,7 @@ import Template from "./btnCss"
 export const BotaoVoltar = () => {
   const navigate = useNavigate();
    const hendleHome = ()=>{
-         navigate("/verify")
+         navigate("/")
    }
   return (
     <Template.container>

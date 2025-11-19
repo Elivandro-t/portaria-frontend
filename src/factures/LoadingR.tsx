@@ -6,7 +6,7 @@ export const LoadingR = () => {
     const isLogged = Logued()
     const navigate = useNavigate();
     const validationUser = () => {
-        const redirect =sessionStorage.getItem("redirectAfterLogin") || "/portaria";
+        const redirect =sessionStorage.getItem("redirectAfterLogin") || "/";
                sessionStorage.removeItem("redirectAfterLogin");
             if (isLogged) {
             navigate(redirect,{ replace: true, state: { refresh: Date.now() } });

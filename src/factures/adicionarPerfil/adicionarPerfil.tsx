@@ -35,7 +35,7 @@ export const AdicionarPerfilRouter = () => {
 
     }
     const hendleBuscaApi = async (data: any) => {
-            const response = await api.AdicionarPefil(id, data.idPerfil);
+            const response = await api.AdicionarPefil(id, data.idPerfil,null as any);
             if (response) {
                 setUpdateModal(false)
                 notify(response.msg, "success")

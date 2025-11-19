@@ -1,11 +1,12 @@
 import IconButton from "@mui/material/IconButton";
 import Template from "./tabelaCss";
 import DeleteIcon from '@mui/icons-material/Delete';
+import { Avatar } from "@mui/material";
 type lista = {
   lista: any[],
-  hendleDelete:(n:any)=>void
+  hendleDelete: (n: any) => void
 }
-export const TableComponent = ({ lista,hendleDelete }: lista) => {
+export const TableComponent = ({ lista, hendleDelete }: lista) => {
 
   return (
     <Template.TableContainer>
@@ -13,8 +14,9 @@ export const TableComponent = ({ lista,hendleDelete }: lista) => {
         <thead>
           <tr>
             <th>ID</th>
+            <th>Avatar</th>
             <th>Nome</th>
-            <th>Tipo Pessoa</th>
+            <th>Telefone</th>
             <th>Data Criação</th>
             <th>Tipo de Acesso</th>
             <th>Ocupação</th>
@@ -26,15 +28,25 @@ export const TableComponent = ({ lista,hendleDelete }: lista) => {
             lista.flatMap((item, key) => (
               <tr key={key}>
                 <td>{item.id}</td>
-                <td>{item.nomeCompleto}</td>
-                <td>{item.tipoPessoa}</td>
+                <td>
+                  {item?.imagem ? (
+                    <Avatar sx={{ width: 40, height: 40, objectFit: 'contain' }} alt={item?.nomeCompleto} src={item?.imagem} />
+
+                  ) : (
+                    <Avatar sx={{ width: 40, height: 40, objectFit: 'contain' }} alt={item?.nomeCompleto} src="/static/images/avatar/2.jpg" />
+
+                  )
+                  }
+                </td>
+                <td>{item?.nomeCompleto}</td>
+                <td>{item?.numeroTelefone}</td>
                 <td>{new Date(item?.dataCriacao as any).toLocaleDateString("pt-BR", {
                   day: "2-digit",
                   month: "long",
                   year: "numeric",
                 })}</td>
-                <td>{item.tipoAcesso}</td>
-                <td>{item.ocupacao}</td>
+                <td>{item?.tipoAcesso}</td>
+                <td>{item?.ocupacao}</td>
                 <td>
                   <Template.trBTN>
                     <IconButton

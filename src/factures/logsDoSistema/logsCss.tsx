@@ -103,7 +103,7 @@ th:nth-child(4) {
       padding: 10px 15px;
       text-align: left;
       border-bottom: 1px solid #ddd;
-      font-size: 0.9rem;
+      font-size: 0.8rem;
       margin: 0;
     }
 

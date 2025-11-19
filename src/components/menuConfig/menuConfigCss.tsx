@@ -13,11 +13,25 @@ export default {
 
     }
   `,
+  areaMenu: styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  
+  `,
 
   menu: styled.div`
     padding: 10px 0;
+             
+             display: none;
+
+    
     @media screen  and (min-width: 760px){
              padding: 0 20px;
+              display: block;
+
+             
+             
 
     }
   `,
@@ -68,6 +82,13 @@ export default {
     color: var(--cor-texto-header);
      object-fit: contain;
      height:38px;
+     @media screen  and (max-width: 760px){
+              display: none;
+
+             
+             
+
+    }
   /* azul suave */
 
     cursor: pointer;
@@ -118,4 +139,16 @@ export default {
   container_int: styled.div`
     padding: 20px;
   `,
+  btnMenu: styled.button`
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    display: none;
+     @media screen  and (max-width: 760px){
+             
+             display: block;
+
+    }
+    
+  `
 };

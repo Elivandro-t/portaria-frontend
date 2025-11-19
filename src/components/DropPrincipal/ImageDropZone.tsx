@@ -24,7 +24,7 @@ interface ImageDropZoneProps {
   titulo?:string,
 }
 
-const ImageDropZone: React.FC<ImageDropZoneProps> = ({ onFileSelect,resetSignal,titulo }) => {
+const DropPrincipal: React.FC<ImageDropZoneProps> = ({ onFileSelect,resetSignal,titulo }) => {
   const [image, setImage] = useState<string | null>(null);
   const options = {
     maxSizeMB: 1, // tamanho máximo (em MB)
@@ -95,4 +95,4 @@ const ImageDropZone: React.FC<ImageDropZoneProps> = ({ onFileSelect,resetSignal,
   );
 };
 
-export default ImageDropZone;
+export default DropPrincipal;

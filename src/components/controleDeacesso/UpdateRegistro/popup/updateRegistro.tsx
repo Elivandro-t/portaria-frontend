@@ -6,6 +6,8 @@ import apiSec from "../../../../service/api_secundaria"
 import type { RegistroVisitante } from "../../../../types/registros";
 import api from "../../../../service/api";
 import { notify } from "../../../../service/snackbarService";
+import serviceTipoPessoa from "../../../../service/tipoPessoaApi/serviceTipoPessoa";
+import { subjet } from "../../../../service/jwt/jwtservice";
 
 type Props = {
   handleCancel: () => void;
@@ -18,7 +20,10 @@ type FormData = {
   nomeCompleto: any
   placaVeiculo: any,
   numeroTelefone: any,
-  bloco: any};
+  bloco: any,
+  tipoPessoa:string,
+  tipoDeAcesso:string
+};
 type bloco = {
   id: number,
   nome: any
@@ -29,11 +34,19 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
       nomeCompleto: data.nomeCompleto || "",
       placaVeiculo: data?.placaVeiculo || "",
       numeroTelefone: data?.visitante.numeroTelefone || "",
-      bloco: data.bloco || ""
+      bloco: data.bloco || "",
+      tipoPessoa:data.tipPessoa,
+      tipoDeAcesso:data?.visitante.tipoAcesso
     },
   })
+  const usuario = subjet();
   const valorSelecionado = watch("bloco")
+  const valorSelecionadoTipo = watch("tipoPessoa")
+   const tipoAcesso = watch("tipoDeAcesso")
   const [blocos, setBlocos] = useState<bloco[]>([])
+  const [ocupacoes, setOcupacao] = useState<any[]>([]);
+  const [recorrencia, setRecorrencia] = useState<any[]>([])
+  
   async function henfleConfirm(dataInput: FormData) {
     dataInput.id = data.id;
     const response  = await api.atualizarRegistro(dataInput);
@@ -42,6 +55,24 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
       handleCancel()
     }
   }
+    const buscaApi = async()=>{
+          const resposta = await serviceTipoPessoa.lista();
+          if(resposta.tipoPessoa){
+               setOcupacao(resposta.tipoPessoa)
+          }
+  
+      }
+       const buscar_recorencia = async () => {
+              const resposta = await serviceTipoPessoa.recorrecia();
+              if (resposta.recorrencia) {
+                  setRecorrencia(resposta.recorrencia)
+              }
+      
+          }
+      useEffect(()=>{
+          buscaApi();
+          buscar_recorencia()
+      },[])
   useEffect(() => {
     const hendleBusca = async () => {
       const resposta = await apiSec.blocos();
@@ -56,6 +87,10 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
     setValue("bloco", data.bloco || "");
     hendleBusca()
   }, [data, setValue])
+
+
+   const permissions: string[] = usuario?.permissoes || [];
+    const permissionEdit = permissions.includes("GERENCIAR_USUARIOS")
   return (
     <Template.container>
       <Template.container_int>
@@ -117,6 +152,46 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
 
             </Template.SelectItens>
           </Template.CamposInput>
+          <Template.CamposInput>
+            <Template.label >Tipo Pessoa</Template.label>
+            <Template.SelectItens {
+              ...register("tipoPessoa")} value={valorSelecionadoTipo} onChange={e => setValue("tipoPessoa", e.target.value)}>
+              {ocupacoes.some(b => b.nome.toLowerCase() === valorSelecionado.toLowerCase()) ? null : (
+                <Template.Options value={valorSelecionadoTipo}>
+                  {valorSelecionadoTipo}
+                </Template.Options>
+
+              )}
+
+              {ocupacoes.map((item) => (
+                <Template.Options key={item.id} value={item.nome.toUpperCase()}>
+                  {item.nome}
+                </Template.Options>
+              ))}
+
+            </Template.SelectItens>
+          </Template.CamposInput>
+          {permissionEdit &&
+             <Template.CamposInput>
+            <Template.label >Recorrencia de Acesso</Template.label>
+            <Template.SelectItens {
+              ...register("tipoDeAcesso")} value={tipoAcesso} onChange={e => setValue("tipoDeAcesso", e.target.value)}>
+              {recorrencia.some(b => b?.nome.toLowerCase() === tipoAcesso.toLowerCase()) ? null : (
+                <Template.Options value={tipoAcesso}>
+                  {tipoAcesso}
+                </Template.Options>
+
+              )}
+
+              {recorrencia.map((item) => (
+                <Template.Options key={item.id} value={item.nome.toUpperCase()}>
+                  {item.nome}
+                </Template.Options>
+              ))}
+
+            </Template.SelectItens>
+          </Template.CamposInput>
+          }
           <Template.buttons>
             <Button
               variant="contained"

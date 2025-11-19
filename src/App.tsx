@@ -1,4 +1,4 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import { BrowserRouter, Route, Routes } from "react-router-dom";
 import { LoadingR } from "./factures/LoadingR";
 import { HomeComponent } from "./factures/home/home";
 import { LoginComponen } from "./factures/auth/login/Login";
@@ -9,8 +9,8 @@ import VisualizarRegistro from "./factures/registros/detalhes_registro/visualiza
 import { RegistrosPortaria } from "./factures/novo registro/registroPortaria";
 import { UnauthorizedPage } from "./factures/unauthorized/unauthorized";
 import { MeusRegistroComponets } from "./factures/registros/meus_registros/meusRegistros";
-import { useState } from "react";
-import { ProviderUser } from "./reducer/userProvider/userProvider";
+import {useState } from "react";
+import {  ProviderUser } from "./reducer/userProvider/userProvider";
 import { ControleDeAcesso } from "./components/controleDeacesso/controledeAcesso";
 import { RegistroDeUsuarioComponent } from "./factures/novoUsuario/registroUsuario";
 import { ConfigComponent } from "./factures/config/config";
@@ -22,17 +22,25 @@ import { UsuarioListaComponets } from "./factures/Usuarios/Usuarios";
 import { ListahistoryComponent } from "./factures/history/lista/ListaHistory";
 import { LogsComponets } from "./factures/logsDoSistema/Logs";
 import { ResetComponets } from "./factures/reseteSenha/reseteRadom";
-import { MeuPerfil } from "./factures/meu_perfil/meu_Perdil";
+import { MeuPerfil } from "./factures/meu_perfil/meu_Perfil";
+import { RedirectByPermissoes } from "./factures/RedirectByPerfil";
+import { subjet } from "./service/jwt/jwtservice";
+import { OutrosPage } from "./factures/outros/outroInfor";
+import { ControleFilial } from "./factures/controle_de_filial_page/controleFIlial";
+import { ListaRegistroComponent } from "./factures/history/RegistroFiliais/ListaRegistroHistory";
 const App = () => {
   const [appKey, setAppKey] = useState(0);
   const handleReset = () => setAppKey((k) => k + 1);
+  const perfil = subjet()
   return (
     //  <LoadingR></LoadingR>
     <ProviderUser key={appKey} onReset={handleReset}>
 
       <BrowserRouter>
         <Routes>
-          <Route path="/" element={<Navigate to="/verify" replace />} />
+          <Route path="/" element={
+            <RedirectByPermissoes permissoes={perfil?.perfil}/>} 
+          />
           <Route path="/portaria"
             element={
               <ProtectedRoute >
@@ -87,18 +95,21 @@ const App = () => {
 
             {/*cadastro de usuario*/}LogsComponent
           </Route>
-          <Route path="configuracoes" element={
+          <Route path="config" element={
             <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
               <ConfigComponent key={Date.now()}
               />
             </ProtectedRoute>
           } >
-            <Route path="reset" element={
+            
+            <Route path="reset" element={ 
                 <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
                   <ResetComponets key={Date.now()}
                   />
                 </ProtectedRoute>
-              }></Route>
+              }>
+                
+              </Route>
               
             <Route path="cadastro/usuario" element={
               <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
@@ -115,6 +126,12 @@ const App = () => {
             <Route path="perfil" element={
               <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
                 <AdicionarPerfilRouter key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
+             <Route path="filiais" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <ControleFilial key={Date.now()}
                 />
               </ProtectedRoute>
             } />
@@ -136,10 +153,22 @@ const App = () => {
                 />
               </ProtectedRoute>
             } />
+            <Route path="outros" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <OutrosPage key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
 
             <Route path="historico" element={
               <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
                 <ListahistoryComponent key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
+            <Route path="portaria" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                <ListaRegistroComponent key={Date.now()}
                 />
               </ProtectedRoute>
             } />

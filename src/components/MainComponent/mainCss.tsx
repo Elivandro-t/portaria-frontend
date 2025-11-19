@@ -11,7 +11,7 @@ position:relative;
    background: ${({ destaque }) => destaque ? coresDestaque[destaque] : "rgba(255, 92, 43, 0.1)"};
 
  /* background-color: rgba(255, 92, 43, 0.1);  */
-    padding: 20px;
+    padding: 20px 5px;
     border-radius: 10px;
 `;
 

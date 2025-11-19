@@ -2,78 +2,63 @@ import Template from "./menuConfigCss";
 import { Link, useNavigate } from "react-router-dom";
 import { BotaoVoltar } from "../voltar/BotaoVoltar";
 import logo from "../../assets/logo portaria (1).png"
+import menuConfig from "./json"
+import MenuIcon from "@mui/icons-material/Menu";
+import { useState } from "react";
+import { SiderBarComponent } from "../sideBar/siderbar";
+
 export const MenuConfig = () => {
     const navigate = useNavigate()
     const hendleHome = () => {
         navigate("/verify")
     }
+    const [open, setOpen] = useState(false);
+    const handleClick = () => {
+        setOpen(false)
+    }
     return (
         <Template.continer>
-            <BotaoVoltar />
+            <Template.areaMenu>
+                <BotaoVoltar />
+                <Template.menu>
+                    <Template.menu_nav>
+                        <Template.menu_ul>
+                            {menuConfig.flatMap((item, index) => (
+                                <Template.menu_li key={index}>
+                                    {item.label}
+                                    <Template.submenu>
+                                        {item.items.map((sub, i) => (
+                                            <div key={i}>
+                                                <Link to={sub?.to as any}>
+                                                    <Template.submenu_item>{sub.label}</Template.submenu_item>
+                                                </Link>
+                                            </div>
+                                        ))}
+                                    </Template.submenu>
+                                </Template.menu_li>
+                            ))}
+                        </Template.menu_ul>
+                    </Template.menu_nav>
+                </Template.menu>
+            </Template.areaMenu>
+            <Template.btnMenu
+                    onClick={() => setOpen(true)}
+                    style={{
+                        background: "transparent",
+                        border: "none",
+                        cursor: "pointer",
+                    }}
+                >
+                    <MenuIcon style={{ fontSize: 24, color: "#fff" }} />
+                </Template.btnMenu>
+
+
             <Template.logo src={logo} onClick={hendleHome} />
-            <Template.menu>
-                <Template.menu_nav>
-                    <Template.menu_ul>
-                        <Template.menu_li>
-                            Configurações
-                            <Template.submenu>
-                                <Link to="/configuracoes/usuarios/lista">
-                                    <Template.submenu_item>Usuários</Template.submenu_item>
-                                </Link>
-                                <Link to="/configuracoes/perfil">
-                                    <Template.submenu_item>Perfis</Template.submenu_item>
+            {open &&
+                <SiderBarComponent setOpen={handleClick} open={open} />
+            }
 
-                                </Link>
-                                <Link to="/configuracoes/permissoes">
-                                    <Template.submenu_item>Permissões</Template.submenu_item>
-                                </Link>
-                                <Link to="/configuracoes/logs">
-                                    <Template.submenu_item>Logs</Template.submenu_item>
-                                </Link>
-                            </Template.submenu>
-                        </Template.menu_li>
-                        <Template.menu_li>
-                            Portaria
-                            <Template.submenu>
-                                <Link to="/configuracoes/portaria/novo">
-                                    <Template.submenu_item>Solicitar entrada</Template.submenu_item>
-                                </Link>
-                                <Link to={"/portaria/pendentes"}>
-                                    <Template.submenu_item>Entradas Pendentes</Template.submenu_item>
-                                </Link>
-                                <Template.submenu_item>Saidas</Template.submenu_item>
-                            </Template.submenu>
-                        </Template.menu_li>
-                        <Template.menu_li>
-                            Visitantes
-                            <Template.submenu>
-                                <Template.submenu_item>Entrada</Template.submenu_item>
-                                <Template.submenu_item>Saída</Template.submenu_item>
-                                <Template.submenu_item>Relatórios</Template.submenu_item>
-                                <Link to="/configuracoes/visitantes/lista">
-                                    <Template.submenu_item>Quantidade</Template.submenu_item>
-
-                                </Link>
-                                <Link to="/configuracoes/historico">
-                                    <Template.submenu_item>Historico</Template.submenu_item>
-                                </Link>
-                            </Template.submenu>
-                        </Template.menu_li>
-                        <Template.menu_li>
-                            Usuario
-                            <Template.submenu>
-
-                                <Link to="/configuracoes/cadastro/usuario">
-                                    <Template.submenu_item >cadastro</Template.submenu_item>
-                                </Link>
-                                <Link to="/configuracoes/reset">
-                                    <Template.submenu_item>resetar senha</Template.submenu_item>
-                                </Link>
-                            </Template.submenu>
-                        </Template.menu_li>
-                    </Template.menu_ul>
-                </Template.menu_nav>
-            </Template.menu>
         </Template.continer>
+
     );
 };

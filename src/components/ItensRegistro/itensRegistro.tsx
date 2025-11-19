@@ -25,8 +25,27 @@ export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visib
         // setVisibleCount(prev=>prev+1)
         hendleBusca()
     }
+const handleConvertData = (data: any) => {
+  const date = new Date(data);
 
+  const day = String(date.getDate()).padStart(2, "0"); // dia com 2 dígitos
+  const month = String(date.getMonth() + 1).padStart(2, "0"); // mês (0-indexado)
+  const year = date.getFullYear();
 
+  const hours = String(date.getHours()).padStart(2, "0");
+  const minutes = String(date.getMinutes()).padStart(2, "0");
+
+  return `${day}/${month}/${year} às ${hours}:${minutes}`;
+};
+    const handleConvetData = (data: any) => {
+        return new Date(data).toLocaleDateString("pt-BR", {
+            day: "2-digit",
+            month: "long",
+            year: "numeric",
+            hour: "2-digit",
+            minute: "2-digit",
+        });
+    }
     return (
         <Template.area_pedidos>
             {/* <Template.titulo>Solicitações</Template.titulo> */}
@@ -45,37 +64,37 @@ export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visib
                     lista.map((item) => (
                         <div key={item.id}>
                             <Template.dataPedido >
-                                {"Criado " + new Date(item?.dataCriacao).toLocaleDateString("pt-BR", {
-                                    day: "2-digit",
-                                    month: "long",
-                                    year: "numeric",
-                                    hour: "2-digit",
-                                    minute: "2-digit",
-                                })}
+                                {"Criado " + handleConvetData(item?.dataCriacao)}
                             </Template.dataPedido>
                             <Template.cardItem onClick={() => hendleDetalhesPedidos(item?.id)} >
                                 <Template.card_item_header>
                                     <Template.numeroDoPedido>Protocolo #{item?.protocolo}</Template.numeroDoPedido>
-                                    <Chip style={{ width: 150, fontSize: 10 }} color={retornaCorStatus(item?.status)} label={item?.status.replace("_", " ")} variant="outlined" />
+                                    <Template.AreaStatus>
+                                        <Chip style={{ width: 150, fontSize: 10 }} color={retornaCorStatus(item?.status)} label={item?.status.replace("_", " ")} variant="outlined" />
+                                        {item?.entrada?.dataEntrada &&
+                                            <span style={{fontSize:13}}><strong>Entrada: </strong><small>{handleConvertData(item?.entrada?.dataEntrada)}</small></span>
+
+                                        }
+                                    </Template.AreaStatus>
                                 </Template.card_item_header>
                                 <Template.card_item_center>
                                     <Template.Image src={item?.visitante?.imagem} />
                                     <Template.Areaitem>
                                         <Template.inforLabel>
                                             <Template.Span>Placa: </Template.Span>
-                                            <Template.Infor>{item.placaVeiculo}</Template.Infor>
+                                            <Template.Infor>{item?.placaVeiculo}</Template.Infor>
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Nome: </Template.Span>
-                                            <Template.Infor>{item?.visitante.nomeCompleto.toUpperCase()}</Template.Infor>
+                                            <Template.Infor>{item?.visitante?.nomeCompleto.toUpperCase()}</Template.Infor>
                                         </Template.inforLabel>
                                         <Template.inforLabel>
-                                            <Template.Span>Tipo Pessoa: </Template.Span>
+                                            <Template.Span>Tipo de Pessoa: </Template.Span>
                                             <Template.Infor>{item.tipPessoa.toUpperCase()}</Template.Infor>
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Acesso: </Template.Span>
-                                            <Template.Infor>{item?.visitante.tipoAcesso}</Template.Infor>
+                                            <Template.Infor>{item?.visitante?.tipoAcesso}</Template.Infor>
                                         </Template.inforLabel>
 
                                     </Template.Areaitem>

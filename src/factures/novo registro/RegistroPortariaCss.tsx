@@ -5,7 +5,7 @@ interface CamposProps {
 
 export default {
     container: styled.div`
-    padding: 40px 10px;
+    padding: 20px 10px;
 
     height: 100vh;
 
@@ -16,7 +16,7 @@ export default {
     gap: 10px;
      max-width: 700px;
     margin: 0 auto;
-    padding: 5px 56px;
+    padding: 10px 56px;
     width: 100%;
    @media screen {
     padding: 10px 0;
@@ -42,13 +42,16 @@ export default {
     gap: 10px;
     `,
     label: styled.label`
-    font-size: 0.95rem;        // tamanho equilibrado
+    font-size: 0.65rem;        // tamanho equilibrado
     font-weight: 500;          // levemente forte, mas não pesado
     color: var(--cor-texto-campos);            // tom claro suave (ótimo em fundos escuros)
     font-family: "Inter", sans-serif;
     letter-spacing: 0.3px;     // pequeno espaçamento entre letras
     margin-bottom: 6px;        // dá um respiro entre label e input
     display: inline-block;
+    @media screen  and (min-width: 560px) {
+       font-size: 0.85rem;    
+    }
     `,
     CamposInput: styled.div`
     width: 100%;
@@ -78,6 +81,21 @@ export default {
     padding:5px;
 
 
+    `,
+    labelCheck:styled.label`
+    display: flex;
+    align-items: center;
+    text-align: center;
+    gap: 10px;
+    margin:5px 0 ;
+    `,
+    checkbox:styled.input`
+    height: 15px;
+    padding: 5px;
+    display: flex;
+    margin-left: 25px;
+    gap: 10px;
+    width: 15px;
     `,
     SelectItens: styled.select<CamposProps>`
     width: 100%;
@@ -143,5 +161,10 @@ export default {
     padding:5px 0;
       display: flex;
       gap: 10px;
+    `,
+    btnDivider:styled.div`
+      display: flex;
+      width: 100%;
+      align-items: center;
     `
 }

@@ -14,10 +14,10 @@ import {
     Input,
     Password
 } from "./Container"
-import logo from "../../../assets/ptcontrole (1).png"
+import logo from "../../../assets/ptcontroleBanner.png"
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import salve from "../../../service/localStorage/service-localStorage"
 import VisibilityIcon from '@mui/icons-material/Visibility';         // 👁️ olho aberto
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';   // 🙈 olho fechado
@@ -39,7 +39,7 @@ export const LoginComponen = () => {
             localStorage.setItem("order", resposta.usuario.id as any)
             setTimeout(() => {
                 setLoading(false);
-                window.location.href = "/portaria"
+                window.location.href = "/"
             }, 1000);
         }
 

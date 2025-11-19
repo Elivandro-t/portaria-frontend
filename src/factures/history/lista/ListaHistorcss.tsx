@@ -111,10 +111,10 @@ export default {
     font-family: "Inter", sans-serif;  
     
     th, td {
-      padding: 10px 15px;
+      padding: 10px 13px;
       text-align: left;
       border-bottom: 1px solid #ddd;
-      font-size: 0.9rem;
+      font-size: 0.7rem;
       margin: 0;
     }
 
@@ -149,6 +149,47 @@ export default {
   erro:styled.div`
     padding: 10px;
     
-  `
+  `,
+  imagemArea:styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 480px;
+  `,
+  tituloLabel:styled.label`
+  font-size: 16px;
+
+  `,
+   imgemVisitante:styled.img`
+    width: 80px;
+    height: 80px;
+    object-fit: cover;
+  `,
+  imgem:styled.img`
+    width: 280px;
+    height: 200px;
+    object-fit: cover;
+  `,
+  divArea:styled.div`
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+    
+  `,
+  btnDownload:styled.div`
+   position: absolute;
+   align-items: center;
+   padding: 10px;
+   right: 0;
+   top: 20px;
+    
+  `,
+   visitante: styled.div`
+    display: flex;
+    align-items: center;
+    gap: 10px;
+     margin: 5px 10px;
+    `,
     
 }

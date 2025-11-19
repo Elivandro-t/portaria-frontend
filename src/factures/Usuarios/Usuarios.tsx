@@ -1,55 +1,79 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, type ChangeEvent } from "react";
 import Template from "./UsuariosCss"
 import Api from "../../service/api"
 import AddIcon from "@mui/icons-material/Add";
+import Avatar from '@mui/material/Avatar';
 import { TextField, IconButton } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
+import LockIcon from '@mui/icons-material/Lock';
+import LockOpenIcon from '@mui/icons-material/LockOpen';
+
 import { useNavigate } from "react-router-dom";
 import { notify } from "../../service/snackbarService";
 import api from "../../service/api";
 import { PopupUpdatePerfilComponent } from "../../components/updatePerfilComponent/popup/updatePerfil";
+import { Paginator } from "../../components/paginator/paginator";
+import { LoadingSecundary } from "../../components/LoadingSecundary/LoadingSecundary";
 export const UsuarioListaComponets = () => {
   const [lista, setLista] = useState<any[]>([])
-  const [id, setId] = useState(false);
+  const [id, setId] = useState('');
   const [busca, setBusca] = useState("")
+  const [totaPage, setTotalPage] = useState(0);
   const nativete = useNavigate()
-  const onSubmit = async () => {
-    const resposta = await Api.listAusuario(busca.trim());
+  const [loading, setLoading] = useState(false);
+  const onSubmit = async (valuePage?: any) => {
+    setLoading(true);
+    const resposta = await Api.listAusuario(busca.trim(), valuePage);
     if (resposta) {
-      setLista(resposta.content)
+      setTimeout(() => {
+        setLoading(false);
+        setLista(resposta.content);
+        setTotalPage(resposta?.totalPages);
+      }, 1000);
     }
+  }
+  const handleNextPage = (_: ChangeEvent<unknown>, value: number) => {
+    const valuePage = value - 1;
+    onSubmit(valuePage);
   }
   useEffect(() => {
     if (busca.trim() === "") {
       onSubmit(); // se o campo estiver vazio, busca toda a lista
     }
   }, [busca])
-  const hendleUpdate = (itemResposta:any) => {
+  const hendleUpdate = (itemResposta: any) => {
     setId(itemResposta.id)
     setUpdateModal(true)
-    console.log("data "+itemResposta)
   }
   const handleNovoUsuario = () => {
-    nativete("/configuracoes/cadastro/usuario")
+    nativete("/config/cadastro/usuario")
   }
+  const handleAtivo = (idusuario: any) => {
+    const ativo = true;
+    hendleBuscaApi(null, ativo, idusuario);
+    console.log(" ativo " + ativo + " susuario " + idusuario)
+  }
+  const handleAtivoFalse = (idusuario: any) => {
+    const ativo = false;
+    hendleBuscaApi(null, ativo, idusuario);
+  }
+  const [updateAtivo, setUpdateModal] = useState(false)
+  const hendleBuscaApi = async (data?: any, ativo?: any, usuarioId?: any) => {
+    const idFinal = id || usuarioId;
+    const response = await api.AdicionarPefil(idFinal, data?.idPerfil, ativo);
+    if (response) {
+        setUpdateModal(false)
+        notify(response.msg, "success")
+        onSubmit()
 
-  const [updateAtivo,setUpdateModal]=useState(false)
-  const hendleBuscaApi = async (data: any) => {
-              const response = await api.AdicionarPefil(id, data.idPerfil);
-              if (response) {
-                  setUpdateModal(false)
-                  notify(response.msg, "success")
-                   setTimeout(()=>{
-                   onSubmit()
-                   },1000)
-  
-              }
-  
-      }
+    }
+
+  }
   return (
     <>
       <Template.container>
+        <Template.titulo>Lista de Usuarios</Template.titulo>
         <Template.FormSub >
           <Template.CamposInput>
             <TextField
@@ -79,16 +103,19 @@ export const UsuarioListaComponets = () => {
             >
               <AddIcon />
             </IconButton>
+            <Paginator totalPage={totaPage} handleNextPage={handleNextPage} />
           </Template.CamposInput>
           <Template.TableContainer>
             <Template.Table>
               <thead>
                 <tr>
+                  <th>Avatar</th>
                   <th>Nome</th>
                   <th>Email</th>
                   <th>Função</th>
                   <th>Filial</th>
                   <th>Pefil</th>
+                  <th>Status</th>
                   <th></th>
                 </tr>
               </thead>
@@ -99,11 +126,24 @@ export const UsuarioListaComponets = () => {
                 {
                   lista.flatMap((item, key) => (
                     <tr key={key}>
+                      <td>
+                        {item?.avatar ? (
+                          <Avatar sx={{ width: 40, height: 40, objectFit: 'contain' }} alt={item?.nome} src={item?.avatar} />
+
+                        ) : (
+                          <Avatar sx={{ width: 40, height: 40, objectFit: 'contain' }} alt={item.nome} src="/static/images/avatar/2.jpg" />
+
+                        )
+                        }
+                      </td>
                       <td>{item.nome}</td>
                       <td>{item.email}</td>
                       <td>{item.ocupacaoOperacional}</td>
                       <td>{item.filial}</td>
-                       <td>{item?.perfil?.nome}</td>
+                      <td>{item?.perfil?.nome}</td>
+                      <td>
+                        <Template.ativo ativo={item?.ativo}></Template.ativo>
+                      </td>
                       <td >
                         <Template.trBTN>
                           <IconButton
@@ -116,6 +156,29 @@ export const UsuarioListaComponets = () => {
                           >
                             <EditIcon />
                           </IconButton>
+                          {item.ativo ? (
+                            <IconButton
+                              aria-label="LockIcon"
+                              onClick={() => handleAtivoFalse(item.id)}
+                              sx={{
+                                color: "green",
+                                "&:hover": { backgroundColor: "#e0e0e0" },
+                              }}
+                            >
+                              <LockOpenIcon />
+                            </IconButton>
+                          ) : (
+                            <IconButton
+                              aria-label="LockOpenIcon"
+                              onClick={() => handleAtivo(item.id)}
+                              sx={{
+                                color: "red",
+                                "&:hover": { backgroundColor: "#e0e0e0" },
+                              }}
+                            >
+                              <LockIcon />
+                            </IconButton>
+                          )}
                         </Template.trBTN>
                       </td>
                     </tr>
@@ -130,8 +193,11 @@ export const UsuarioListaComponets = () => {
             throw new Error("Function not implemented.");
           }} message={"Deseja realmente atualizar o item com ID"} ativoBtn={ativo} />
         } */}
-        {updateAtivo&&
-        <PopupUpdatePerfilComponent ID={undefined} handleConfirm={hendleBuscaApi} handleCancel={()=>setUpdateModal(false)} message={""} ativoBtn={false}/>
+        {updateAtivo &&
+          <PopupUpdatePerfilComponent ID={undefined} handleConfirm={(w)=>hendleBuscaApi(w,null,null)} handleCancel={() => setUpdateModal(false)} message={""} ativoBtn={false} />
+        }
+        {loading &&
+          <LoadingSecundary />
         }
       </Template.container>
     </>

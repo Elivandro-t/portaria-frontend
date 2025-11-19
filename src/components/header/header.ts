@@ -9,10 +9,11 @@ export default {
     justify-content: space-between;
     font-family: 'Segoe UI', sans-serif;
     padding:10px 0;
+      padding:10px 10px;
     background: var(--header-background);
     color: white;
-     @media screen and (min-width: 560px){
-          padding:10px 40px;
+     @media screen and (min-width: 700px){
+          padding:10px 30px;
 
     }
    
@@ -24,6 +25,7 @@ export default {
     color: var(--cor-texto-header);
      object-fit: contain;
      height:35px;
+     font-size: 12px;
   /* azul suave */
 
     cursor: pointer;

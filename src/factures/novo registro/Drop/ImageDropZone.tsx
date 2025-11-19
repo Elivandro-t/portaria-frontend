@@ -88,7 +88,7 @@ const ImageDropZone: React.FC<ImageDropZoneProps> = ({ onFileSelect,resetSignal,
       ) : (
         <Template.Text>
           {isDragActive
-            ? "Solte a imagem aqui..."
+            ? "Solte a imagem aqui...."
             : "Arraste e solte uma imagem ou clique para selecionar"}
         </Template.Text>
       )}

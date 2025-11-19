@@ -1,4 +1,4 @@
-import ImageDropZone from "../../factures/novo registro/Drop/ImageDropZone";
+import DropPrincipal from "../DropPrincipal/ImageDropZone";
 import Template from "./popupcss";
 import { Button, Typography } from "@mui/material";
 
@@ -22,7 +22,7 @@ export const ModalSelectImagemUsuarioComponent = ({ handleConfirm,handleFileSele
               {message}
             </Typography>
           </Typography>
-          <ImageDropZone onFileSelect={handleFileSelect} resetSignal={resetSignal}/>
+          <DropPrincipal onFileSelect={handleFileSelect} resetSignal={resetSignal}/>
 
           <Template.buttons>
             {ativoBtn &&

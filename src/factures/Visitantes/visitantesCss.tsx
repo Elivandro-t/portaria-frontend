@@ -80,6 +80,12 @@ export default {
      
     
     `,
+    paginator:styled.div`
+      display: flex;
+      justify-content: end;
+      margin-right: 10px;
+      margin-bottom: 25px;
+    `
    
     
 }

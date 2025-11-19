@@ -62,7 +62,7 @@ export default {
     display: flex;
     align-items: center;
     gap: 20px;
-    @media screen and (max-width: 700px) {
+    @media screen and (max-width: 420px) {
       justify-content: space-between;
 
     }
@@ -80,12 +80,18 @@ export default {
     border-radius: 10px;
     font-size: 14px;
   `,
+  AreaStatus:styled.div`
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+  `,
 
   Image: styled.img`
      width: 80px;
   height: 80px;
   border-radius: 10%;
   object-fit: cover;
+  object-position: center top;
   border: 2px solid #ddd;
   `,
   dataPedido: styled.div`

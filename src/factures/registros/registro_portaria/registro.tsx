@@ -28,25 +28,26 @@ export const MeusRegistros = () => {
         carregarRegistros(novoSize);
     }
     useEffect(() => {
-        carregarRegistros()
-    }, [user?.filial,usuario?.busca])
+            carregarRegistros()
+        
+    }, [user?.filial, usuario?.busca])
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
 
     const hendleDetalhesPedidos = (numeroDoRegistro: string) => {
         setLoading(true);
         setTimeout(() => {
-            navigate(`/controle/detalhes-registro?order=${numeroDoRegistro}`, { replace: true, state: { refresh: Date.now() } })
+            navigate(`/controle/detalhes-registro?order=${numeroDoRegistro}`, { replace: false, state: { refresh: Date.now() } })
         }, 2000)
     }
 
     return (
         <Template.container>
             <ItensRegistro lista={lista} hendleDetalhesPedidos={hendleDetalhesPedidos} hendleBusca={exibirMais} visibleCount={totalElements} loading={loading}></ItensRegistro>
-                {loading &&
-                 <LoadingSecundary></LoadingSecundary>
-                }
-            
+            {loading &&
+                <LoadingSecundary></LoadingSecundary>
+            }
+
         </Template.container>
     )
 }

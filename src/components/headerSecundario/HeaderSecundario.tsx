@@ -1,9 +1,10 @@
+import { BotaoVoltar } from "../voltar/BotaoVoltar";
 import Header from "./headerSecundario"
 import { useNavigate } from "react-router-dom";
 export const HeaderSecundarioComponent = () => {
     const navigate = useNavigate()
     const hendleHome = () => {
-        navigate("/portaria")
+        navigate(-1)
     }
     return (
         <>
@@ -11,10 +12,9 @@ export const HeaderSecundarioComponent = () => {
                 <Header.container>
                     
                         <Header.btnLogin>
-                            <Header.ButtomService onClick={hendleHome} >
+                            {/* <Header.ButtomService onClick={hendleHome} >
                                 {/* <ArrowBackIcon /> */}
-                                Voltar
-                            </Header.ButtomService>
+                                <BotaoVoltar/>
                     
                         </Header.btnLogin>
                      <Header.logo onClick={() => hendleHome()}>
