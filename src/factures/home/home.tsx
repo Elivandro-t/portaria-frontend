@@ -2,14 +2,16 @@ import { Outlet, useOutlet } from "react-router-dom";
 import { HeaderComponent } from "../../components/header/Header"
 import Makert from "./homeCss"
 import { useEffect } from "react";
+import { subjet } from "../../service/jwt/jwtservice";
 export const HomeComponent = () => {
+    const user = subjet()
     const outlet = useOutlet();
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
     return (
         <Makert.container>
-            <HeaderComponent  ativoBusca={outlet}/>
+            <HeaderComponent filial={user?.filial}  ativoBusca={outlet}/>
             <Makert.Container_int>
                 {outlet ? (
                     <Outlet />

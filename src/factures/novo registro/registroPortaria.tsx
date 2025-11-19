@@ -24,7 +24,7 @@ type FormData = {
     descricao: string,
     ocupacaoLiberada: string,
     criadorId: number,
-    globalAtivo?: boolean
+    globalAtivo?: any
 };
 const Resize = styled.span`
   color: red;
@@ -47,7 +47,11 @@ export const ocupacoesLiberada = [
 
 export const RegistrosPortaria = () => {
 
-    const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm<FormData>()
+    const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm<FormData>({
+    defaultValues: {
+        globalAtivo: "false",   // ou "true"
+    }
+})
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [resetCounter, setResetCounter] = useState(0);
     const [ocupacoes, setOcupacao] = useState<any[]>([])
@@ -234,12 +238,12 @@ export const RegistrosPortaria = () => {
                                         </Template.label>
                                         <Template.labelCheck style={{ display: "flex" }}>
                                             <Template.checkbox type="radio" value="true" {
-                                                ...register("globalAtivo")} checked />
+                                                ...register("globalAtivo")}  />
                                             <small>Sim</small>
                                         </Template.labelCheck>
                                         <Template.labelCheck>
                                             <Template.checkbox type="radio" value="false"{
-                                                ...register("globalAtivo")} checked />
+                                                ...register("globalAtivo")}  />
                                             <small>Não</small>
                                         </Template.labelCheck>
                                     </Template.CamposInput>

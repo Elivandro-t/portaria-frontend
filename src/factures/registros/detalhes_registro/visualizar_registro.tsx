@@ -197,7 +197,7 @@ const VisualizarRegistro = () => {
                   <Template.AreaItemJustRigth>
                     <Template.Label>Unidade / Filial:</Template.Label>
                     <Template.LabelSubtitulo>
-                      {item?.filial ? item?.filial : "N/A"}
+                      {item?.visitante.filial ? item?.visitante.filial : "N/A"}
                     </Template.LabelSubtitulo>
                   </Template.AreaItemJustRigth>
                 </Template.SummaryRow>
@@ -241,9 +241,9 @@ const VisualizarRegistro = () => {
                     {
 
                       item?.status.includes("AGUARDANDO_ENTRADA") ? (
-                        <Template.Button ativo={item?.ativo || !selectedFile} onClick={() => solicitarLiberacao(item?.id)}>Solicitar Liberação</Template.Button>
+                        <Template.Button ativo={item?.ativo || !selectedFile} onClick={() => solicitarLiberacao(item?.id)}>Liberar Entrada</Template.Button>
                       ) : (
-                        <Template.Button ativo={item?.ativo} onClick={() => SolicitarSaida(item?.id)}>Solicitar Saida</Template.Button>
+                        <Template.Button ativo={item?.ativo} onClick={() => SolicitarSaida(item?.id)}>Liberar Saida</Template.Button>
                       )
                     }
                   </>

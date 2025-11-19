@@ -7,9 +7,10 @@ import { contextProvider } from "../../reducer/userProvider/userProvider";
 import { subjet } from "../../service/jwt/jwtservice";
 import logo from "../../assets/logo portaria (1).png"
 type props = {
-    ativoBusca?: any
+    ativoBusca?: any,
+    filial?:any
 }
-export const HeaderComponent = ({ ativoBusca }: props) => {
+export const HeaderComponent = ({ ativoBusca,filial }: props) => {
     const { setBusca } = useContext(contextProvider) as any;
     const usuario = subjet();
     const navigate = useNavigate()
@@ -22,9 +23,11 @@ export const HeaderComponent = ({ ativoBusca }: props) => {
         <>
             <Header.areaHeader>
                 <Header.container>
-
-                    <Header.logo src={logo} onClick={() => hendleHome()}>
-                    </Header.logo>
+                    <Header.areaLogo>
+                      <Header.logo src={logo} onClick={() => hendleHome()}/>
+                      <span>CD - {filial}</span>
+                    </Header.areaLogo>
+                    
                     {ativoBusca &&
                         <Header.busca placeholder="Buscar por placa, visitante ou protocolo..." type="search" onChange={e => setBusca(e.target.value)} />
                     }

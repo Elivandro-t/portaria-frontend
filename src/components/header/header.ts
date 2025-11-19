@@ -12,6 +12,12 @@ export default {
       padding:10px 10px;
     background: var(--header-background);
     color: white;
+    span{
+      width: 65px;
+      font-weight: bold;
+      font-size: 14px;
+      text-align: center;
+    }
      @media screen and (min-width: 700px){
           padding:10px 30px;
 
@@ -24,17 +30,25 @@ export default {
     padding: 0 5px;
     color: var(--cor-texto-header);
      object-fit: contain;
+     object-position: center top;
      height:35px;
      font-size: 12px;
+     display: none;
   /* azul suave */
 
     cursor: pointer;
     @media screen and (min-width: 560px){
+      display: block;
          font-size: 14px;
         font-weight: 600;
 
 
     }
+    `,
+    areaLogo:styled.div`
+    display: flex;
+    gap: 10px;
+    align-items: center;
     `,
   busca: styled.input`
       width:90%;
