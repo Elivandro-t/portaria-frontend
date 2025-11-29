@@ -47,7 +47,7 @@ export default {
      margin: 5px 0;
     `,
     Select: styled.div`
-    width: 100%;
+    width: 50%;
     display: flex;
     flex-direction: column;
     gap: 10px; 
@@ -56,7 +56,7 @@ export default {
     Campos: styled.input.withConfig({
         shouldForwardProp: (prop) => prop !== "hasError",
     }) <CamposProps>`
-    width: 100%;
+    width: 320px;
     height: 38px;
     border:1px solid #d6d6d6;
     background-color:#FFF;
@@ -81,10 +81,11 @@ export default {
     
     `,
     paginator:styled.div`
+    width: 100%;
       display: flex;
-      justify-content: end;
-      margin-right: 10px;
-      margin-bottom: 25px;
+      align-items: center;
+      flex-direction: row-reverse;
+      gap: 10px;
     `
    
     

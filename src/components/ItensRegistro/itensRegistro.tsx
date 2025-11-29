@@ -1,6 +1,10 @@
 import Chip from "@mui/material/Chip"
 import Template from "./ItensRegistroCss"
+import { ChevronRight } from "lucide-react";
 
+import { Alert, Button } from "@mui/material";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+import CardSkeleton from "../skeleton/registroSkeleon/registroSkelen";
 type lista = {
     lista: any[],
     hendleDetalhesPedidos: (n: any) => void,
@@ -25,18 +29,18 @@ export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visib
         // setVisibleCount(prev=>prev+1)
         hendleBusca()
     }
-const handleConvertData = (data: any) => {
-  const date = new Date(data);
+    const handleConvertData = (data: any) => {
+        const date = new Date(data);
 
-  const day = String(date.getDate()).padStart(2, "0"); // dia com 2 dígitos
-  const month = String(date.getMonth() + 1).padStart(2, "0"); // mês (0-indexado)
-  const year = date.getFullYear();
+        const day = String(date.getDate()).padStart(2, "0"); // dia com 2 dígitos
+        const month = String(date.getMonth() + 1).padStart(2, "0"); // mês (0-indexado)
+        const year = date.getFullYear();
 
-  const hours = String(date.getHours()).padStart(2, "0");
-  const minutes = String(date.getMinutes()).padStart(2, "0");
+        const hours = String(date.getHours()).padStart(2, "0");
+        const minutes = String(date.getMinutes()).padStart(2, "0");
 
-  return `${day}/${month}/${year} às ${hours}:${minutes}`;
-};
+        return `${day}/${month}/${year} às ${hours}:${minutes}`;
+    };
     const handleConvetData = (data: any) => {
         return new Date(data).toLocaleDateString("pt-BR", {
             day: "2-digit",
@@ -46,15 +50,18 @@ const handleConvertData = (data: any) => {
             minute: "2-digit",
         });
     }
+    const renderSkeletons = () => {
+        return Array.from({ length: 4 }).map((_, i) => (
+            <CardSkeleton key={i} />
+        ));
+    };
     return (
         <Template.area_pedidos>
             {/* <Template.titulo>Solicitações</Template.titulo> */}
             <Template.pedidos>
                 {loading ? (
-                    <Template.loading>
-                        <>Carregando...</>
-                    </Template.loading>
-                ) : lista.length === 0 ? (
+                    renderSkeletons()
+                ) : !loading && lista.length === 0 ? (
                     <Template.semItens>
                         <Template.iconSemItens />
                         Nenhum item encontrado
@@ -66,15 +73,33 @@ const handleConvertData = (data: any) => {
                             <Template.dataPedido >
                                 {"Criado " + handleConvetData(item?.dataCriacao)}
                             </Template.dataPedido>
-                            <Template.cardItem onClick={() => hendleDetalhesPedidos(item?.id)} >
+                            <Template.cardItem  >
+                                {item?.prioridadeAtrasoAtivo &&
+                                    <Alert icon={<WarningAmberIcon fontSize="small" sx={{ fontSize: '0.75rem' }} />} severity="warning"
+                                        sx={{
+                                            padding: "0 5px",
+                                            fontSize: "0.52rem",
+                                            display: "flex",
+                                            alignItems: "center",
+                                            "& .MuiAlert-icon": {
+                                                fontSize: "0.9rem",
+                                                marginRight: "4px",
+                                            }
+
+                                        }}
+                                    >
+                                        {item.prioridadeAviso ? item.prioridadeAviso : item.prioridadeAtraso}
+                                    </Alert>
+                                }
                                 <Template.card_item_header>
                                     <Template.numeroDoPedido>Protocolo #{item?.protocolo}</Template.numeroDoPedido>
                                     <Template.AreaStatus>
-                                        <Chip style={{ width: 150, fontSize: 10 }} color={retornaCorStatus(item?.status)} label={item?.status.replace("_", " ")} variant="outlined" />
+                                        <Chip style={{ width: 140, fontSize: 9 }} color={retornaCorStatus(item?.status)} label={item?.status.replace("_", " ")} variant="outlined" />
                                         {item?.entrada?.dataEntrada &&
-                                            <span style={{fontSize:13}}><strong>Entrada: </strong><small>{handleConvertData(item?.entrada?.dataEntrada)}</small></span>
+                                            <span style={{ fontSize: 11 }}><strong>Entrada: </strong><small>{handleConvertData(item?.entrada?.dataEntrada)}</small></span>
 
                                         }
+
                                     </Template.AreaStatus>
                                 </Template.card_item_header>
                                 <Template.card_item_center>
@@ -86,7 +111,7 @@ const handleConvertData = (data: any) => {
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Nome: </Template.Span>
-                                            <Template.Infor>{item?.visitante?.nomeCompleto.toUpperCase()}</Template.Infor>
+                                            <Template.Infor>{item?.visitante?.nomeCompleto.toUpperCase().split(" ")[0]}</Template.Infor>
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Tipo de Pessoa: </Template.Span>
@@ -94,10 +119,39 @@ const handleConvertData = (data: any) => {
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Acesso: </Template.Span>
-                                            <Template.Infor>{item?.visitante?.tipoAcesso}</Template.Infor>
+                                            <Template.Infor>{item?.visitante?.recorrencia?.nome}</Template.Infor>
                                         </Template.inforLabel>
 
                                     </Template.Areaitem>
+                                    <Template.btn>
+                                        <Button
+                                            onClick={() => hendleDetalhesPedidos(item?.id)}
+                                            variant="contained"
+                                            sx={{
+                                                width: { xs: 40, sm: 45, md: 56 },   // mobile first
+                                                height: { xs: 40, sm: 45, md: 48 },
+                                                minWidth: "auto",
+                                                borderRadius: { xs: "10px", sm: "12px", md: "14px" },
+                                                background: "linear-gradient(135deg, #42A5F5, #1E88E5)",
+                                                boxShadow: "0 3px 8px rgba(30,136,229,0.28)",
+                                                display: "flex",
+                                                alignItems: "center",
+                                                justifyContent: "center",
+                                                transition: "0.25s",
+                                                padding: 0,
+                                                "& svg": {
+                                                    fontSize: { xs: "20px", sm: "22px" }, // ícone também reduz no celular
+                                                },
+                                                "&:hover": {
+                                                    background: "linear-gradient(135deg, #1E88E5, #1565C0)",
+                                                    boxShadow: "0 6px 16px rgba(21,101,192,0.35)",
+                                                    transform: "translateY(-2px)",
+                                                },
+                                            }}
+                                        >
+                                            <ChevronRight />
+                                        </Button>
+                                    </Template.btn>
                                 </Template.card_item_center>
                             </Template.cardItem>
                         </div>

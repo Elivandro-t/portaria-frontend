@@ -15,6 +15,7 @@ import api from "../../service/api";
 import { PopupUpdatePerfilComponent } from "../../components/updatePerfilComponent/popup/updatePerfil";
 import { Paginator } from "../../components/paginator/paginator";
 import { LoadingSecundary } from "../../components/LoadingSecundary/LoadingSecundary";
+import { subjet } from "../../service/jwt/jwtservice";
 export const UsuarioListaComponets = () => {
   const [lista, setLista] = useState<any[]>([])
   const [id, setId] = useState('');
@@ -22,6 +23,8 @@ export const UsuarioListaComponets = () => {
   const [totaPage, setTotalPage] = useState(0);
   const nativete = useNavigate()
   const [loading, setLoading] = useState(false);
+  const user = subjet();
+  const permission = user?.permissoes;
   const onSubmit = async (valuePage?: any) => {
     setLoading(true);
     const resposta = await Api.listAusuario(busca.trim(), valuePage);
@@ -70,6 +73,18 @@ export const UsuarioListaComponets = () => {
     }
 
   }
+  const handleConvetData = (data: any) => {
+       const d = new Date(data);
+
+    const dia = String(d.getDate()).padStart(2, "0");
+    const mes = String(d.getMonth() + 1).padStart(2, "0");
+    const ano = d.getFullYear();
+
+    const hora = String(d.getHours()).padStart(2, "0");
+    const minuto = String(d.getMinutes()).padStart(2, "0");
+
+    return `${dia}/${mes}/${ano} às ${hora}:${minuto}`;
+    }
   return (
     <>
       <Template.container>
@@ -115,8 +130,11 @@ export const UsuarioListaComponets = () => {
                   <th>Função</th>
                   <th>Filial</th>
                   <th>Pefil</th>
+                  <th>Device</th>
+                  <th>Ultima Sessão</th>
                   <th>Status</th>
-                  <th></th>
+                  {permission?.includes("ADICIONAR_ACESSo")&&
+                  <th></th>}
                 </tr>
               </thead>
               <tbody>
@@ -142,9 +160,14 @@ export const UsuarioListaComponets = () => {
                       <td>{item.filial}</td>
                       <td>{item?.perfil?.nome}</td>
                       <td>
+                        <Template.device> {item?.sessionDevice?item?.sessionDevice:"0"}</Template.device>   
+                       </td>
+                      <td>{item?.sessionLastLogin?handleConvetData(item?.sessionLastLogin):"Sem acesso"}</td>
+                      <td>
                         <Template.ativo ativo={item?.ativo}></Template.ativo>
                       </td>
-                      <td >
+                      {permission?.includes("ADICIONAR_ACESSO")&&
+                        <td >
                         <Template.trBTN>
                           <IconButton
                             aria-label="editar"
@@ -181,6 +204,7 @@ export const UsuarioListaComponets = () => {
                           )}
                         </Template.trBTN>
                       </td>
+                      }
                     </tr>
                   ))
                 }

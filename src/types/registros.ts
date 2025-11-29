@@ -8,7 +8,8 @@ type Visitante = {
     tipoAcesso: string;
     tipoMotorista: string;
     tipoPessoa: string;
-    numeroTelefone?:any
+    numeroTelefone?:any,
+    recorrencia?:recorrecia
 
 };
 
@@ -19,6 +20,9 @@ type Autorizador = {
     filial: number;
 };
 
+type recorrecia = {
+  nome:string
+}
 export type RegistroVisitante = {
     id: number;
     protocolo: string;
@@ -35,7 +39,12 @@ export type RegistroVisitante = {
     ativo: boolean;
     filial:string,
     entrada:Entrada,
-    saida:Saida
+    saida:Saida,
+    prioridadeAtrasoAtivo?:boolean,
+    prioridadeAviso?:any,
+    prioridadeAtraso?:any
+
+
 };
 export interface Entrada {
   dataEntrada: string;      // Data em formato ISO

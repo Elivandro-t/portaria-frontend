@@ -53,6 +53,12 @@ const App = () => {
                 />
               </ProtectedRoute>
             } />
+            <Route path="gerais" element={
+              <ProtectedRoute allowedPermissions={["GERENCIAR_REGISTROS"]}>
+                <ListaRegistroComponent key={Date.now()}
+                />
+              </ProtectedRoute>
+            } />
             {/* <Route path="meus-pedidos"  element={<MainComponent />} /> */}
           </Route>
           <Route index path="verify" element={<LoadingR />} />
@@ -96,7 +102,7 @@ const App = () => {
             {/*cadastro de usuario*/}LogsComponent
           </Route>
           <Route path="config" element={
-            <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+            <ProtectedRoute allowedPermissions={["LISTA_GERAL"]}>
               <ConfigComponent key={Date.now()}
               />
             </ProtectedRoute>
@@ -112,7 +118,7 @@ const App = () => {
               </Route>
               
             <Route path="cadastro/usuario" element={
-              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+              <ProtectedRoute allowedPermissions={["CADASTRO_USUARIO"]}>
                 <RegistroDeUsuarioComponent key={Date.now()}
                 />
               </ProtectedRoute>
@@ -154,20 +160,20 @@ const App = () => {
               </ProtectedRoute>
             } />
             <Route path="outros" element={
-              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+              <ProtectedRoute allowedPermissions={["ALTERAR_CONFIGURACOES"]}>
                 <OutrosPage key={Date.now()}
                 />
               </ProtectedRoute>
             } />
 
             <Route path="historico" element={
-              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+              <ProtectedRoute allowedPermissions={["GERENCIAR_REGISTROS"]}>
                 <ListahistoryComponent key={Date.now()}
                 />
               </ProtectedRoute>
             } />
             <Route path="portaria" element={
-              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+              <ProtectedRoute allowedPermissions={["GERENCIAR_REGISTROS"]}>
                 <ListaRegistroComponent key={Date.now()}
                 />
               </ProtectedRoute>
@@ -180,7 +186,7 @@ const App = () => {
             }>
             </Route>
             <Route path="logs" element={
-              <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+              <ProtectedRoute allowedPermissions={["GERENCIAR_REGISTROS"]}>
                 <LogsComponets key={Date.now()}
                 />
               </ProtectedRoute>

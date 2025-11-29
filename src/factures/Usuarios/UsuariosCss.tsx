@@ -144,6 +144,11 @@ export default {
   height: 15px;
     background-color: ${({ativo}:any)=>ativo?"#22c55e":"#ef4444"};
     border-radius: 15px;
+  `,
+  device:styled.div`
+  font-size: 14px;
+  color:#22c55e;
+  border-radius: 15px;
   `
     
 }

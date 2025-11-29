@@ -5,13 +5,15 @@ import { useEffect } from "react";
 import { subjet } from "../../service/jwt/jwtservice";
 export const HomeComponent = () => {
     const user = subjet()
+    const isPortaria = location.pathname === "/portaria/pendentes";
+
     const outlet = useOutlet();
     useEffect(() => {
         window.scrollTo(0, 0);
     }, [])
     return (
         <Makert.container>
-            <HeaderComponent filial={user?.filial}  ativoBusca={outlet}/>
+            <HeaderComponent filial={user?.filial} ativoBusca={outlet&&isPortaria} />
             <Makert.Container_int>
                 {outlet ? (
                     <Outlet />

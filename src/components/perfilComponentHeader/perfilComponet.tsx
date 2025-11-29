@@ -7,7 +7,7 @@ import Menu from '@mui/material/Menu';
 import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
-import {  useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import save from "../../service/localStorage/service-localStorage"
 import { contextProvider } from "../../reducer/userProvider/userProvider";
 import { useContext } from "react";
@@ -17,8 +17,9 @@ const settings = [
   { name: "Minha Conta" },
   { name: "Portaria Pendentes", permissions: ["REGISTRAR_SAIDA"] },
   { name: "Meus Registros", permissions: ["VISUALIZAR_REGISTRO"] },
+  { name: "Registros Gerais", permissions: ["GERENCIAR_REGISTROS"] },
   { name: "Criar Registro", permissions: ["CRIAR_REGISTRO"] },
-  { name: "Configuraçoẽs", permissions: ["GERENCIAR_USUARIOS"] },
+  { name: "Configuraçoẽs", permissions: ["LISTA_GERAL"] },
   { name: "Sair" }
 ];
 
@@ -43,7 +44,7 @@ export const PerfilComponet = () => {
     switch (setting) {
       case "Meus Registros":
         setLoading(true)
-          navigate("/controle/meus-registros",{replace:false});
+        navigate("/controle/meus-registros", { replace: false });
         setTimeout(() => setLoading(false), 800);
 
         break;
@@ -54,6 +55,13 @@ export const PerfilComponet = () => {
           setLoading(false)
         }, 1000)
 
+        break;
+      case "Registros Gerais":
+        setLoading(true)
+        setTimeout(() => {
+          navigate("/portaria/gerais");
+          setLoading(false)
+        }, 1000)
         break;
       case "Portaria Pendentes":
         setLoading(true)
@@ -114,7 +122,7 @@ export const PerfilComponet = () => {
         <Tooltip title="Open settings">
           <IconButton onClick={handleOpenUserMenu} sx={{ p: 0 }}>
             {contex?.usuario?.avatar ? (
-              <Avatar style={{objectFit:"contain"}} alt={user?.nome} src={contex?.usuario?.avatar} />
+              <Avatar style={{ objectFit: "contain" }} alt={user?.nome} src={contex?.usuario?.avatar} />
 
             ) : (
               <Avatar alt={user?.nome} src="/static/images/avatar/2.jpg" />

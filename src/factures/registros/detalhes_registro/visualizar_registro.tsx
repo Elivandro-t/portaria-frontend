@@ -6,6 +6,9 @@ import type { RegistroVisitante } from "../../../types/registros";
 import { subjet } from "../../../service/jwt/jwtservice";
 import type { AtualizaStatus } from "../../../types/stualizaStatus";
 import { notify } from "../../../service/snackbarService";
+import { Alert } from "@mui/material";
+import WarningAmberIcon from "@mui/icons-material/WarningAmber";
+
 import { useEffect, useState } from "react";
 import { ImageModal } from "../../../components/Galeria/Galeria";
 import { IconButton } from "@mui/material";
@@ -13,6 +16,7 @@ import { IconButton } from "@mui/material";
 import EditIcon from "@mui/icons-material/Edit"
 import { PopupUpdateResgistroComponent } from "../../../components/controleDeacesso/UpdateRegistro/popup/updateRegistro";
 import { AlertComponent } from "../../../components/alert/alertaComponent";
+import { ConfirmComponent } from "../../../components/confirmSucess/confirm";
 
 const VisualizarRegistro = () => {
   const usuario = subjet()
@@ -39,6 +43,9 @@ const VisualizarRegistro = () => {
   const [ativo, setAtivo] = useState(false);
   const [imagemAtivo, setImagemAtivo] = useState(false)
   const [Imagem, setImagem] = useState("");
+  const verifyEntrada = item?.status.includes("AGUARDANDO_ENTRADA");
+  const [nomeBtn, setNomeBtn] = useState("")
+  const [msg, setMsg] = useState("")
   const hendleBTNIMG = (imagem: string) => {
     setImagemAtivo(true)
     setImagem(imagem)
@@ -58,6 +65,7 @@ const VisualizarRegistro = () => {
       registroId
     }
     if (selectedFile != null) {
+      setExibe(false)
       try {
         const resposta = await api.alterarEntrada(data, selectedFile as any);
         if (resposta) {
@@ -66,7 +74,7 @@ const VisualizarRegistro = () => {
           const detalhesAtualizados = await api.consuta_portaria(numeroDoRegistro);
           if (detalhesAtualizados) {
             setRegistro(detalhesAtualizados);
-            setLoading(false)
+            setLoading(false);
           }
         }
       } catch (error) {
@@ -77,11 +85,14 @@ const VisualizarRegistro = () => {
     } else {
       setTimeout(() => {
         notify("Selecione uma imagem", "error")
-        setLoading(false)
+        setLoading(false),
+          setExibe(false)
       }, 2000)
     }
 
   }
+  const [exibe, setExibe] = useState(false);
+
   const permissions: string[] = usuario?.permissoes || [];
   const permission = permissions.includes("REGISTRAR_ENTRADA")
   const permissionEdit = permissions.includes("EDITAR_REGISTRO")
@@ -93,7 +104,7 @@ const VisualizarRegistro = () => {
       registroId
     }
     if (selectedFile != null) {
-      console.log("Dados enviados:", data, selectedFile);
+      setExibe(false)
 
       const resposta = await api.alterarSaida(data, selectedFile as any);
       if (resposta) {
@@ -102,17 +113,52 @@ const VisualizarRegistro = () => {
         setResetCounter(prev => prev + 1)
         if (detalhesAtualizados) {
           setRegistro(detalhesAtualizados);
-          setLoading(false)
+          setLoading(false),
+            setExibe(false)
         }
       }
 
     } else {
       setTimeout(() => {
         notify("Selecione uma imagem", "error")
-        setLoading(false)
+        setLoading(false);
+        setExibe(false)
       }, 2000)
     }
 
+  }
+
+  const handleConfirmeLiberacao = () => {
+    if (selectedFile != null) {
+      setExibe(true)
+      if (verifyEntrada) {
+        setNomeBtn("Liberar Entrada");
+        setMsg(`Deseja realmente liberar a entrada de <b>${item?.nomeCompleto}</b>?`)
+      } else {
+        setNomeBtn("Liberar Saida");
+        setMsg(`Deseja realmente liberar a saída de <b>${item?.nomeCompleto}</b>?`)
+
+      }
+    } else {
+      setTimeout(() => {
+        notify("Selecione uma imagem", "error")
+        setLoading(false);
+        setExibe(false)
+      }, 100)
+    }
+  }
+  const hendleCancelar = () => {
+    setResetCounter(prev => prev + 1);
+    setLoading(false);
+    setExibe(false)
+  }
+  const headleConfirm = () => {
+    if (verifyEntrada) {
+      solicitarLiberacao(item?.id)
+    } else {
+      SolicitarSaida(item?.id);
+
+    }
   }
   const retornaCorStatus = (status: any) => {
     switch (status) {
@@ -133,6 +179,23 @@ const VisualizarRegistro = () => {
           <Template.Area>
             <Template.Container>
               {/* Status do pedido */}
+              {item.ativo && item?.prioridadeAtrasoAtivo &&
+                <Alert icon={<WarningAmberIcon fontSize="small" sx={{ fontSize: '0.75rem' }} />} severity="warning"
+                  sx={{
+                    padding: "0 5px",
+                    fontSize: "0.52rem",
+                    display: "flex",
+                    alignItems: "center",
+                    "& .MuiAlert-icon": {
+                      fontSize: "0.9rem",
+                      marginRight: "4px",
+                    }
+
+                  }}
+                >
+                  {item.prioridadeAviso ? item.prioridadeAviso : item.prioridadeAtraso}
+                </Alert>
+              }
               <Template.heanderPedido>
                 <Template.tituloPedido>PRT: #{item?.protocolo}</Template.tituloPedido>
                 <Template.status>
@@ -155,14 +218,17 @@ const VisualizarRegistro = () => {
                   </Template.AreaItemJust>
                   <Template.AreaItemJust>
                     <Template.Label>Tipo de Pessoa:</Template.Label>
-                    <Template.LabelSubtitulo>{item?.visitante.ocupacao.toUpperCase()}</Template.LabelSubtitulo>
+                    <Template.LabelSubtitulo>{item?.visitante.ocupacao.toUpperCase()
+                    }
+
+                    </Template.LabelSubtitulo>
                   </Template.AreaItemJust>
                   {/* <p><strong>Data entrada:</strong> <Template.Bold>1100011</Template.Bold></p> */}
                 </Template.ItemDetails>
                 <Template.ItemDetails>
                   <Template.AreaItemJust>
                     <Template.Label>Categoria de Acesso:</Template.Label>
-                    <Template.LabelSubtitulo>{item?.visitante?.tipoAcesso}</Template.LabelSubtitulo>
+                    <Template.LabelSubtitulo>{item?.visitante?.tipoAcesso || item.visitante?.recorrencia?.nome}</Template.LabelSubtitulo>
                   </Template.AreaItemJust>
                   <Template.AreaItemJust>
                     <Template.Label>Placa do Veículo:</Template.Label>
@@ -211,10 +277,12 @@ const VisualizarRegistro = () => {
                 <Template.LabelSubtitulo>{item?.autorizador.ocupacaoOperacional}</Template.LabelSubtitulo>
               </Template.AreaItemJustRigth>
             </Template.SummaryRow> */}
-                <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
-                  <Template.Label>Observações:</Template.Label>
-                  <Template.LabelSubtitulo>{item?.Obs}</Template.LabelSubtitulo>
-                </div >
+                {item?.Obs &&
+                  <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
+                    <Template.Label>Observações:</Template.Label>
+                    <Template.LabelSubtitulo>{item?.Obs}</Template.LabelSubtitulo>
+                  </div >
+                }
                 <Template.imagemArea>
                   {item?.entrada && item?.entrada?.imagem &&
                     <Template.ImagemItemRecebido>
@@ -234,18 +302,20 @@ const VisualizarRegistro = () => {
                   <>
                     {item?.ativo &&
                       <Template.ImagemItemRecebido>
-                        <Template.LabelSubtitulo>Imagem do Porta-malas *</Template.LabelSubtitulo>
+                        <Template.LabelSubtitulo>Imagem de Inspeção do Porta-malas *</Template.LabelSubtitulo>
                         <ImageDropZone onFileSelect={handleFileSelect} resetSignal={resetCounter}></ImageDropZone>
                       </Template.ImagemItemRecebido>
                     }
-                    {
+                    {/* {
 
                       item?.status.includes("AGUARDANDO_ENTRADA") ? (
                         <Template.Button ativo={item?.ativo || !selectedFile} onClick={() => solicitarLiberacao(item?.id)}>Liberar Entrada</Template.Button>
                       ) : (
                         <Template.Button ativo={item?.ativo} onClick={() => SolicitarSaida(item?.id)}>Liberar Saida</Template.Button>
                       )
-                    }
+                    } */}
+                    <Template.Button ativo={item?.ativo} onClick={handleConfirmeLiberacao}>{verifyEntrada ? "Liberar Entrada" : "Liberar Saida"}</Template.Button>
+
                   </>
                 }
               </Template.Card>
@@ -271,6 +341,9 @@ const VisualizarRegistro = () => {
           {permissionEdit && ativo &&
             <PopupUpdateResgistroComponent data={item as any} handleCancel={volta} message={""} ativoBtn={false} />
           }
+          {exibe &&
+            <ConfirmComponent handleConfirm={headleConfirm} handleCancel={hendleCancelar} message={msg} ativoBtn={true} btnName={nomeBtn} />
+          }
         </div>
       ) : (<>
         <Template.semItens>
@@ -278,6 +351,7 @@ const VisualizarRegistro = () => {
           Nenhum item encontrado
         </Template.semItens>
       </>)}
+
     </>
   );
 };

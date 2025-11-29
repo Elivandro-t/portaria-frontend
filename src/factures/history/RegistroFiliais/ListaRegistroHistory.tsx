@@ -200,7 +200,7 @@ export const ListaRegistroComponent = () => {
                       <td>#{item?.protocolo || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
                       <td>{item?.nomeCompleto || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
                       <td>{item?.ocupacaoLiberada || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
-                      <td>{item?.visitante?.tipoAcesso || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
+                      <td>{item?.visitante?.tipoAcesso || item.visitante?.recorrencia?.nome || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
                       <td>{item?.placaVeiculo || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
                       <td>{item?.bloco || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
                       <td><Template.Chip color={retornaCorStatus(item?.status)}>{item?.status.replace("_", " ")}</Template.Chip></td>

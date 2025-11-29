@@ -21,10 +21,11 @@ type FormData = {
     filial: number,
     bloco: string,
     tipPessoa: string,
-    descricao: string,
+    descricao?: string,
     ocupacaoLiberada: string,
     criadorId: number,
-    globalAtivo?: any
+    globalAtivo?: any,
+    dataAcesso?: any
 };
 const Resize = styled.span`
   color: red;
@@ -34,24 +35,14 @@ export const ocupacoesLiberada = [
     { id: 2, nome: "Motorista e Passageiros", codigo: "DIR" },
 
 ];
-// export const blocos = [
-//     { id: 1, nome: "Secos", codigo: "SEC" },
-//     { id: 2, nome: "Hortifrúti", codigo: "HORTI" },
-//     { id: 3, nome: "Frios", codigo: "FRI" },
-//     { id: 4, nome: "Fatiados", codigo: "FAT" },
-//     { id: 5, nome: "Indústria", codigo: "IND" },
-//     { id: 6, nome: "Spazio", codigo: "SPZ" },
-//     { id: 7, nome: "Oficina Caminhões", codigo: "OFI" },
-//     { id: 8, nome: "Material Logistico", codigo: "CAM" }
-// ];
 
 export const RegistrosPortaria = () => {
 
     const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm<FormData>({
-    defaultValues: {
-        globalAtivo: "false",   // ou "true"
-    }
-})
+        defaultValues: {
+            globalAtivo: "false",   // ou "true"
+        }
+    })
     const [selectedFile, setSelectedFile] = useState<File | null>(null);
     const [resetCounter, setResetCounter] = useState(0);
     const [ocupacoes, setOcupacao] = useState<any[]>([])
@@ -70,24 +61,33 @@ export const RegistrosPortaria = () => {
         }
 
     }
+    const tipoAcesso = watch("tipoAcesso");
     const handleFileSelect = (file: File | null) => {
         setSelectedFile(file);
     };
+    const [bloqueioBTN,setbloqueioBTN] = useState(false);
     const onSubmit = async (data: FormData) => {
+        setbloqueioBTN(true)
         const usaurio = subjet();
-        // if (!data.filial) {
-        //     delete data.filial;
-        // }
+        if (!data.descricao) {
+            delete data.descricao;
+        }
         if (selectedFile != null) {
             data.criadorId = usaurio?.id as any;
+            const acess = tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO";
+            if (!acess) {
+                delete data.dataAcesso
+            }
             const resposta = await Api.salvaRegistro(data, selectedFile as any)
             if (resposta) {
+                setbloqueioBTN(false)
                 notify(resposta.msg, "success")
                 reset()
                 setResetCounter(prev => prev + 1)
 
             }
         } else {
+            setbloqueioBTN(false)
             notify("Selecione uma imagem", "error")
         }
 
@@ -132,7 +132,7 @@ export const RegistrosPortaria = () => {
 
     }
 
-    
+
     const hendleBusca = async () => {
         const resposta = await BlocosApi.blocos();
         if (resposta.blocos) {
@@ -238,12 +238,12 @@ export const RegistrosPortaria = () => {
                                         </Template.label>
                                         <Template.labelCheck style={{ display: "flex" }}>
                                             <Template.checkbox type="radio" value="true" {
-                                                ...register("globalAtivo")}  />
+                                                ...register("globalAtivo")} />
                                             <small>Sim</small>
                                         </Template.labelCheck>
                                         <Template.labelCheck>
                                             <Template.checkbox type="radio" value="false"{
-                                                ...register("globalAtivo")}  />
+                                                ...register("globalAtivo")} />
                                             <small>Não</small>
                                         </Template.labelCheck>
                                     </Template.CamposInput>
@@ -302,10 +302,25 @@ export const RegistrosPortaria = () => {
                                         {errors.ocupacaoLiberada && <Template.Erros><p>{errors.ocupacaoLiberada.message}</p></Template.Erros>}
                                     </Template.CamposInput>
                                 </Template.leftArea>
+                                {tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO" &&
+                                    <Template.CamposInput>
+                                        <Template.label>Data <Resize>*</Resize></Template.label>
+                                        <Template.Campos 
+                                           hasError={!!errors.dataAcesso} placeholder="data" type="date"
+                                            autoComplete="current-password"
+                                            {...register("dataAcesso", {
+                                                required: "A data é obrigatória para acesso recorrente temporário"
+                                            })}
+                                            onKeyDown={(e) => focus(e)}
+
+                                        />
+                                 {errors.dataAcesso && <Template.Erros><p>{errors.dataAcesso.message as any}</p></Template.Erros>}
+   
+                                    </Template.CamposInput>
+                                }
                                 <Template.CamposInput>
                                     <Template.label>OBS </Template.label>
-                                    <Template.TextArea {...register("descricao", { required: "Selecione o cargo" })}></Template.TextArea>
-                                    {errors.descricao && <Template.Erros><p>{errors.descricao.message}</p></Template.Erros>}
+                                    <Template.TextArea {...register("descricao")}></Template.TextArea>
                                 </Template.CamposInput>
                             </Template.Select>
                             <Template.label>IMG visitante<Resize>*</Resize></Template.label>
@@ -314,7 +329,7 @@ export const RegistrosPortaria = () => {
 
                         </Template.FormSub>
                         <Template.btnDivider>
-                            <Template.BtnLogin onClick={handleSubmit(onSubmit)}>Enviar Pedido</Template.BtnLogin>
+                            <Template.BtnLogin disabled={bloqueioBTN} onClick={handleSubmit(onSubmit)}>Enviar Pedido</Template.BtnLogin>
                             <BtnGlobal click={handleCancelar} nome_btn={"red"} isvalid={true}>Resetar</BtnGlobal>
                         </Template.btnDivider>
                     </Template.pedidos>

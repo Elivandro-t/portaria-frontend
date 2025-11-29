@@ -2,11 +2,14 @@ import IconButton from "@mui/material/IconButton";
 import Template from "./tabelaCss";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Avatar } from "@mui/material";
+import { subjet } from "../../service/jwt/jwtservice";
 type lista = {
   lista: any[],
   hendleDelete: (n: any) => void
 }
 export const TableComponent = ({ lista, hendleDelete }: lista) => {
+  const user = subjet();
+  const permission = user?.permissoes;
 
   return (
     <Template.TableContainer>
@@ -45,11 +48,12 @@ export const TableComponent = ({ lista, hendleDelete }: lista) => {
                   month: "long",
                   year: "numeric",
                 })}</td>
-                <td>{item?.tipoAcesso}</td>
+                <td>{item?.recorrencia?.nome}</td>
                 <td>{item?.ocupacao}</td>
                 <td>
                   <Template.trBTN>
-                    <IconButton
+                   {permission?.includes("DELETE_GLOBAL") ?(
+                     <IconButton
                       aria-label="deletar"
                       onClick={() => hendleDelete(item?.id)}
                       sx={{
@@ -61,6 +65,13 @@ export const TableComponent = ({ lista, hendleDelete }: lista) => {
                     >
                       <DeleteIcon />
                     </IconButton>
+                   ):(
+                     <IconButton
+                      disabled
+                    >
+                      <DeleteIcon />
+                    </IconButton>
+                   )}
                   </Template.trBTN>
                 </td>
               </tr>

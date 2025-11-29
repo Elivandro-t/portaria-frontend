@@ -27,6 +27,8 @@ export const RedirectByPermissoes = ({ permissoes }: Props) => {
       return <Navigate to="/portaria" replace />;
     case "ADMIN":
       return <Navigate to= "/portaria/pendentes" replace />;
+    case "GERENTE_PREVENCAO":
+      return <Navigate to= "/portaria/pendentes" replace />;
     default:
       return <Navigate to="/portaria" replace />;
   }

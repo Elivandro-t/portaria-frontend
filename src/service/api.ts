@@ -40,9 +40,14 @@ axios.interceptors.response.use(response => {
   return response;
 
 }, (error) => {
+  if (error.code === "ERR_NETWORK") {
+   notify("Servidor indisponível. Verifique sua conexão.","info")
+    throw new Error("Servidor indisponível. Verifique sua conexão.");
+  }
   if (error.response) {
     const status = error.response.status;
     const data = error.response.data;
+    
     switch (status) {
       case 400:
         if (error.message) {
@@ -54,15 +59,18 @@ axios.interceptors.response.use(response => {
       case 401:
         const from = location.pathname + location.search + location.hash;
         sessionStorage.setItem("redirectAfterLogin", from);
-        const msg = data.message || "Ocorreu um erro";
+        const msg = data.message || data.error;
         notify(msg)
         break
       case 403:
+         if(data.error){
+           notify(data.error)
+         }
         removeToken()
         setTimeout(() => {
           window.location.href = "/verify";
 
-        }, 1000)
+        }, 2000)
         break
       case 500:
         removeToken()

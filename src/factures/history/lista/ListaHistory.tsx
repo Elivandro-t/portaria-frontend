@@ -3,6 +3,7 @@ import Template from "./ListaHistorcss"
 import DeleteIcon from '@mui/icons-material/Delete';
 import { TextField, IconButton, Avatar } from '@mui/material';
 import SearchIcon from "@mui/icons-material/Search";
+import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import Api from "../../../service/api"
 import { PopupComponent } from "../../../components/popup/popupComponent";
 import type { HistoricoPortaria } from "../../../types/historico/historico";
@@ -59,6 +60,7 @@ export const ListahistoryComponent = () => {
     setAtivo(false);
 
   }
+  const permissiton = user?.permissoes;
 
   const handleModalImg = (item: any) => {
     setExibeImagem(true)
@@ -169,23 +171,30 @@ export const ListahistoryComponent = () => {
                       <td>{item?.criador?.nome || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
                       <td >
                         <Template.trBTN>
-                          {item?.imagemEntrada &&
+                          {item?.imagemEntrada ? (
                             <IconButton onClick={() => handleModalImg(item)}>
                               <ImageIcon />
                             </IconButton>
+                          ) : (
+                            <IconButton disabled>
+                              <ImageNotSupportedIcon />
+                            </IconButton>
+                          )
                           }
-                          <IconButton
-                            aria-label="deletar"
-                            onClick={() => hendleDelete(item)}
-                            sx={{
-                              color: 'black',
-                              '&:hover': {
-                                backgroundColor: '#f0f0f0',
-                              },
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
+                          {permissiton?.includes("DELETE_GLOBAL") &&
+                            <IconButton
+                              aria-label="deletar"
+                              onClick={() => hendleDelete(item)}
+                              sx={{
+                                color: 'black',
+                                '&:hover': {
+                                  backgroundColor: '#f0f0f0',
+                                },
+                              }}
+                            >
+                              <DeleteIcon />
+                            </IconButton>
+                          }
                         </Template.trBTN>
                       </td>
                     </tr>

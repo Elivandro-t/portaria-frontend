@@ -11,66 +11,64 @@ import { Paginator } from "../../components/paginator/paginator";
 
 export const VisitantesListaComponets = () => {
   const [lista, setLista] = useState<Visitante[]>([])
-   const [busca,setBusca] = useState("");
-   const [totalPage,setTotalPage] = useState(0)
-      const [id,setId] = useState("")
-         const [titulo,setTitulo] = useState("")
+  const [busca, setBusca] = useState("");
+  const [totalPage, setTotalPage] = useState(0)
+  const [id, setId] = useState("")
+  const [titulo, setTitulo] = useState("")
 
   const user = subjet();
-  const onSubmit = async (numeroPage?:any) => {
-    const resposta = await Api.listaVisistante(busca,numeroPage);
+  const onSubmit = async (numeroPage?: any) => {
+    const resposta = await Api.listaVisistante(busca, numeroPage);
     if (resposta) {
       setLista(resposta.content);
       setTotalPage(resposta.tatalPages)
     }
   }
   useEffect(() => {
-   if(busca.trim()===""){
-     onSubmit()
-   }
+    if (busca.trim() === "") {
+      onSubmit()
+    }
   }, [busca])
 
-  const hendleDelete = (idItem?:any)=>{
+  const hendleDelete = (idItem?: any) => {
     setId(idItem)
     setTitulo(`Deseja realmente deletar o item de ID ${idItem}`);
     setAtivo(true)
   }
-  const hendleAPi = async()=>{
-       const resposta = await Api.deletarVisitante(id,user?.id);
-      notify(resposta?.msg,"success")
-       setAtivo(false)
-      await onSubmit();
-      setAtivo(false);
+  const hendleAPi = async () => {
+    const resposta = await Api.deletarVisitante(id, user?.id);
+    notify(resposta?.msg, "success")
+    setAtivo(false)
+    await onSubmit();
+    setAtivo(false);
   }
-  const [ativoBtn,setAtivo] = useState(false);
-  const handleNextPage = (_:ChangeEvent<unknown>, value: number)=> {
-          const valueConvertido = value - 1;
-          onSubmit(valueConvertido);
-        } 
+  const [ativoBtn, setAtivo] = useState(false);
+  const handleNextPage = (_: ChangeEvent<unknown>, value: number) => {
+    const valueConvertido = value - 1;
+    onSubmit(valueConvertido);
+  }
   return (
     <>
       <Template.container>
         <Template.FormSub >
-          <Template.CamposInput >
+          <Template.paginator>
             <Template.Campos
               autoComplete="current-password"
               placeholder="Buscar visitante"
-              onChange={e=>setBusca(e.target.value)}
+              onChange={e => setBusca(e.target.value)}
               onKeyDown={onSubmit}
             />
-          </Template.CamposInput>
-          {lista.length===0 &&
-          <div>Sem Itens</div>
-          }
-          <TableComponent lista={lista} hendleDelete={hendleDelete}/>
-        </Template.FormSub>
-        {ativoBtn &&
-                  <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={hendleAPi} message={titulo} ativoBtn={ativoBtn} />
+            <Paginator totalPage={totalPage} handleNextPage={handleNextPage} />
+          </Template.paginator>
+        {lista.length === 0 &&
+          <div>Nada encontrado</div>
         }
-      </Template.container>
-      <Template.paginator>
-         <Paginator totalPage={totalPage} handleNextPage={handleNextPage}/>
-      </Template.paginator>
+        <TableComponent lista={lista} hendleDelete={hendleDelete} />
+      </Template.FormSub>
+      {ativoBtn &&
+        <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={hendleAPi} message={titulo} ativoBtn={ativoBtn} />
+      }
+    </Template.container >
         
     </>
   )

@@ -8,10 +8,11 @@ const consulta_portaria = async (endpoint: string) => {
 
 }
 //buscar portaria cd: ja integrado
-const lista_portaria = async (endpoint: string,filial:any,busca:string,size:any) => {
+const lista_portaria = async (endpoint: string,filial:any,busca:string,size:any,status:any) => {
     const params = new URLSearchParams();
     params.append('filial', filial);
     params.append('busca', busca || '');
+    params.append('status', status || '');
      params.append('size', size || '');
     const resposta = await axios.get(base + endpoint,{params:Object.fromEntries(params)});
     return resposta.data;
@@ -53,9 +54,9 @@ const consulta = {
         return json;
     },
     /// adicionar filial
-    Solicitacoes: async (filial:any, busca: any,size:any) => {
+    Solicitacoes: async (filial:any, busca: any,size:any,status:any) => {
         console.log("busca " + busca)
-        const json = await lista_portaria(`/portaria/v1/lista/entradas/pendentes`,filial,busca,size);
+        const json = await lista_portaria(`/portaria/v1/lista/entradas/pendentes`,filial,busca,size,status);
         return json;
     },
     alterarEntrada: async (data: AtualizaStatus, file: File) => {

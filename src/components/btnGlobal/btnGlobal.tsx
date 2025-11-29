@@ -2,7 +2,7 @@ import type { ReactNode } from "react"
 import {BtnLogin} from "./btnGlobalCss"
 type props = {
     titulo?:string,
-    nome_btn:String,
+    nome_btn?:string,
     click:()=>void,
       isvalid:boolean,
       children?:ReactNode

@@ -1,6 +1,6 @@
 import Template from "./updateRegistroCss";
 import { Button } from "@mui/material";
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import apiSec from "../../../../service/api_secundaria"
 import type { RegistroVisitante } from "../../../../types/registros";
@@ -21,8 +21,9 @@ type FormData = {
   placaVeiculo: any,
   numeroTelefone: any,
   bloco: any,
-  tipoPessoa:string,
-  tipoDeAcesso:string
+  tipoPessoa: string,
+  tipoDeAcesso: string,
+  dataAcesso?:any
 };
 type bloco = {
   id: number,
@@ -35,44 +36,49 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
       placaVeiculo: data?.placaVeiculo || "",
       numeroTelefone: data?.visitante.numeroTelefone || "",
       bloco: data.bloco || "",
-      tipoPessoa:data.tipPessoa,
-      tipoDeAcesso:data?.visitante.tipoAcesso
+      tipoPessoa: data.tipPessoa,
+      tipoDeAcesso: data?.visitante.tipoAcesso || data.visitante.recorrencia?.nome
     },
   })
   const usuario = subjet();
   const valorSelecionado = watch("bloco")
   const valorSelecionadoTipo = watch("tipoPessoa")
-   const tipoAcesso = watch("tipoDeAcesso")
+  const tipoAcesso = watch("tipoDeAcesso")
   const [blocos, setBlocos] = useState<bloco[]>([])
   const [ocupacoes, setOcupacao] = useState<any[]>([]);
   const [recorrencia, setRecorrencia] = useState<any[]>([])
-  
+
   async function henfleConfirm(dataInput: FormData) {
     dataInput.id = data.id;
-    const response  = await api.atualizarRegistro(dataInput);
-    if(response.msg){
-      notify(response.msg,"success");
+    const TipoAcessoRecorrencia = dataInput.tipoDeAcesso;
+    if(TipoAcessoRecorrencia==="RECORRENTE TEMPORARIO" && dataInput.dataAcesso==null){
+      notify("informa uma data valida","error");
+    }
+ 
+    const response = await api.atualizarRegistro(dataInput);
+    if (response.msg) {
+      notify(response.msg, "success");
       handleCancel()
     }
   }
-    const buscaApi = async()=>{
-          const resposta = await serviceTipoPessoa.lista();
-          if(resposta.tipoPessoa){
-               setOcupacao(resposta.tipoPessoa)
-          }
-  
-      }
-       const buscar_recorencia = async () => {
-              const resposta = await serviceTipoPessoa.recorrecia();
-              if (resposta.recorrencia) {
-                  setRecorrencia(resposta.recorrencia)
-              }
-      
-          }
-      useEffect(()=>{
-          buscaApi();
-          buscar_recorencia()
-      },[])
+  const buscaApi = async () => {
+    const resposta = await serviceTipoPessoa.lista();
+    if (resposta.tipoPessoa) {
+      setOcupacao(resposta.tipoPessoa)
+    }
+
+  }
+  const buscar_recorencia = async () => {
+    const resposta = await serviceTipoPessoa.recorrecia();
+    if (resposta.recorrencia) {
+      setRecorrencia(resposta.recorrencia)
+    }
+
+  }
+  useEffect(() => {
+    buscaApi();
+    buscar_recorencia()
+  }, [])
   useEffect(() => {
     const hendleBusca = async () => {
       const resposta = await apiSec.blocos();
@@ -89,8 +95,8 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
   }, [data, setValue])
 
 
-   const permissions: string[] = usuario?.permissoes || [];
-    const permissionEdit = permissions.includes("GERENCIAR_USUARIOS")
+  const permissions: string[] = usuario?.permissoes || [];
+  const permissionEdit = permissions.includes("GERENCIAR_USUARIOS")
   return (
     <Template.container>
       <Template.container_int>
@@ -172,25 +178,38 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
             </Template.SelectItens>
           </Template.CamposInput>
           {permissionEdit &&
-             <Template.CamposInput>
-            <Template.label >Recorrencia de Acesso</Template.label>
-            <Template.SelectItens {
-              ...register("tipoDeAcesso")} value={tipoAcesso} onChange={e => setValue("tipoDeAcesso", e.target.value)}>
-              {recorrencia.some(b => b?.nome.toLowerCase() === tipoAcesso.toLowerCase()) ? null : (
-                <Template.Options value={tipoAcesso}>
-                  {tipoAcesso}
-                </Template.Options>
+            <Fragment>
+              <Template.CamposInput>
+                <Template.label >Recorrencia de Acesso</Template.label>
+                <Template.SelectItens {
+                  ...register("tipoDeAcesso")} value={tipoAcesso} onChange={e => setValue("tipoDeAcesso", e.target.value)}>
+                  {recorrencia.some(b => b?.nome.toLowerCase() === tipoAcesso.toLowerCase()) ? null : (
+                    <Template.Options value={tipoAcesso}>
+                      {tipoAcesso}
+                    </Template.Options>
 
-              )}
+                  )}
 
-              {recorrencia.map((item) => (
-                <Template.Options key={item.id} value={item.nome.toUpperCase()}>
-                  {item.nome}
-                </Template.Options>
-              ))}
+                  {recorrencia.map((item) => (
+                    <Template.Options key={item.id} value={item.nome.toUpperCase()}>
+                      {item.nome}
+                    </Template.Options>
+                  ))}
 
-            </Template.SelectItens>
-          </Template.CamposInput>
+                </Template.SelectItens>
+              </Template.CamposInput>
+              {tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO" &&
+                <Template.CamposInput>
+                  <Template.label>Data </Template.label>
+                  <Template.Campos placeholder="data" type="date"
+                    autoComplete="current-password"
+                    {...register("dataAcesso")}
+
+                  />
+
+                </Template.CamposInput>
+              }
+            </Fragment>
           }
           <Template.buttons>
             <Button

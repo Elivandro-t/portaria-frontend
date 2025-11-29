@@ -61,6 +61,7 @@ export default {
   card_item_center: styled.div`
     display: flex;
     align-items: center;
+    justify-content:space-between;
     gap: 20px;
     @media screen and (max-width: 420px) {
       justify-content: space-between;
@@ -84,6 +85,10 @@ export default {
     display: flex;
     flex-direction: column;
     gap: 10px;
+    /* @media screen and (max-width:560px){
+          flex-direction: row-reverse;
+
+    } */
   `,
 
   Image: styled.img`
@@ -102,14 +107,16 @@ export default {
 `,
   Areaitem: styled.div`
   display: flex;
-  gap: 2px;
+  flex: 1;
+  gap: 1px;
   flex-direction: column;
 `,
   inforLabel: styled.div`
   display: flex;
   align-items: center;
   text-align:center;
-  gap: 10px;
+  word-wrap: break-word;
+  gap:2px;
 
 `,
 loading:styled.div`
@@ -145,12 +152,24 @@ buttonNext:styled.button`
     font-family:Arial, Helvetica, sans-serif;
     font-weight: 600;
     color:#374151;
+    @media screen and (max-width: 560px){
+      font-size: 12px;
+              letter-spacing: 0.2;
+
+      
+    }
   `,
   Infor: styled.small`
-    font-size: 14px;
+    font-size: 13px;
     color: #494545;
         letter-spacing: 0.5;
         margin-top: 2px;
+    @media screen and (max-width: 560px){
+      font-size: 11px;
+              letter-spacing: 0.2;
+
+      
+    }
 
   `,
   semItens: styled.div`
@@ -168,6 +187,17 @@ buttonNext:styled.button`
   iconSemItens: styled(MdInbox)`
     font-size: 60px;
     color: #999;
+  `,
+  btn:styled.div`
+  display: flex;
+  justify-content:flex-end;
+   right: 1;
+   @media screen and (max-width:560px){
+    flex: 0;
+    padding: 5px;
+    
+   }
   `
+
 
 };

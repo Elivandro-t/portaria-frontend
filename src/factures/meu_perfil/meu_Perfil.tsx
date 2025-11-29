@@ -42,7 +42,7 @@ export const MeuPerfil = () => {
     }
     const hendleAtualizaImg = async () => {
         if (!selectedFile) {
-            notify("Selecione uma imagem", "error")
+            notify("Por favor, selecione uma imagem para continuar.", "error")
         }
         const resposta = await api.selecionarImagem(usuarioId, selectedFile as any)
         if (resposta.msg) {
@@ -70,7 +70,7 @@ export const MeuPerfil = () => {
                 <Template.container >
                     <Template.container_int>
                         <ModalComponent>
-                            <Template.container_titulo>Perfil usuario</Template.container_titulo>
+                            <Template.container_titulo>Perfil Usuario</Template.container_titulo>
                             <Template.container_usuarioArea>
                                 <Template.container_img>
                                     {usuario?.avatar ? (
@@ -130,7 +130,7 @@ export const MeuPerfil = () => {
 
                             </ModalComponent>
                             <Template.foother>@Desenvolvido por Elivandro  <div style={{ color: "#464545", fontSize: "10px" }}>
-                                Versão {packageJson.version}
+                                Versão {packageJson?.version} - {packageJson?.name}
                             </div>
                             </Template.foother>
                             {
