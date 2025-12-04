@@ -12,7 +12,7 @@ import { subjet } from "../../service/jwt/jwtservice";
 import serviceTipoPessoa from "../../service/tipoPessoaApi/serviceTipoPessoa";
 import { BtnGlobal } from "../../components/btnGlobal/btnGlobal";
 import styled from "styled-components";
-import ImageDropZone from "./Drop/ImageDropZone";
+import DropPrincipal from "../../components/DropPrincipal/ImageDropZone";
 type FormData = {
     placaVeiculo: string;
     nomeCompleto: string,
@@ -65,7 +65,7 @@ export const RegistrosPortaria = () => {
     const handleFileSelect = (file: File | null) => {
         setSelectedFile(file);
     };
-    const [bloqueioBTN,setbloqueioBTN] = useState(false);
+    const [bloqueioBTN, setbloqueioBTN] = useState(false);
     const onSubmit = async (data: FormData) => {
         setbloqueioBTN(true)
         const usaurio = subjet();
@@ -93,6 +93,7 @@ export const RegistrosPortaria = () => {
 
     };
     const handleCancelar = () => {
+        setResetCounter(prev => prev + 1)
         reset()
     }
     const senhaRef = useRef<HTMLInputElement>(null);
@@ -160,7 +161,7 @@ export const RegistrosPortaria = () => {
                                 <Template.Campos
                                     hasError={!!errors.placaVeiculo} type="text"
                                     autoComplete="current-password"
-                                    placeholder="Placa do veiculo"
+                                    placeholder="Placa do Veiculo"
 
                                     {...register("placaVeiculo", {
                                         required: "Placa E obrigatorio",
@@ -180,7 +181,7 @@ export const RegistrosPortaria = () => {
                                 </Template.Erros>
                             </Template.CamposInput>
                             <Template.CamposInput>
-                                <Template.label>Pessoa <Resize>*</Resize></Template.label>
+                                <Template.label>Nome <Resize>*</Resize></Template.label>
                                 <Template.Campos hasError={!!errors.nomeCompleto} placeholder="Nome Completo" type="text"
                                     autoComplete="current-password"
                                     {...register("nomeCompleto", {
@@ -201,7 +202,7 @@ export const RegistrosPortaria = () => {
                             </Template.CamposInput>
                             <Template.CamposInput>
                                 <Template.label>Numero de Telefone <Resize>*</Resize></Template.label>
-                                <Template.Campos hasError={!!errors.nomeCompleto} placeholder="Telefone" type="tel"
+                                <Template.Campos hasError={!!errors.nomeCompleto} placeholder="(99) 99999-9999" type="tel"
                                     autoComplete="current-password"
                                     {...register("numeroTelefone", {
                                         required: "O telefone é obrigatório.",
@@ -265,7 +266,7 @@ export const RegistrosPortaria = () => {
                                         {errors.tipPessoa && <Template.Erros><p>{errors.tipPessoa.message}</p></Template.Erros>}
                                     </Template.CamposInput>
                                     <Template.CamposInput>
-                                        <Template.label >Bloco <Resize>*</Resize></Template.label>
+                                        <Template.label >Bloco<Resize>*</Resize></Template.label>
                                         <Template.SelectItens {
                                             ...register("bloco", { required: "Selecione o bloco" })}>
                                             <Template.Options value="">Selecione</Template.Options>
@@ -305,8 +306,8 @@ export const RegistrosPortaria = () => {
                                 {tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO" &&
                                     <Template.CamposInput>
                                         <Template.label>Data <Resize>*</Resize></Template.label>
-                                        <Template.Campos 
-                                           hasError={!!errors.dataAcesso} placeholder="data" type="date"
+                                        <Template.Campos
+                                            hasError={!!errors.dataAcesso} placeholder="data" type="date"
                                             autoComplete="current-password"
                                             {...register("dataAcesso", {
                                                 required: "A data é obrigatória para acesso recorrente temporário"
@@ -314,8 +315,8 @@ export const RegistrosPortaria = () => {
                                             onKeyDown={(e) => focus(e)}
 
                                         />
-                                 {errors.dataAcesso && <Template.Erros><p>{errors.dataAcesso.message as any}</p></Template.Erros>}
-   
+                                        {errors.dataAcesso && <Template.Erros><p>{errors.dataAcesso.message as any}</p></Template.Erros>}
+
                                     </Template.CamposInput>
                                 }
                                 <Template.CamposInput>
@@ -324,13 +325,13 @@ export const RegistrosPortaria = () => {
                                 </Template.CamposInput>
                             </Template.Select>
                             <Template.label>IMG visitante<Resize>*</Resize></Template.label>
-                            <ImageDropZone onFileSelect={handleFileSelect} titulo={"Clique ou arraste outra imagem para substituir"} resetSignal={resetCounter} />
+                            <DropPrincipal onFileSelect={handleFileSelect} titulo={"Clique ou arraste outra imagem para substituir"} resetSignal={resetCounter} />
                             {selectedFile && <p>Arquivo selecionado: {selectedFile.name}</p>}
 
                         </Template.FormSub>
                         <Template.btnDivider>
                             <Template.BtnLogin disabled={bloqueioBTN} onClick={handleSubmit(onSubmit)}>Enviar Pedido</Template.BtnLogin>
-                            <BtnGlobal click={handleCancelar} nome_btn={"red"} isvalid={true}>Resetar</BtnGlobal>
+                            <BtnGlobal click={handleCancelar} nome_btn={"red"} isvalid={true}>Limpar</BtnGlobal>
                         </Template.btnDivider>
                     </Template.pedidos>
                 </Template.area_pedidos>
