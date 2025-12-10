@@ -6,7 +6,7 @@ import menuConfig from "./json"
 import MenuIcon from "@mui/icons-material/Menu";
 import { useContext, useEffect, useState } from "react";
 import { SiderBarComponent } from "../sideBar/siderbar";
-import { subjet } from "../../service/jwt/jwtservice";
+import { subjet } from "../../modulos/portaria/service/jwt/jwtservice";
 import { contextProvider } from "../../reducer/userProvider/userProvider";
 
 export const MenuConfig = () => {

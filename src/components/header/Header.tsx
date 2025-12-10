@@ -1,10 +1,10 @@
 import { PerfilComponet } from "../perfilComponentHeader/perfilComponet"
 import Header from "./header"
 import { useNavigate } from "react-router-dom";
-import { Logued } from "../../service/Logued"
+import { Logued } from "../../modulos/portaria/service/Logued"
 import { useContext } from "react";
 import { contextProvider } from "../../reducer/userProvider/userProvider";
-import { subjet } from "../../service/jwt/jwtservice";
+import { subjet } from "../../modulos/portaria/service/jwt/jwtservice";
 import logo from "../../assets/logo portaria (1).png"
 type props = {
     ativoBusca?: any,

@@ -2,12 +2,12 @@ import Template from "./updateRegistroCss";
 import { Button } from "@mui/material";
 import { Fragment, useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import apiSec from "../../../../service/api_secundaria"
-import type { RegistroVisitante } from "../../../../types/registros";
-import api from "../../../../service/api";
-import { notify } from "../../../../service/snackbarService";
-import serviceTipoPessoa from "../../../../service/tipoPessoaApi/serviceTipoPessoa";
-import { subjet } from "../../../../service/jwt/jwtservice";
+import apiSec from "../../../../modulos/portaria/service/api_secundaria"
+import type { RegistroVisitante } from "../../../../modulos/portaria/types/registros";
+import api from "../../../../modulos/portaria/service/api";
+import { notify } from "../../../../modulos/portaria/service/snackbarService";
+import serviceTipoPessoa from "../../../../modulos/portaria/service/tipoPessoaApi/serviceTipoPessoa";
+import { subjet } from "../../../../modulos/portaria/service/jwt/jwtservice";
 
 type Props = {
   handleCancel: () => void;
@@ -106,7 +106,7 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
             <Template.Campos
               type="text"
               autoComplete="current-password"
-              placeholder="Placa do veiculo"
+              placeholder="Nome completo"
 
               {...register("nomeCompleto", {
                 required: "Nome E obrigatorio"

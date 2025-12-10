@@ -111,7 +111,7 @@ export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visib
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Nome: </Template.Span>
-                                            <Template.Infor>{item?.nomeCompleto.trim().toUpperCase().split(" ")[0]}</Template.Infor>
+                                            <Template.Infor>{item?.nomeCompleto?.trim().toUpperCase().split(" ")[0]}</Template.Infor>
                                         </Template.inforLabel>
                                         <Template.inforLabel>
                                             <Template.Span>Tipo de Pessoa: </Template.Span>

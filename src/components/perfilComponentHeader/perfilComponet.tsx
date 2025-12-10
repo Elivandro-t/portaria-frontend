@@ -8,11 +8,11 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from "react-router-dom";
-import save from "../../service/localStorage/service-localStorage"
+import save from "../../modulos/portaria/service/localStorage/service-localStorage"
 import { contextProvider } from "../../reducer/userProvider/userProvider";
 import { useContext } from "react";
 import { LoadingSecundary } from "../LoadingSecundary/LoadingSecundary";
-import { subjet } from "../../service/jwt/jwtservice";
+import { subjet } from "../../modulos/portaria/service/jwt/jwtservice";
 const settings = [
   { name: "Minha Conta" },
   { name: "Portaria Pendentes", permissions: ["REGISTRAR_SAIDA"] },
