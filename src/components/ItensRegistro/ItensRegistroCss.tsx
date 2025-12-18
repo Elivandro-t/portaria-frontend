@@ -128,6 +128,7 @@ loading:styled.div`
 `,
 buttonNext:styled.button`
  color: blue;
+ background-color:blue;
  cursor: pointer;
  border: 0;
   background: transparent;

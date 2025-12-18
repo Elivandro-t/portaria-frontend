@@ -190,7 +190,7 @@ export const RegistrosPortaria = () => {
             <Template.container_principal>
                 {modo === "BUSCA" &&
                     <Template.AreaBuscaPlaca style={{ display: "flex" }}>
-                        <AlertComponent link={true} linkRouter={"/controle/registro"} titulo={"info"} msg={"Cadastro de visitante!"}></AlertComponent>
+                        <AlertComponent link={true} linkRouter={"/portaria/controle/registro"} titulo={"info"} msg={"Cadastro de visitante!"}></AlertComponent>
                         <Template.busca>
 
                             {/* <input

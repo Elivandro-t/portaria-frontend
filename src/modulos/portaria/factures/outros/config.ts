@@ -2,56 +2,56 @@ export default [
   {
     "label": "Usuários",
     "desc": "Cadastrar, editar, remover e gerenciar usuários.",
-    "to": "/config/usuarios",
+    "to": "/portaria/config/usuarios",
     "icon": "PersonIcon",
     "ativo":false
   },
   {
-    "label": "Perfis",
-    "desc": "Criar e configurar perfis de acesso.",
-    "to": "/config/perfis",
+    "label": "Adicionar Modulo",
+    "desc": "Configurar modulos de acesso ao usuario.",
+    "to": "/portaria/config/access",
     "icon": "BadgeIcon",
-     "ativo":false
+     "ativo":true
   },
   {
     "label": "Permissões",
     "desc": "Definir o que cada perfil pode acessar.",
-    "to": "/config/permissoes",
+    "to": "/portaria/config/permissoes",
     "icon": "KeyIcon",
      "ativo":false
   },
   {
     "label": "Filiais",
     "desc": "Cadastrar e gerenciar filiais.",
-    "to": "/config/filiais",
+    "to": "/portaria/config/filiais",
     "icon": "StoreIcon",
      "ativo":true
   },
   {
     "label": "Logs do Sistema",
     "desc": "Visualizar acessos e operações registradas.",
-    "to": "/config/logs",
+    "to": "/portaria/config/logs",
     "icon": "ListAltIcon",
      "ativo":true
   },
   {
     "label": "Resetar Senha",
     "desc": "Gerenciar redefinição de senhas.",
-    "to": "/config/reset",
+    "to": "/portaria/config/reset",
     "icon": "RestartAltIcon",
      "ativo":true
   },
   {
     "label": "Configurações Gerais",
     "desc": "Alterar regras do sistema e preferências.",
-    "to": "/config/geral",
+    "to": "/portaria/config/geral",
     "icon": "SettingsIcon",
      "ativo":false
   },
   {
     "label": "Auditoria",
     "desc": "Acompanhar ações dos usuários.",
-    "to": "/config/auditoria",
+    "to": "/portaria/config/auditoria",
     "icon": "VisibilityIcon",
      "ativo":false
   }

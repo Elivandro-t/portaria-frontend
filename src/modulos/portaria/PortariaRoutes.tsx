@@ -1,13 +1,10 @@
-import { useState, lazy, type ComponentType } from "react";
+import { lazy, type ComponentType } from "react";
 import { Route, Routes } from "react-router-dom";
 import { ControleDeAcesso } from "../../components/controleDeacesso/controledeAcesso";
-import { RedirectByPermissoes } from "../../RedirectByPerfil";
 import { AdicionarPerfilRouter } from "./factures/adicionarPerfil/adicionarPerfil";
-import { LoginComponen } from "./factures/auth/login/Login";
 import { ConfigComponent } from "./factures/config/config";
 import { ControleFilial } from "./factures/controle_de_filial_page/controleFIlial";
 import { ListahistoryComponent } from "./factures/history/lista/ListaHistory";
-import { LoadingR } from "./factures/LoadingR";
 import { LogsComponets } from "./factures/logsDoSistema/Logs";
 import { MeuPerfil } from "./factures/meu_perfil/meu_Perfil";
 import { OutrosPage } from "./factures/outros/outroInfor";
@@ -15,17 +12,20 @@ import { PermissoesComponets } from "./factures/permissoes/permissoes";
 import { MeusRegistroComponets } from "./factures/registros/meus_registros/meusRegistros";
 import { ResetComponets } from "./factures/reseteSenha/reseteRadom";
 import { AlterarSenhaUsuarioComponent } from "./factures/resetsenha/resetSenha";
-import { UnauthorizedPage } from "./factures/unauthorized/unauthorized";
 import { UsuarioListaComponets } from "./factures/Usuarios/Usuarios";
 import { VisitantesListaComponets } from "./factures/Visitantes/visitantes";
-import { subjet } from "./service/jwt/jwtservice";
 import { ProtectedRoute } from "./service/ProtectedRoute";
 import { HomeComponent } from "./factures/home/home";
 import { ListaRegistroComponent } from "./factures/history/RegistroFiliais/ListaRegistroHistory";
 import { RegistrosPortaria } from "./factures/novo registro/registroPortaria";
+import NotFund from "../../paga_segunds/404/NotFund";
+import { RedirectByPermissoes } from "../../RedirectByPerfil";
+import { subjet } from "./service/jwt/jwtservice";
+import MeusRegistros from "./factures/registros/registro_portaria/registro"
+import { PermissionComponent } from "./factures/Usuarios/permission/controle_de_filial_page/permission";
 
 function PortariaRoutes() {
-    const perfil = subjet()
+  const perfil = subjet()
 
     function lazyWidth<T extends ComponentType>
         (factory: () => Promise<{ default: T }>, delay: number) {
@@ -37,16 +37,14 @@ function PortariaRoutes() {
         );
     }
     const RegistrosPortariaAntigo = lazyWidth(() => import("./factures/novo registro/registroPortariaAntigo"), 500);
-    const NotFund = lazyWidth(() => import("./factures/404/NotFund"), 500);
-    const MeusRegistros = lazyWidth(() => import("./factures/registros/registro_portaria/registro"), 500);
     const VisualizarRegistro = lazyWidth(() => import("./factures/registros/detalhes_registro/visualizar_registro"), 500);
     const RegistroDeUsuarioComponent = lazyWidth(() => import("./factures/novoUsuario/registroUsuario"), 500);
     return (
         <Routes>
-            <Route path="/" element={
-                <RedirectByPermissoes permissoes={perfil?.perfil} />}
-            />
-            <Route path="/portaria"
+              <Route index element={
+                           <RedirectByPermissoes permissoes={perfil?.perfil} />}
+                         />
+            <Route path="/active"
                 element={
                     <ProtectedRoute >
                         <HomeComponent key={Date.now()} />
@@ -64,10 +62,7 @@ function PortariaRoutes() {
                         />
                     </ProtectedRoute>
                 } />
-                {/* <Route path="meus-pedidos"  element={<MainComponent />} /> */}
             </Route>
-            <Route index path="verify" element={<LoadingR />} />
-            <Route path="/login" element={<LoginComponen />} />
             <Route path="/teste" element={<HomeComponent key={Date.now()} />} />
             {/* rota pai */}
             <Route path="/controle"
@@ -81,7 +76,6 @@ function PortariaRoutes() {
                         <RegistrosPortaria key={Date.now()}
                         />
                     </ProtectedRoute>
-
 
                 } />
                 <Route path="registro" element={
@@ -154,6 +148,12 @@ function PortariaRoutes() {
                         />
                     </ProtectedRoute>
                 } />
+                <Route path="access" element={
+                    <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
+                        <PermissionComponent key={Date.now()}
+                        />
+                    </ProtectedRoute>
+                } />
                 <Route path="permissoes" element={
                     <ProtectedRoute allowedPermissions={["GERENCIAR_USUARIOS"]}>
                         <PermissoesComponets key={Date.now()}
@@ -205,9 +205,8 @@ function PortariaRoutes() {
                     </ProtectedRoute>
                 } />
             </Route>
-
-            <Route path="/unauthorized" element={<UnauthorizedPage />} />
             <Route path="*" element={<NotFund />} />
+
 
         </Routes>
     )

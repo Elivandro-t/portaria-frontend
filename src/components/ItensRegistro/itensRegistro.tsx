@@ -26,7 +26,6 @@ export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visib
         }
     };
     const exibirMais = () => {
-        // setVisibleCount(prev=>prev+1)
         hendleBusca()
     }
     const handleConvertData = (data: any) => {

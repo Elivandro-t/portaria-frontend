@@ -14,15 +14,15 @@ import {
     Input,
     Password
 } from "./Container"
-import logo from "../../../../assets/ptcontroleBanner.png"
+import logo from "../../../assets/ptcontroleBanner.png"
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import salve from "../../../service/localStorage/service-localStorage"
+import salve from "../../portaria/service/localStorage/service-localStorage"
 import VisibilityIcon from '@mui/icons-material/Visibility';         // 👁️ olho aberto
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';   // 🙈 olho fechado
-import Api from "../../../service/api"
-import { LoadingSecundary } from "../../../../../components/LoadingSecundary/LoadingSecundary";
+import Api from "../../portaria/service/api"
+import { LoadingSecundary } from "../../../components/LoadingSecundary/LoadingSecundary";
 import IconButton from "@mui/material/IconButton";
 type FormData = {
     email: string;

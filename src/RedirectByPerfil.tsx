@@ -24,7 +24,7 @@ export const RedirectByPermissoes = ({ permissoes }: Props) => {
     case "FISCAL":
       return <Navigate to= "/portaria/pendentes" replace />;
     case "AUTORIZADOR":
-      return <Navigate to="/portaria" replace />;
+      return <Navigate to="/portaria/active" replace />;
     case "ADMIN":
       return <Navigate to= "/portaria/pendentes" replace />;
     case "GERENTE_PREVENCAO":

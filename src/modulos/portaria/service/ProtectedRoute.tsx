@@ -24,7 +24,7 @@ export const ProtectedRoute = ({ children, allowedPermissions }: ProtectedRouteP
 
   useEffect(() => {
     const token = !!localStorage.getItem("acessToken");
-    if (token) {
+    if (token!=null) {
       setIsAuthenticated(true);
       const user = subjet();
       setUserPermissions(user?.permissoes || []);

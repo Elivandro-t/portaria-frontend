@@ -46,7 +46,7 @@ function MeusRegistros() {
     const hendleDetalhesPedidos = (numeroDoRegistro: string) => {
         setLoading(true);
         setTimeout(() => {
-            navigate(`/controle/detalhes-registro?order=${numeroDoRegistro}`, { replace: false, state: { refresh: Date.now() } })
+            navigate(`/portaria/controle/detalhes-registro?order=${numeroDoRegistro}`, { replace: false, state: { refresh: Date.now() } })
         }, 2000)
     }
    const handleFiltroEntrada = ()=>{

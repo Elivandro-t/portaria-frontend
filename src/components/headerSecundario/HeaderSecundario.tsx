@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 export const HeaderSecundarioComponent = () => {
     const navigate = useNavigate()
     const hendleHome = () => {
-        navigate(-1)
+        navigate("/portaria")
     }
     return (
         <>

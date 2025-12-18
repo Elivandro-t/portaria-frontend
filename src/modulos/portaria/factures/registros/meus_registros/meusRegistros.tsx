@@ -37,12 +37,11 @@ export const MeusRegistroComponets = () => {
         setLoading(true)
         setTimeout(
             () => {
-                navigate(`/controle/detalhes-registro?order=${numeroDoRegistro}`, { replace: false, state: { refresh: Date.now() } })
+                navigate(`/portaria/controle/detalhes-registro?order=${numeroDoRegistro}`, { replace: false, state: { refresh: Date.now() } })
                 setLoading(false)
 
             }
             , 1000);
-
     }
 
     return (

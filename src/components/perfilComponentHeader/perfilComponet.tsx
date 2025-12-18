@@ -44,14 +44,14 @@ export const PerfilComponet = () => {
     switch (setting) {
       case "Meus Registros":
         setLoading(true)
-        navigate("/controle/meus-registros", { replace: false });
+        navigate("/portaria/controle/meus-registros", { replace: false });
         setTimeout(() => setLoading(false), 800);
 
         break;
       case "Minha Conta":
         setLoading(true)
         setTimeout(() => {
-          navigate("/controle/profile");
+          navigate("/portaria/controle/profile");
           setLoading(false)
         }, 1000)
 
@@ -73,14 +73,14 @@ export const PerfilComponet = () => {
       case "Criar Registro":
         setLoading(true)
         setTimeout(() => {
-          navigate("/controle/registro-portaria-cd");
+          navigate("/portaria/controle/registro-portaria-cd");
           setLoading(false)
         }, 1000)
         break;
       case "Configuraçoẽs":
         setLoading(true)
         setTimeout(() => {
-          navigate("/config");
+          navigate("/portaria/config");
           setLoading(false)
         }, 1000)
         break
