@@ -7,7 +7,7 @@ import type { RegistroVisitante } from "../../../../modulos/portaria/types/regis
 import api from "../../../../modulos/portaria/service/api";
 import { notify } from "../../../../modulos/portaria/service/snackbarService";
 import serviceTipoPessoa from "../../../../modulos/portaria/service/tipoPessoaApi/serviceTipoPessoa";
-import { subjet } from "../../../../modulos/portaria/service/jwt/jwtservice";
+import { subjet } from "../../../../jwt/jwtservice";
 
 type Props = {
   handleCancel: () => void;

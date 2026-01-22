@@ -3,7 +3,7 @@ import { LoadingSecundary } from "../../../../../components/LoadingSecundary/Loa
 import api from "../../../service/api_secundaria";
 import ImageDropZone from "../../novo registro/Drop/ImageDropZone";
 import type { RegistroVisitante } from "../../../types/registros";
-import { subjet } from "../../../service/jwt/jwtservice";
+import { subjet } from "../../../../../jwt/jwtservice";
 import type { AtualizaStatus } from "../../../types/stualizaStatus";
 import { notify } from "../../../service/snackbarService";
 import { Alert } from "@mui/material";
@@ -46,6 +46,8 @@ const VisualizarRegistro = () => {
   const verifyEntrada = item?.status.includes("AGUARDANDO_ENTRADA");
   const [nomeBtn, setNomeBtn] = useState("")
   const [msg, setMsg] = useState("")
+
+  const [tilulomsg, setTituloMsg] = useState("")
   const hendleBTNIMG = (imagem: string) => {
     setImagemAtivo(true)
     setImagem(imagem)
@@ -65,16 +67,20 @@ const VisualizarRegistro = () => {
       registroId
     }
     if (selectedFile != null) {
-      setExibe(false)
       try {
+        setConfirm("LOADING")
+
         const resposta = await api.alterarEntrada(data, selectedFile as any);
         if (resposta) {
-          notify(resposta.msg, "success")
           setResetCounter(prev => prev + 1)
           const detalhesAtualizados = await api.consuta_portaria(numeroDoRegistro);
+
           if (detalhesAtualizados) {
             setRegistro(detalhesAtualizados);
             setLoading(false);
+            setConfirm("SUCCESS")
+
+            setTituloMsg(resposta.msg);
           }
         }
       } catch (error) {
@@ -85,8 +91,7 @@ const VisualizarRegistro = () => {
     } else {
       setTimeout(() => {
         notify("Selecione uma imagem", "error")
-        setLoading(false),
-          setExibe(false)
+        setLoading(false)
       }, 2000)
     }
 
@@ -98,23 +103,23 @@ const VisualizarRegistro = () => {
   const permissionEdit = permissions.includes("EDITAR_REGISTRO")
   const SolicitarSaida = async (registroId: any) => {
     setLoading(true)
+    setConfirm("CONFIRM")
+
     const usuarioId = usuario?.id as any;
     const data: AtualizaStatus = {
       usuarioId,
       registroId
     }
     if (selectedFile != null) {
-      setExibe(false)
-
+      setConfirm("LOADING")
       const resposta = await api.alterarSaida(data, selectedFile as any);
       if (resposta) {
-        notify(resposta.msg, "success")
+        setTituloMsg(resposta.msg)
         const detalhesAtualizados = await api.consuta_portaria(numeroDoRegistro);
         setResetCounter(prev => prev + 1)
         if (detalhesAtualizados) {
           setRegistro(detalhesAtualizados);
-          setLoading(false),
-            setExibe(false)
+          setConfirm("SUCCESS")
         }
       }
 
@@ -122,28 +127,28 @@ const VisualizarRegistro = () => {
       setTimeout(() => {
         notify("Selecione uma imagem", "error")
         setLoading(false);
-        setExibe(false)
       }, 2000)
     }
 
   }
+  const [confirm, setConfirm] = useState("");
 
   const handleConfirmeLiberacao = () => {
     if (selectedFile != null) {
-      setExibe(true)
+      setExibe(true);
+      setConfirm("CONFIRM")
       if (verifyEntrada) {
         setNomeBtn("Liberar Entrada");
-        setMsg(`Deseja realmente liberar a entrada de <b>${item?.nomeCompleto}</b>?`)
+        setMsg(`Deseja liberar a entrada de <b>${item?.nomeCompleto}</b>?`);
       } else {
         setNomeBtn("Liberar Saida");
-        setMsg(`Deseja realmente liberar a saída de <b>${item?.nomeCompleto}</b>?`)
+        setMsg(`Deseja liberar a saída de <b>${item?.nomeCompleto}</b>?`)
 
       }
     } else {
       setTimeout(() => {
         notify("Selecione uma imagem", "error")
         setLoading(false);
-        setExibe(false)
       }, 100)
     }
   }
@@ -172,6 +177,20 @@ const VisualizarRegistro = () => {
         return "#DC2626";
     }
   };
+
+  function handleConvertData(data: any) {
+    const date = new Date(data);
+
+    const hora = date.toLocaleTimeString("pt-BR", {
+      hour: "2-digit",
+      minute: "2-digit",
+    });
+
+    const dia = date.toLocaleDateString("pt-BR");
+
+    return `${hora} ${dia}`;
+  }
+
   return (
     <>
       {item ? (
@@ -210,7 +229,7 @@ const VisualizarRegistro = () => {
                 </Template.status>
               </Template.heanderPedido>
               <Template.CardCentro >
-                <Template.Image src={item?.visitante.imagem} />
+                <Template.Image onClick={() => hendleBTNIMG(item.visitante.imagem)} src={item?.visitante.imagem} />
                 <Template.ItemDetails>
                   <Template.AreaItemJust>
                     <Template.Label>Nome Completo:</Template.Label>
@@ -218,7 +237,7 @@ const VisualizarRegistro = () => {
                   </Template.AreaItemJust>
                   <Template.AreaItemJust>
                     <Template.Label>Tipo de Pessoa:</Template.Label>
-                    <Template.LabelSubtitulo>{item?.visitante.ocupacao.toUpperCase()
+                    <Template.LabelSubtitulo>{item?.visitante.tipoPessoa.toUpperCase()
                     }
 
                     </Template.LabelSubtitulo>
@@ -267,32 +286,24 @@ const VisualizarRegistro = () => {
                     </Template.LabelSubtitulo>
                   </Template.AreaItemJustRigth>
                 </Template.SummaryRow>
-                {/* <Template.SummaryRow>
-              <Template.AreaItemJustCenter>
-                <Template.Label>Autorizador:</Template.Label>
-                <Template.LabelSubtitulo>{item?.autorizador.nome}</Template.LabelSubtitulo>
-              </Template.AreaItemJustCenter>
-              <Template.AreaItemJustRigth>
-                <Template.Label>Função Autorizador:</Template.Label>
-                <Template.LabelSubtitulo>{item?.autorizador.ocupacaoOperacional}</Template.LabelSubtitulo>
-              </Template.AreaItemJustRigth>
-            </Template.SummaryRow> */}
                 {item?.Obs &&
                   <div style={{ display: "flex", flexDirection: "column", gap: 3 }}>
                     <Template.Label>Observações:</Template.Label>
-                    <Template.LabelSubtitulo>{item?.Obs}</Template.LabelSubtitulo>
+                    <Template.LabelDescrip>{item?.Obs}</Template.LabelDescrip>
                   </div >
                 }
                 <Template.imagemArea>
                   {item?.entrada && item?.entrada?.imagem &&
                     <Template.ImagemItemRecebido>
                       <p><strong>Imagem Entrada:</strong></p>
+                      <small style={{ fontSize: 10, color: "#333" }}>{handleConvertData(item?.entrada?.dataEntrada)}</small>
                       <Template.ItemImage onClick={() => hendleBTNIMG(item.entrada.imagem)} src={item?.entrada?.imagem} />
                     </Template.ImagemItemRecebido>
                   }
                   {item?.saida && item?.saida?.imagem &&
                     <Template.ImagemItemRecebido>
                       <p><strong>Imagem Saida:</strong></p>
+                      <small style={{ fontSize: 10, color: "#333" }}>{handleConvertData(item?.saida?.dataSaida)}</small>
                       <Template.ItemImage onClick={() => hendleBTNIMG(item?.saida?.imagem)} src={item?.saida?.imagem} />
                     </Template.ImagemItemRecebido>
                   }
@@ -306,14 +317,6 @@ const VisualizarRegistro = () => {
                         <ImageDropZone onFileSelect={handleFileSelect} resetSignal={resetCounter}></ImageDropZone>
                       </Template.ImagemItemRecebido>
                     }
-                    {/* {
-
-                      item?.status.includes("AGUARDANDO_ENTRADA") ? (
-                        <Template.Button ativo={item?.ativo || !selectedFile} onClick={() => solicitarLiberacao(item?.id)}>Liberar Entrada</Template.Button>
-                      ) : (
-                        <Template.Button ativo={item?.ativo} onClick={() => SolicitarSaida(item?.id)}>Liberar Saida</Template.Button>
-                      )
-                    } */}
                     <Template.Button ativo={item?.ativo} onClick={handleConfirmeLiberacao}>{verifyEntrada ? "Liberar Entrada" : "Liberar Saida"}</Template.Button>
 
                   </>
@@ -342,7 +345,7 @@ const VisualizarRegistro = () => {
             <PopupUpdateResgistroComponent data={item as any} handleCancel={volta} message={""} ativoBtn={false} />
           }
           {exibe &&
-            <ConfirmComponent handleConfirm={headleConfirm} handleCancel={hendleCancelar} message={msg} ativoBtn={true} btnName={nomeBtn} />
+            <ConfirmComponent confirm={confirm as any} handleConfirm={headleConfirm} handleCancel={hendleCancelar} message={msg} ativoBtn={true} btnName={nomeBtn} titutlo={tilulomsg} />
           }
         </div>
       ) : (<>

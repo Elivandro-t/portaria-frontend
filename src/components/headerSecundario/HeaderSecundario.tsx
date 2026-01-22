@@ -1,10 +1,14 @@
 import { BotaoVoltar } from "../voltar/BotaoVoltar";
 import Header from "./headerSecundario"
 import { useNavigate } from "react-router-dom";
-export const HeaderSecundarioComponent = () => {
+type props = {
+    titulo:any,
+    ativo:boolean
+}
+export const HeaderSecundarioComponent = ({titulo,ativo}:props) => {
     const navigate = useNavigate()
     const hendleHome = () => {
-        navigate("/portaria")
+        navigate("/")
     }
     return (
         <>
@@ -14,11 +18,14 @@ export const HeaderSecundarioComponent = () => {
                         <Header.btnLogin>
                             {/* <Header.ButtomService onClick={hendleHome} >
                                 {/* <ArrowBackIcon /> */}
-                                <BotaoVoltar/>
+                               {
+                                ativo &&
+                                  <BotaoVoltar/>
+                               }
                     
                         </Header.btnLogin>
                      <Header.logo onClick={() => hendleHome()}>
-                                Portaria - Controle de Acesso
+                               {titulo}
                         </Header.logo>
                     
                 </Header.container>
@@ -28,3 +35,5 @@ export const HeaderSecundarioComponent = () => {
 
     )
 }
+
+//  Portaria - Controle de Acesso

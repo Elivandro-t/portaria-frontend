@@ -10,7 +10,7 @@
 
 import { useEffect, useState, type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
-import { subjet } from "./jwt/jwtservice";
+import { subjet } from "../../../jwt/jwtservice";
 
 interface ProtectedRouteProps {
   children: ReactNode;

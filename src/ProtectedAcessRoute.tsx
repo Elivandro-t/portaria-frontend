@@ -1,7 +1,7 @@
 import { useEffect, useState, type ReactNode } from "react";
 import { Navigate } from "react-router-dom";
 import apiAcess from "./modulos/PaginaInicial/service/moduleApi"
-import { subjet } from "./modulos/portaria/service/jwt/jwtservice";
+import { subjet } from "./jwt/jwtservice";
 
 interface ProtectedRouteProps {
   children: ReactNode;

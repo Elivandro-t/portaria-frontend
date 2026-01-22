@@ -3,7 +3,6 @@ import { useState, type ComponentType } from "react";
 import { ProviderUser } from "./reducer/userProvider/userProvider";
 import { lazy, Suspense } from "react";
 import { LoadingSecundary } from "./components/LoadingSecundary/LoadingSecundary";
-import PaginaInicial from "./modulos/PaginaInicial/PaginaInicial";
 import { LoadingR } from "./modulos/portaria/factures/LoadingR";
 import { LoginComponen } from "./modulos/auth/login/Login";
 import { ProtectedRoute } from "./ProtectedAcessRoute";
@@ -20,8 +19,11 @@ const App = () => {
     );
   }
   const PortariaRoutes = lazyWidth(() => import("./modulos/portaria/PortariaRoutes"), 500);
+    const Logistico = lazyWidth(() => import("./modulos/logistico/logisticoRouter"), 500);
+
   const NotFund = lazyWidth(() => import("./paga_segunds/404/NotFund"), 500);
   const UnauthorizedPage = lazyWidth(() => import("./paga_segunds/unauthorized/unauthorized"), 500);
+  const PaginaPrincipal = lazyWidth(() => import("./modulos/PaginaInicial/Pagina.router"), 500);
 
   return (
     //  <LoadingR></LoadingR>
@@ -33,14 +35,19 @@ const App = () => {
             <Route path="/" element={<Navigate to="/required" replace />} />
 
             {/*modulo portaria, usando arquitetura modular */}
-            <Route path="required" element={
+            <Route path="required/*" element={
               <ProtectedRoute>
-                <PaginaInicial />
+                <PaginaPrincipal />
               </ProtectedRoute>
             } />
             <Route path="portaria/*" element={
               <ProtectedRoute allowedPermissions="PORTARIA_ACCESS">
                 <PortariaRoutes />
+              </ProtectedRoute>
+            } />
+             <Route path="logistico/*" element={
+              <ProtectedRoute allowedPermissions="LOGISTICO_ACCESS">
+                <Logistico />
               </ProtectedRoute>
             } />
             <Route index path="verify" element={<LoadingR />} />

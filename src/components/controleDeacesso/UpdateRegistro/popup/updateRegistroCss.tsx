@@ -3,97 +3,126 @@ import styled from "styled-components";
 export default {
   container: styled.div`
     position: fixed;
+    inset: 0; // Atalho para top/left/right/bottom: 0
     width: 100%;
     height: 100vh;
-    z-index: 10;
-    top: 0;
-    left: 0;
+    z-index: 999;
     display: flex;
     align-items: center;
     justify-content: center;
-    background-color: rgba(0, 0, 0, 0.5);
-    @media screen  and (max-width:560px){
-      padding:0 10px;
-      
-    }
+    background-color: rgba(0, 0, 0, 0.4);
+    backdrop-filter: blur(4px); // Efeito moderno de desfoque ao fundo
+    padding: 20px;
   `,
-  label: styled.label`
-    font-size: 0.95rem;        // tamanho equilibrado
-    font-weight: 500;          // levemente forte, mas não pesado
-    color: var(--cor-texto-campos);            // tom claro suave (ótimo em fundos escuros)
-    font-family: "Inter", sans-serif;
-    letter-spacing: 0.3px;     // pequeno espaçamento entre letras
-    margin-bottom: 6px;        // dá um respiro entre label e input
-    `,
-  CamposInput: styled.div`
-   display: flex;
-   flex-direction: column;
-   align-items: start;
-    width: 100%;
-     margin: 5px 0;
-    `,
-  Campos: styled.input`
-      width: 100%;
-      height: 38px;
-      border:1px solid #d6d6d6;
-      background-color:#FFF;
-      border-radius: 5px;
-      border: 1px solid  '#ccc';
-      &:focus {
-          outline: none;
-          border-color:'#007BFF';
-      }
-      padding:5px;
-  
-  
-      `,
 
   container_int: styled.section`
-    width: 400px;
-        box-sizing: border-box;
-
-    background-color: #fff;
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
-    border-radius: 10px;
+    width: 100%;
+    max-width: 450px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     display: flex;
     flex-direction: column;
-    padding: 16px;
-    position: relative;
+    overflow: hidden;
+    animation: fadeIn 0.3s ease-out;
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
   `,
 
   header: styled.div`
+    padding: 20px 24px 0;
     display: flex;
-    width: 100%;
-    justify-content: flex-end;
+    justify-content: space-between;
+    align-items: center;
+    
+    h2 {
+      margin: 0;
+      font-size: 1.25rem;
+      color: #1a1a1a;
+      font-family: "Inter", sans-serif;
+      font-weight: 600;
+    }
   `,
 
   content: styled.div`
+    padding: 24px;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    flex: 1;
-    text-align: center;
+    gap: 16px; // Espaçamento consistente entre campos
+  `,
+
+  CamposInput: styled.div`
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+  `,
+
+  label: styled.label`
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #4b5563; // Cinza médio profissional
+    font-family: "Inter", sans-serif;
+    margin-bottom: 6px;
+    display: block;
+  `,
+
+  Campos: styled.input`
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.9rem;
+    transition: all 0.2s ease;
+    box-sizing: border-box;
+
+    &:focus {
+      outline: none;
+      border-color: #2563eb;
+      background-color: #fff;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+
+    &::placeholder {
+      color: #9ca3af;
+    }
+  `,
+
+  SelectItens: styled.select`
+    width: 100%;
+    height: 42px;
+    padding: 0 12px;
+    border: 1px solid #e5e7eb;
+    background-color: #f9fafb;
+    border-radius: 8px;
+    font-family: "Inter", sans-serif;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+
+    &:focus {
+      outline: none;
+      border-color: #2563eb;
+      box-shadow: 0 0 0 4px rgba(37, 99, 235, 0.1);
+    }
+  `,
+
+  Options: styled.option`
+    font-size: 14px;
+    padding: 10px;
   `,
 
   buttons: styled.div`
     display: flex;
-    gap: 20px;
-    margin-top: 40px;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 12px;
+    padding-top: 20px;
+    border-top: 1px solid #f3f4f6;
   `,
-  SelectItens: styled.select`
-    width: 100%;
-    height: 38px;
-    border:1px solid #d6d6d6;
-    background-color:transparent;
-        background-color:#FFF;
-
-    border-radius: 5px;
-    border: 1px solid #ccc;
-    
-    `,
-        Options: styled.option`
-        font-size: 12px;
-        `,
-
 };

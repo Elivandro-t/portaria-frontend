@@ -4,13 +4,12 @@ import './index.css'
 import App from './App.tsx'
 import { SnackbarProvider } from './modulos/portaria/service/snackbar.tsx'
 import { NetworkProvider } from './reducer/networkContext.tsx'
-createRoot(document.getElementById('root')!).render(
-      <SnackbarProvider>
-        <NetworkProvider>
-            <App />
-          </NetworkProvider>
-      </SnackbarProvider >
+const root = createRoot(document.getElementById('root')!);
+root.render(
+  <SnackbarProvider>
+    <NetworkProvider>
+      <App />
+    </NetworkProvider>
+  </SnackbarProvider >
+);
 
-
-
-)

@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import styled from "styled-components";
-import { subjet } from "../../../service/jwt/jwtservice";
+import { subjet } from "../../../../../jwt/jwtservice";
 import serviceTipoPessoa from "../../../service/tipoPessoaApi/serviceTipoPessoa";
 import Template from "../RegistroPortariaCss"
 import Api from "../../../service/apiRegistro/apiRegistro"
@@ -12,8 +12,8 @@ import { BtnGlobal } from "../../../../../components/btnGlobal/btnGlobal";
 // import DropPrincipal from "../../components/DropPrincipal/ImageDropZone";
 
 type FormData = {
-    typeMethod:"VISITANTE"|"NAO_VISITANTE",
-    visitanteId:number,
+    typeMethod: "VISITANTE" | "NAO_VISITANTE",
+    visitanteId: number,
     tipoAcesso?: string,
     bloco: string,
     descricao?: string,
@@ -23,21 +23,22 @@ type FormData = {
     dataAcesso?: any,
 };
 type VisitanteData = {
-    id:any,
+    id: any,
     nomeCompleto?: string;
     imagem?: string; // Assumindo que a URL da imagem virá aqui
     // Adicione outras propriedades relevantes do visitante aqui:
     tipoPessoa?: string;
     categoriaAcesso?: string;
     placaVeiculo?: string;
-    numeroTelefone:any
+    numeroTelefone: any
     // ... outras propriedades que a API retorna
 };
 
 // 2. Defina a interface (ou tipo) para as props do SlidePortariaComponent
 type SlideProps = {
     visitante: VisitanteData;
-    tipo:()=>void};
+    tipo: () => void
+};
 const Resize = styled.span`
   color: red;
   `;
@@ -47,7 +48,7 @@ export const ocupacoesLiberada = [
     { id: 2, nome: "Motorista e Passageiros", codigo: "DIR" },
 
 ];
-export const SlidePortariaComponent = ({visitante,tipo}:SlideProps) => {
+export const SlidePortariaComponent = ({ visitante, tipo }: SlideProps) => {
 
     const { register, handleSubmit, formState: { errors }, reset, watch } = useForm<FormData>({
         defaultValues: {
@@ -62,12 +63,12 @@ export const SlidePortariaComponent = ({visitante,tipo}:SlideProps) => {
     const tipoAcesso = watch("tipoAcesso");
     const [bloqueioBTN, setbloqueioBTN] = useState(false);
     const onSubmit = async (data: FormData) => {
-       try{
-         setbloqueioBTN(true)
-        const usuario = subjet();
-        if (!data.descricao) {
-            delete data.descricao;
-        }
+        try {
+            setbloqueioBTN(true)
+            const usuario = subjet();
+            if (!data.descricao) {
+                delete data.descricao;
+            }
             data.criadorId = usuario?.id as any;
             const acess = tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO";
             if (!acess) {
@@ -75,6 +76,9 @@ export const SlidePortariaComponent = ({visitante,tipo}:SlideProps) => {
             }
             data.typeMethod = "VISITANTE";
             data.visitanteId = visitante?.id
+            if(tipoAcesso==null){
+               data.tipoAcesso = visitante.categoriaAcesso;
+            }
             const resposta = await Api.RegistroFactory(data);
             if (resposta) {
                 setbloqueioBTN(false)
@@ -82,9 +86,9 @@ export const SlidePortariaComponent = ({visitante,tipo}:SlideProps) => {
                 reset()
 
             }
-       }finally{
-        setbloqueioBTN(false)
-       }
+        } finally {
+            setbloqueioBTN(false)
+        }
 
     };
     const handleCancelar = () => {
@@ -96,7 +100,6 @@ export const SlidePortariaComponent = ({visitante,tipo}:SlideProps) => {
         nextRef?: React.RefObject<HTMLInputElement | null>
     ) => {
         if (event.key === "Enter") {
-            // event.preventDefault();
             nextRef?.current?.focus();
         }
     };
@@ -172,38 +175,38 @@ export const SlidePortariaComponent = ({visitante,tipo}:SlideProps) => {
                                     </Template.CamposInput>
                                 </Template.leftArea>
                                 {/* Select 1  erro*/}
-                         
-                                <Template.leftArea>
-                                     {permissionEdit &&
-                                    <Template.CamposInput >
-                                        <Template.label>Recorrência do Acesso <Resize>*</Resize></Template.label>
-                                        <Template.SelectItens  {...register("tipoAcesso", { required: "Selecione o Tipo de acesso" })}>
-                                            <Template.Options value="">Selecione</Template.Options>
-                                            {recorrencia.map(rec => (
-                                                <Template.Options value={rec?.nome.toLowerCase()}>{rec?.nome}</Template.Options>
 
-                                            ))}
-                                        </Template.SelectItens>
-                                        {errors.tipoAcesso && <Template.Erros><p>{errors.tipoAcesso.message}</p></Template.Erros>}
-                                    
-                                    </Template.CamposInput>
-                                    
-}                                    {permissionEdit && tipoAcesso?.toUpperCase() === "RECORRENTE"  &&
-                                    <Template.CamposInput>
-                                        <Template.label >Global?
-                                        </Template.label>
-                                        <Template.labelCheck style={{ display: "flex" }}>
-                                            <Template.checkbox type="radio" value="true" {
-                                                ...register("globalAtivo")} />
-                                            <small>Sim</small>
-                                        </Template.labelCheck>
-                                        <Template.labelCheck>
-                                            <Template.checkbox type="radio" value="false"{
-                                                ...register("globalAtivo")} />
-                                            <small>Não</small>
-                                        </Template.labelCheck>
-                                    </Template.CamposInput>
-                                }
+                                <Template.leftArea>
+                                    {permissionEdit &&
+                                        <Template.CamposInput >
+                                            <Template.label>Recorrência do Acesso <Resize>*</Resize></Template.label>
+                                            <Template.SelectItens  {...register("tipoAcesso", { required: "Selecione o Tipo de acesso" })}>
+                                                <Template.Options value="">Selecione</Template.Options>
+                                                {recorrencia.map(rec => (
+                                                    <Template.Options value={rec?.nome.toLowerCase()}>{rec?.nome}</Template.Options>
+
+                                                ))}
+                                            </Template.SelectItens>
+                                            {errors.tipoAcesso && <Template.Erros><p>{errors.tipoAcesso.message}</p></Template.Erros>}
+
+                                        </Template.CamposInput>
+
+                                    }                                    {permissionEdit && tipoAcesso?.toUpperCase() === "RECORRENTE" &&
+                                        <Template.CamposInput>
+                                            <Template.label >Global?
+                                            </Template.label>
+                                            <Template.labelCheck style={{ display: "flex" }}>
+                                                <Template.checkbox type="radio" value="true" {
+                                                    ...register("globalAtivo")} />
+                                                <small>Sim</small>
+                                            </Template.labelCheck>
+                                            <Template.labelCheck>
+                                                <Template.checkbox type="radio" value="false"{
+                                                    ...register("globalAtivo")} />
+                                                <small>Não</small>
+                                            </Template.labelCheck>
+                                        </Template.CamposInput>
+                                    }
                                     <Template.CamposInput>
                                         <Template.label>Ocupação Liberada <Resize>*</Resize></Template.label>
                                         <Template.SelectItens {...register("ocupacaoLiberada", { required: "Selecione uma ocupaçao" })}>
@@ -215,7 +218,7 @@ export const SlidePortariaComponent = ({visitante,tipo}:SlideProps) => {
                                         {errors.ocupacaoLiberada && <Template.Erros><p>{errors.ocupacaoLiberada.message}</p></Template.Erros>}
                                     </Template.CamposInput>
                                 </Template.leftArea>
-                                
+
                                 {tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO" &&
                                     <Template.CamposInput>
                                         <Template.label>Data <Resize>*</Resize></Template.label>

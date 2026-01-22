@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { Logued } from "../../modulos/portaria/service/Logued"
 import { useContext } from "react";
 import { contextProvider } from "../../reducer/userProvider/userProvider";
-import { subjet } from "../../modulos/portaria/service/jwt/jwtservice";
+import { subjet } from "../../jwt/jwtservice";
 import logo from "../../assets/logo portaria (1).png"
 type props = {
     ativoBusca?: any,
@@ -15,7 +15,7 @@ export const HeaderComponent = ({ ativoBusca,filial }: props) => {
     const usuario = subjet();
     const navigate = useNavigate()
 
-    const hendleHome = () => {
+    const handleHome = () => {
         navigate("/")
     }
 
@@ -24,8 +24,8 @@ export const HeaderComponent = ({ ativoBusca,filial }: props) => {
             <Header.areaHeader>
                 <Header.container>
                     <Header.areaLogo>
-                      <Header.logo src={logo} onClick={() => hendleHome()}/>
-                      <span>CD - {filial}</span>
+                      <Header.logo src={logo} onClick={handleHome}/>
+                      <span onClick={handleHome}>CD - {filial}</span>
                     </Header.areaLogo>
                     
                     {ativoBusca &&

@@ -1,8 +1,5 @@
 import axios from "axios";
-
 const base = import.meta.env.VITE_API_URL;
-
-
 const visitanteBuscaPlaca= async (endpoint:any,visitanteID?:any,nome?:any)=>{
     const params = new URLSearchParams();
     if(visitanteID!==null && visitanteID!==undefined){

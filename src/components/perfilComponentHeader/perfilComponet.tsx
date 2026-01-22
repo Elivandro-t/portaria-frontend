@@ -8,21 +8,20 @@ import Avatar from '@mui/material/Avatar';
 import Tooltip from '@mui/material/Tooltip';
 import MenuItem from '@mui/material/MenuItem';
 import { useNavigate } from "react-router-dom";
-import save from "../../modulos/portaria/service/localStorage/service-localStorage"
+import save from "../../localStorage/service-localStorage"
 import { contextProvider } from "../../reducer/userProvider/userProvider";
 import { useContext } from "react";
 import { LoadingSecundary } from "../LoadingSecundary/LoadingSecundary";
-import { subjet } from "../../modulos/portaria/service/jwt/jwtservice";
+import { subjet } from "../../jwt/jwtservice";
 const settings = [
   { name: "Minha Conta" },
   { name: "Portaria Pendentes", permissions: ["REGISTRAR_SAIDA"] },
   { name: "Meus Registros", permissions: ["VISUALIZAR_REGISTRO"] },
   { name: "Registros Gerais", permissions: ["GERENCIAR_REGISTROS"] },
+  { name: "Controle De Registros", permissions: ["GERENCIAR_REGISTROS"] },
   { name: "Criar Registro", permissions: ["CRIAR_REGISTRO"] },
-  { name: "Configuraçoẽs", permissions: ["LISTA_GERAL"] },
   { name: "Sair" }
 ];
-
 export const PerfilComponet = () => {
   const user = subjet()
   const contex = useContext(contextProvider)
@@ -34,7 +33,6 @@ export const PerfilComponet = () => {
   const handleOpenUserMenu = (event: React.MouseEvent<HTMLElement>) => {
     setAnchorElUser(event.currentTarget);
   };
-
   function removeToken() {
     save.logout()
   }
@@ -51,7 +49,7 @@ export const PerfilComponet = () => {
       case "Minha Conta":
         setLoading(true)
         setTimeout(() => {
-          navigate("/portaria/controle/profile");
+          navigate("/required/profile");
           setLoading(false)
         }, 1000)
 
@@ -59,14 +57,21 @@ export const PerfilComponet = () => {
       case "Registros Gerais":
         setLoading(true)
         setTimeout(() => {
-          navigate("/portaria/gerais");
+          navigate("/portaria/active/gerais");
           setLoading(false)
         }, 1000)
         break;
       case "Portaria Pendentes":
         setLoading(true)
         setTimeout(() => {
-          navigate("/portaria/pendentes");
+          navigate("/portaria/active/pendentes");
+          setLoading(false)
+        }, 1000)
+        break;
+      case "Controle De Registros":
+        setLoading(true)
+        setTimeout(() => {
+          navigate("/portaria/configuracao");
           setLoading(false)
         }, 1000)
         break;
@@ -77,13 +82,6 @@ export const PerfilComponet = () => {
           setLoading(false)
         }, 1000)
         break;
-      case "Configuraçoẽs":
-        setLoading(true)
-        setTimeout(() => {
-          navigate("/portaria/config");
-          setLoading(false)
-        }, 1000)
-        break
       case "Sair":
         removeToken()
         window.location.href = "/verify";

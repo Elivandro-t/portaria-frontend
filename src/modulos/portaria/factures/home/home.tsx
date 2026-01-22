@@ -2,10 +2,10 @@ import { Outlet, useOutlet } from "react-router-dom";
 import { HeaderComponent } from "../../../../components/header/Header"
 import Makert from "./homeCss"
 import { useEffect } from "react";
-import { subjet } from "../../service/jwt/jwtservice";
+import { subjet } from "../../../../jwt/jwtservice";
 export const HomeComponent = () => {
     const user = subjet()
-    const isPortaria = location.pathname === "/portaria/pendentes";
+    const isPortaria = location.pathname === "/portaria/active/pendentes";
 
     const outlet = useOutlet();
     useEffect(() => {

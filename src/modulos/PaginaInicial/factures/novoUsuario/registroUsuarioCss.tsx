@@ -1,0 +1,136 @@
+import styled from "styled-components";
+interface CamposProps {
+    hasError?: boolean;
+}
+
+export default {
+    container: styled.div`
+    min-height: 70vh;
+   display: flex;
+    flex-direction: column;
+    gap: 5px;
+     max-width: 700px;
+    margin: 0 auto;
+    padding: 5px 56px;
+    height: 100vh;
+    width: 100%;
+
+   @media screen {
+    padding: 10px 10px;
+   }
+  
+
+    
+  `,
+    titulo: styled.h1`
+    font-size: 24px;
+    font-weight: bold;
+    margin-bottom: 5px;
+    color: var(--cor-titulo);
+  `,
+    FormSub: styled.form`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    `,
+    label: styled.label`
+    font-size: 0.95rem;        // tamanho equilibrado
+    font-weight: 500;          // levemente forte, mas não pesado
+    color: var(--cor-texto-campos);            // tom claro suave (ótimo em fundos escuros)
+    font-family: "Inter", sans-serif;
+    letter-spacing: 0.3px;     // pequeno espaçamento entre letras
+    margin-bottom: 5px;        // dá um respiro entre label e input
+    display: inline-block;
+    `,
+    CamposInput: styled.div`
+    width: 100%;
+    position: relative;
+     margin: 5px 0;
+    `,
+    Select: styled.div`
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    gap: 10px; 
+     margin: 5px 0;
+    `,
+    Campos: styled.input.withConfig({
+        shouldForwardProp: (prop) => prop !== "hasError",
+    }) <CamposProps>`
+    width: 100%;
+    height: 38px;
+    border:1px solid #d6d6d6;
+    background-color:#FFF;
+    border-radius: 5px;
+    border: 1px solid ${({ hasError }) => (hasError ? '#ff4d4f' : '#ccc')};
+    &:focus {
+        outline: none;
+        border-color: ${({ hasError }) => (hasError ? '#ff4d4f' : '#007BFF')};
+    }
+    padding:5px;
+
+
+    `,
+    SelectItens: styled.select<CamposProps>`
+    width: 100%;
+    height: 38px;
+    border:1px solid #d6d6d6;
+    background-color:transparent;
+        background-color:#FFF;
+
+    border-radius: 5px;
+    border: 1px solid ${({ hasError }) => (hasError ? '#ff4d4f' : '#ccc')};
+    
+    `,
+     TextArea: styled.textarea<CamposProps>`
+    width: 100%;
+    height: 38px;
+    border:1px solid #d6d6d6;
+    background-color:transparent;
+        background-color:#FFF;
+
+    border-radius: 5px;
+    border: 1px solid ${({ hasError }) => (hasError ? '#ff4d4f' : '#ccc')};
+    
+    `,
+    Options: styled.option``,
+    Erros: styled.div`
+    position: absolute;
+    color:#ff4d4f;
+     color: #ff4d4f;
+      font-size: 12px;
+      margin: 0px 10px;
+     
+    
+    `,
+    BtnLogin: styled.button`
+    margin: 5px 0;
+    width: 100%;
+    height: 35px;
+    border:1px solid #d6d6d6;
+    background-color:#007BFF;
+    border-radius: 5px;
+    color: #DDD;
+    font-size: 14px;
+    font-weight: bold;
+        transition: background-color 0.3s ease;
+    
+    &:active {
+        transform: scale(0.95);
+        font-size: 12px;
+    
+      }
+      &:hover {
+        background-color: #0056b3;
+        color: white; 
+      }
+    
+    `,
+    leftArea:styled.div`
+    width: 100%;
+    padding:5px 0;
+      display: flex;
+      gap: 10px;
+    `
+}

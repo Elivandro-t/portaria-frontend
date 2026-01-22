@@ -4,7 +4,7 @@ import Template from "./controleCss"
 export const ControleDeAcesso = ()=>{
     return(
      <Template.container>
-        <HeaderSecundarioComponent></HeaderSecundarioComponent>
+        <HeaderSecundarioComponent titulo={"Portaria - Controle de Acesso"} ativo={true}></HeaderSecundarioComponent>
          <Outlet></Outlet>
      </Template.container>
     )

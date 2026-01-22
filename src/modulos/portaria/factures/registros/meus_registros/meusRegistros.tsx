@@ -4,7 +4,7 @@ import { useEffect, useState } from "react"
 import { useNavigate } from "react-router-dom"
 import { LoadingSecundary } from "../../../../../components/LoadingSecundary/LoadingSecundary"
 import { ItensRegistro } from "../../../../../components/ItensRegistro/itensRegistro"
-import { subjetUsuarioId } from "../../../service/jwt/jwtservice"
+import { subjetUsuarioId } from "../../../../../jwt/jwtservice"
 import IconButton from "@mui/material/IconButton"
 import SearchIcon from "@mui/icons-material/Search";
 

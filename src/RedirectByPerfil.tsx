@@ -22,13 +22,13 @@ export const RedirectByPermissoes = ({ permissoes }: Props) => {
   // return <Navigate to="/portaria" replace />;
   switch(permissoes){
     case "FISCAL":
-      return <Navigate to= "/portaria/pendentes" replace />;
+      return <Navigate to= "/portaria/active/pendentes" replace />;
     case "AUTORIZADOR":
       return <Navigate to="/portaria/active" replace />;
     case "ADMIN":
-      return <Navigate to= "/portaria/pendentes" replace />;
+      return <Navigate to= "/portaria/active/pendentes" replace />;
     case "GERENTE_PREVENCAO":
-      return <Navigate to= "/portaria/pendentes" replace />;
+      return <Navigate to= "/portaria/active/pendentes" replace />;
     default:
       return <Navigate to="/portaria" replace />;
   }

@@ -5,10 +5,12 @@ const ListaModulo = (endpoint:any,usuarioid:any)=>{
     params.append("usuarioId",usuarioid)
     return Axios.get(base+endpoint,{params:Object.fromEntries(params)})
 }
+
 const api ={
     modulo:async(usuarioId:any)=>{
        const json = await ListaModulo("/portaria/v1/usuario/busca/valid",usuarioId);
        return json.data;
-    }
+    },
+    
 }
 export default api;

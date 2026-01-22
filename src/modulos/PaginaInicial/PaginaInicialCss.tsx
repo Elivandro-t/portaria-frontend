@@ -1,33 +1,35 @@
 import { MdInbox } from "react-icons/md";
 import styled from "styled-components";
 export default {
-  header: styled.header`
-    display: flex;
-    padding:24px 15px;
-    align-items: center;
-    justify-content: space-between;
-    height: 43px;
-      background: var(--header-background);
-       h1{
-            color: #FFF;
-            font-size: 15px;
-            font-weight: 700;
-            cursor: pointer;
-        
-        }
-    `,
+
   container: styled.div`
-        
+  display: flex;
+  height: 100%;
+  flex-direction: column;
+
+    `,
+  main: styled.div`
+    flex: 1;
+  display: flex;
+  background: #f4f6f9;      
+;
+
     `,
   container_2: styled.div`
-    min-height: 70vh;
-    max-width: 1100px;
-    height: 100vh;
-    gap: 30px;
-    margin: auto;
-    justify-content: center;
-    width: 100%;
+  flex: 1;
+  padding: 0 10px;
+  position: relative;
 
+
+  padding-right: 8px; /* evita cortar scrollbar */
+    overflow-x: hidden;
+  `,
+  scroll: styled.div`
+    width: 100%;
+    height: calc(100vh - 80px);
+    overflow:auto;
+    padding: 20px 5px;
+    scrollbar-width: thin;
   `,
   titulo: styled.h2`
     font-size: 16px;
@@ -60,17 +62,18 @@ export default {
             box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             cursor: pointer;
             transition: .2s;
-            border-left: 5px solid #6a0dad;
+            border-left: 4px solid #5B7FFF;
             &:hover{
                    transform: translateY(-4px);
-            box-shadow: 0 6px 18px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 18px rgba(46, 45, 45, 0.15);
              background: #f7f5f5;
             }
   `,
   card_title: styled.div`
-    font-size: 18px;
-            font-weight: bold;
-            color: #6a0dad;
+            font-size: 22px;
+            font-family: "inter",inherit, Helvetica, sans-serif;
+            color: #504a4aff;
+            margin: 10px 0;
             margin-bottom: 8px;
   `,
   card_desc: styled.div`
@@ -94,7 +97,7 @@ export default {
     font-size: 0.75rem;
     font-weight: 500;
   `,
-   semItens: styled.div`
+  semItens: styled.div`
       display: flex;
       flex-direction: column;
       align-items: center;
@@ -105,30 +108,18 @@ export default {
       gap: 10px;
       opacity: 0.8;
     `,
-  
-    iconSemItens: styled(MdInbox)`
+  iconSemItens: styled(MdInbox)`
       font-size: 60px;
       color: #999;
     `,
-     perfil: styled.div`
-    display: flex;
-    align-items: center;
-    gap: 5px;
-  `,
-  nomeUsuario:styled.div`
-    display: none;
-    color: var(--cor-texto-header);
-    font-size: 14px;
-   @media screen and (min-width: 560px){
-    display: block;
-    }
-    
-  `,
-  footer:styled.footer`
-      background: var(--header-background);
+  footer: styled.footer`
+  position: fixed;
+  margin-top: 10px;
+  bottom: 0;
+  left: 0;
   width: 100%;
   text-align: center;
-  color: #FFF;
+  color: #c09a9a;
   padding: 10px;
   `
 }

@@ -3,9 +3,12 @@ import Template from "./registroFiliaisCss"
 import { TextField, IconButton, Avatar } from '@mui/material';
 import SearchIcon from "@mui/icons-material/Search";
 import Api from "../../../service/apiRegistro/apiRegistro"
+import portariaApi from "../../../service/api"
+
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ImageIcon from '@mui/icons-material/Image';
 import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import apiFiliais from "../../../service/filiaisApi/filiasAPi"
 // Versão mais recente do MUI
@@ -19,15 +22,17 @@ const listaSelect = [
   { nome: "Fechado", value: false }
 ]
 import SelectVariants from "../../../../../components/select/selectFiltro";
+import { PopupComponent } from "../../../../../components/popup/popupComponent";
+import { subjet } from "../../../../../jwt/jwtservice";
 export const ListaRegistroComponent = () => {
   const [lista, setLista] = useState<any[]>([])
-  // const [ativo, setAtivo] = useState(false);
-  // const [id, setId] = useState("");
+  const [ativo, setAtivo] = useState(false);
+  const [id, setId] = useState("");
   const navigate = useNavigate()
   const [busca, setBusca] = useState("")
-  // const [msg, setMsg] = useState("")
-  // const [ativoBtn, setBtnAtivo] = useState(true)
-  // const user = subjet()
+  const [msg, setMsg] = useState("")
+  const [ativoBtn, setBtnAtivo] = useState(true)
+  const user = subjet()
   const [exibeImagem, setExibeImagem] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedValue, setSelectedValue] = useState<any | null>(null);
@@ -72,19 +77,19 @@ export const ListaRegistroComponent = () => {
   useEffect(() => {
     handleSearchFiliais()
   }, [])
-  // const hendleDelete = (item: any,) => {
-  //   setMsg(`Deseja realmente deletar o item ${item.id}`)
-  //   setAtivo(true);
-  //   setId(item.id)
-  // }
-  // const handleDeleteHistory = async () => {
-  //   // await Api.deletar(id, user?.id);
-  //   // setMsg(`${id} Deletado com sucesso`);
-  //   // setBtnAtivo(false)
-  //   // await onSubmit();
-  //   // setAtivo(false);
+  const hendleDelete = (item: any,) => {
+    setMsg(`Deseja realmente deletar o item ${item.id}`)
+    setAtivo(true);
+    setId(item.id)
+  }
+  const handleDeleteHistory = async () => {
+    await portariaApi.deletarPortaria(id, user?.id);
+    setMsg(`${id} Deletado com sucesso`);
+    setBtnAtivo(false)
+    await onSubmit();
+    setAtivo(false);
 
-  // }
+  }
 
   const handleModalImg = (item: any) => {
     setExibeImagem(true)
@@ -236,7 +241,7 @@ export const ListaRegistroComponent = () => {
                             </IconButton>
                           )
                           }
-                          {/* <IconButton
+                          <IconButton
                             aria-label="deletar"
                             onClick={() => hendleDelete(item)}
                             sx={{
@@ -247,7 +252,7 @@ export const ListaRegistroComponent = () => {
                             }}
                           >
                             <DeleteIcon />
-                          </IconButton> */}
+                          </IconButton>
 
                         </Template.trBTN>
                       </td>
@@ -258,9 +263,9 @@ export const ListaRegistroComponent = () => {
             </Template.Table>
           </Template.TableContainer>
         </Template.FormSub>
-        {/* {ativo &&
+        {ativo &&
           <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={handleDeleteHistory} message={msg} ativoBtn={ativoBtn} />
-        } */}
+        }
         {
           exibeImagem &&
           <ModalGlobalComponent cancelar={() => setExibeImagem(false)} >

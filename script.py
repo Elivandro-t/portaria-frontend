@@ -9,7 +9,7 @@ class SPAHandler(SimpleHTTPRequestHandler):
             self.path = 'index.html'
             return super().do_GET()
 
-PORT = 8082
+PORT = 8088
 os.chdir('dist')
 httpd = HTTPServer(("", PORT), SPAHandler)
 print(f"Serving at port {PORT}")

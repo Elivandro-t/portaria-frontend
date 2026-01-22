@@ -70,9 +70,12 @@ export default {
   `,
   numeroDoPedido: styled.h4`
     font-size: 14px;
-    font-family: Arial, Helvetica, sans-serif;
     color: #756f6f;
-    font-weight: 600;
+  `,
+   data: styled.small`
+    font-size: 9px;
+    font-family: "inter";
+    color: #756f6f;
   `,
   btnAguadandoPagamento: styled.div`
     background-color: #eeb853;
@@ -95,9 +98,18 @@ export default {
      width: 80px;
   height: 80px;
   border-radius: 10%;
-  object-fit: cover;
-  object-position: center top;
-  border: 2px solid #ddd;
+  /* object-fit: cover;
+  border: 2px solid #ddd; */
+    object-fit: cover;
+    border: 4px solid #fff;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    margin-bottom: 16px;
+      object-position: center bottom top;
+
+
+    @media screen and (min-width: 600px) {
+      margin-bottom: 0;
+    }
   `,
   dataPedido: styled.div`
   font-size: 14px;
@@ -198,7 +210,23 @@ buttonNext:styled.button`
     padding: 5px;
     
    }
-  `
+  `,
+  sentinela: styled.div`
+    width: 100%;
+    height: 100px; /* Altura generosa para garantir detecção */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+    background: transparent;
+  `,
+  loadingFooter: styled.div`
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-weight: 500;
+  `,
 
 
 };

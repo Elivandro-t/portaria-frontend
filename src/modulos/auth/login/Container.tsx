@@ -12,7 +12,6 @@ padding:30px 0;
 
 height:var(--height);
   @media screen and (min-width: 560px){
-background-color:var(--cor-auth);
 justify-content: center;
 padding:30px 20px;
 

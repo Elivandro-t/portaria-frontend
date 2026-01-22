@@ -109,7 +109,7 @@ export default {
     border-collapse: collapse;
     background-color: #fff;
     font-family: "Inter", sans-serif;  
-    
+  
     th, td {
       padding: 10px 13px;
       text-align: left;

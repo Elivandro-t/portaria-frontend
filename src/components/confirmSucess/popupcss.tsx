@@ -1,11 +1,22 @@
-import styled from "styled-components";
+import styled, { keyframes } from "styled-components";
+const over = keyframes`
+   0% {
+    width: 100%;
+    background-color: #15c4faff; /* amarelo */
+  }
 
+  100% {
+    width: 0%;
+    background-color: #16a34a; /* verde */
+  }
+`
 export default {
   container: styled.div`
     position: fixed;
     width: 100%;
     height: 100vh;
     z-index: 9999;
+
     top: 0;
     left: 0;
     display: flex;
@@ -16,7 +27,18 @@ export default {
       padding: 0 25px;
     }
   `,
-
+  confirm:styled.div`
+   display: flex;
+   width: 100%;
+   height: 250px;
+   justify-content: center;
+   align-items: center;
+   flex-direction: column;
+   gap: 20px;
+   button{
+    bottom: 0;
+   }
+  `,
   container_int: styled.section`
     width: 400px;
     min-height: 220px;
@@ -52,4 +74,11 @@ export default {
      font-size:14px;
     }
   `,
+   loadingBar: styled.div`
+        height: 6px;
+        width: 100%;
+        background: #2197e6;
+        animation: ${over} 2s linear forwards;
+      
+    `
 };

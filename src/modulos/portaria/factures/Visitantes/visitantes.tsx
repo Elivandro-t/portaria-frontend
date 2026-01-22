@@ -6,7 +6,7 @@ import ApiVisitante from "../../service/visitanteApi/visitanteApi"
 import type { Visitante } from "../../types/visitante";
 import { TableComponent } from "../../../../components/tabela/Tabela";
 import { PopupComponent } from "../../../../components/popup/popupComponent";
-import { subjet } from "../../service/jwt/jwtservice";
+import { subjet } from "../../../../jwt/jwtservice";
 import { notify } from "../../service/snackbarService";
 import { Paginator } from "../../../../components/paginator/paginator";
 export const VisitantesListaComponets = () => {

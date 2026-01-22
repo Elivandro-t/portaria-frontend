@@ -7,7 +7,7 @@ import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import Api from "../../../service/api"
 import { PopupComponent } from "../../../../../components/popup/popupComponent";
 import type { HistoricoPortaria } from "../../../types/historico/historico";
-import { subjet } from "../../../service/jwt/jwtservice";
+import { subjet } from "../../../../../jwt/jwtservice";
 import ImageIcon from '@mui/icons-material/Image';
 // Versão mais recente do MUI
 import DownloadIcon from '@mui/icons-material/Download';

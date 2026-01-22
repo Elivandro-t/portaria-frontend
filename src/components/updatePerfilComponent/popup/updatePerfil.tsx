@@ -2,7 +2,7 @@ import Template from "./updatePerfilCss";
 import { Button } from "@mui/material";
 import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
-import api from "../../../modulos/portaria/service/api";
+import api from "../../../modulos/PaginaInicial/service/apiUsuario";
 
 type Props = {
   ID: any;

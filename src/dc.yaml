@@ -1,0 +1,94 @@
+services:
+  # --- BANCO DE DADOS ---
+  postgres-portaria:
+    image: postgres:15
+    container_name: postgres-portaria
+    environment:
+      POSTGRES_DB: portaria
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - portaria-network
+    restart: unless-stopped
+
+  # --- BACKEND PORTARIA ---
+  portaria-app:
+    image: elivandrolopes/portaria:7.0
+    container_name: portaria-app
+    depends_on:
+      - postgres-portaria
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-portaria:5432/portaria
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin123
+      SPRING_VALUE: http://192.168.88.239:8083/portaria/v1
+      SPRING_JPA_HIBERNATE_DDL_AUTO: update
+    volumes:
+      - ./avatar:/portaria/avatar
+      - ./entrada:/portaria/entrada
+      - ./saida:/portaria/saida
+      - ./usuario:/portaria/usuario
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    networks:
+      - portaria-network
+    restart: unless-stopped
+
+  # --- NOVO BACKEND LOGISTICO ---
+  logistico-app:
+    image: elivandrolopes/logistico:1.0
+    container_name: logistico-app
+    depends_on:
+      - postgres-portaria
+    ports:
+      - "8084:8080"
+    environment:
+      TZ: America/Sao_Paulo
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres-portaria:5432/portaria
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin123
+    volumes:
+      - /etc/localtime:/etc/localtime:ro
+      - /etc/timezone:/etc/timezone:ro
+    networks:
+      - portaria-network
+    restart: unless-stopped
+
+  # --- SERVIÇO NGINX ---
+  nginx:
+    image: nginx:stable-alpine
+    container_name: nginx
+    ports:
+      - "8083:8083"
+    volumes:
+      - ./nginx:/etc/nginx/conf.d
+    restart: unless-stopped
+    networks:
+      - portaria-network
+
+  # --- FRONTEND ---
+  portaria-front:
+    image: elivandrolopes/front-portaria:7.0
+    container_name: portaria-front-app
+    depends_on:
+      - portaria-app
+    ports:
+      - "80:80"
+    networks:
+      - portaria-network
+    restart: unless-stopped
+    volumes:
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf
+
+# --- REDES E VOLUMES ---
+networks:
+  portaria-network:
+    driver: bridge
+
+volumes:
+  postgres_data:

@@ -5,7 +5,6 @@ import {
     , Logo,
     Campos,
     Or,
-    BtnLogin,
     Erros,
     Text,
     Foooter,
@@ -17,13 +16,14 @@ import {
 import logo from "../../../assets/ptcontroleBanner.png"
 import { useForm } from "react-hook-form";
 import { useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import salve from "../../portaria/service/localStorage/service-localStorage"
+import salve from "../../../localStorage/service-localStorage"
 import VisibilityIcon from '@mui/icons-material/Visibility';         // 👁️ olho aberto
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';   // 🙈 olho fechado
-import Api from "../../portaria/service/api"
-import { LoadingSecundary } from "../../../components/LoadingSecundary/LoadingSecundary";
+import Api from "../../PaginaInicial/service/apiUsuario"
 import IconButton from "@mui/material/IconButton";
+import { Button, CircularProgress } from "@mui/material";
+import { SendIcon } from "lucide-react";
+import { AlertComponent } from "../../../components/alert/alertaComponent";
 type FormData = {
     email: string;
     password: string;
@@ -31,30 +31,24 @@ type FormData = {
 // //npm install react-hook-form
 export const LoginComponen = () => {
     const { register, handleSubmit, formState: { errors } } = useForm<FormData>()
-    const [ativaPasswd,setAtivaPasswd]=useState(false)
+    const [ativaPasswd, setAtivaPasswd] = useState(false)
+    const [loading, setLoading] = useState(false);
+    const [logued, setLogued] = useState(false);
     const onSubmit = async (data: FormData) => {
-        const resposta = await Api.login(data)
-        if (resposta && resposta.acessToken) {
-            salve.salva_token(resposta.acessToken)
-            localStorage.setItem("order", resposta.usuario.id as any)
-            setTimeout(() => {
-                setLoading(false);
-                window.location.href = "/"
-            }, 1000);
+        try {
+            setLoading(true)
+            const resposta = await Api.login(data);
+            if (resposta && resposta.acessToken) {
+                salve.salva_token(resposta.acessToken);
+                localStorage.setItem("order", String(resposta.usuario.id));
+                setLogued(true)
+                window.location.href =  "/"
+
+            }
+        } finally {
+            setLoading(false)
         }
 
-    };
-    // criando loading para ir para a rota de login pelo whats
-    const [loading, setLoading] = useState(false)
-    const navigate = useNavigate()
-
-    const handleMarckClick = (e: React.MouseEvent<HTMLImageElement>) => {
-        e.stopPropagation(); // só pra garantir que o clique não dispare em outro lugar
-        setLoading(true);
-        setTimeout(() => {
-            setLoading(false);
-            navigate("/", { replace: true, state: { refresh: Date.now() } });
-        }, 2000);
     };
     const senhaRef = useRef<HTMLInputElement>(null);
     const focus = (
@@ -62,15 +56,19 @@ export const LoginComponen = () => {
         nextRef?: React.RefObject<HTMLInputElement | null>
     ) => {
         if (event.key === "Enter") {
-            // event.preventDefault();
-            nextRef?.current?.focus();
+
+            if (nextRef) {
+                nextRef?.current?.focus();
+
+            }
         }
+
     };
     return (
         <Container>
             <Form>
-                <Logo src={logo} onClick={handleMarckClick} >
-                    
+                <Logo src={logo} >
+
                 </Logo>
                 <Text></Text>
                 <Or></Or>
@@ -97,18 +95,20 @@ export const LoginComponen = () => {
                     </Select>
                     <Select>
                         <Input hasError={!!errors.password}>
-                           <Password placeholder="Senha" type={ativaPasswd?"text":"password"}
-                            autoComplete="current-password"
-                            {...register("password", {
-                                required: "Senha obrigatória",
-                            })}
-                            onKeyDown={(e) => focus(e)}
+                            <Password placeholder="Senha"
+                                type={ativaPasswd ? "text" : "password"}
+                                onKeyDown={(e) => focus(e)}
 
-                        />
-                        <IconButton onClick={()=>setAtivaPasswd(!ativaPasswd)}>
-                         {ativaPasswd ?(<VisibilityOffIcon/>):(<VisibilityIcon/>)}
+                                autoComplete="current-password"
+                                {...register("password", {
+                                    required: "Senha obrigatória",
+                                })}
 
-                        </IconButton>
+                            />
+                            <IconButton onClick={() => setAtivaPasswd(!ativaPasswd)}>
+                                {ativaPasswd ? (<VisibilityOffIcon />) : (<VisibilityIcon />)}
+
+                            </IconButton>
                         </Input>
                         <Erros>
                             {errors.password && <p>{errors.password.message}</p>}
@@ -118,19 +118,34 @@ export const LoginComponen = () => {
                     <EsquceuSenha>
                         {/* <Link to={""} >Esqueceu a senha</Link> */}
                     </EsquceuSenha>
-                    <BtnLogin>Entrar</BtnLogin>
+                    <Button
+                        type="submit"
+                        variant="contained"
+                        fullWidth
+                        size="large"
+                        disabled={loading}
+                        endIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
+                        sx={{ bgcolor: '#5B7FFF', '&:hover': { bgcolor: '#4a6cf0' } }}
+                    >
+                        {loading ? 'Fazendo Login...' : 'Login'}
+                    </Button>
+                    {logued &&
+                        <AlertComponent titulo={"success"} msg={"Login confirmado"} />
 
+                    }
 
                 </FormSub>
 
 
 
+
+
             </Form>
             <Foooter>Portaria - Controle de Acesso</Foooter>
-            {
+            {/* {
                 loading && <LoadingSecundary />
 
-            }
+            } */}
         </Container>
     )
 }

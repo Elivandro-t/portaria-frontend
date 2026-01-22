@@ -1,4 +1,4 @@
-import menuConfig from "../menuConfig/json"
+import menuConfig from "../../json"
 import Template from "./cssSidebar"
 import { useState } from "react";
 import ExpandMoreIcon from "@mui/icons-material/ExpandMore";

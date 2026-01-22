@@ -1,6 +1,6 @@
 import { createContext, useEffect, useState, type ReactNode } from "react";
-import {subjet} from "../../modulos/portaria/service/jwt/jwtservice"
-import api from "../../modulos/portaria/service/api";
+import {subjet} from "../../jwt/jwtservice"
+import api from "../../modulos/PaginaInicial/service/apiUsuario";
 type children = {
     children:ReactNode,
     onReset:()=>void

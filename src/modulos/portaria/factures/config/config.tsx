@@ -1,8 +1,8 @@
 import { Outlet, useOutlet } from "react-router-dom";
-import { MenuConfig } from "../../../../components/menuConfig/menuConfig"
+import { MenuConfig } from "./menuConfig/menuConfig"
 import Template from "./ConfigCss"
 import { useEffect } from "react";
-export const ConfigComponent = () => {
+export const ConfiguracaoComponent = () => {
   const outlet = useOutlet();
   useEffect(() => {
     window.scrollTo(0, 0);

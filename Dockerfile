@@ -10,7 +10,7 @@ COPY . .
 RUN npm run build
 
 # Etapa de produção
-FROM nginx:stable-alpine as production
+FROM nginx:stable-alpine AS production
 WORKDIR /usr/share/nginx/html
 
 RUN rm -rf ./*

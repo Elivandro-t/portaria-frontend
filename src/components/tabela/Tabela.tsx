@@ -1,7 +1,7 @@
 import Template from "./tabelaCss";
 import DeleteIcon from '@mui/icons-material/Delete';
 import { Avatar } from "@mui/material";
-import { subjet } from "../../modulos/portaria/service/jwt/jwtservice";
+import { subjet } from "../../jwt/jwtservice";
 import { IconButton } from '@mui/material';
 import LockIcon from '@mui/icons-material/Lock';
 import LockOpenIcon from '@mui/icons-material/LockOpen';

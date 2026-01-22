@@ -5,9 +5,7 @@ const listaFiliais = async (endpoint:any)=>{
     const resposta = axios.get(base+endpoint)
     return (await resposta).data;
 }
-
-const cadastro= async (endpoint:any,body:any)=>{
-    console.log(JSON.stringify(body))
+const cadastro = async (endpoint:any,body:any)=>{
     const resposta = await axios.post(base+endpoint,body)
     return resposta.data;
 }

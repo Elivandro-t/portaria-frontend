@@ -1,106 +1,94 @@
-import Chip from "@mui/material/Chip"
-import Template from "./ItensRegistroCss"
+import { useEffect, useRef } from "react";
+import Chip from "@mui/material/Chip";
+import Template from "./ItensRegistroCss";
 import { ChevronRight } from "lucide-react";
-
-import { Alert, Button } from "@mui/material";
+import { Alert, Button, CircularProgress } from "@mui/material";
 import WarningAmberIcon from "@mui/icons-material/WarningAmber";
 import CardSkeleton from "../skeleton/registroSkeleon/registroSkelen";
-type lista = {
+
+type listaProps = {
     lista: any[],
     hendleDetalhesPedidos: (n: any) => void,
     hendleBusca: () => void,
     visibleCount: number,
     loading: boolean
 }
-export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visibleCount, loading }: lista) => {
-    const retornaCorStatus = (status: string) => {
-        switch (status) {
-            case "AGUARDANDO_ENTRADA":
-                return "info"; // azul (Chip info)
-            case "AGUARDANDO_SAIDA":
-                return "warning"; // amarelo
-            case "SAIDA_LIBERADA":
-                return "success"; // verde
-            default:
-                return "error"; // vermelho
-        }
-    };
-    const exibirMais = () => {
-        hendleBusca()
-    }
-    const handleConvertData = (data: any) => {
-        const date = new Date(data);
 
-        const day = String(date.getDate()).padStart(2, "0"); // dia com 2 dígitos
-        const month = String(date.getMonth() + 1).padStart(2, "0"); // mês (0-indexado)
-        const year = date.getFullYear();
+export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visibleCount, loading }: listaProps) => {
+    const observerTarget = useRef<HTMLDivElement>(null);
 
-        const hours = String(date.getHours()).padStart(2, "0");
-        const minutes = String(date.getMinutes()).padStart(2, "0");
+    useEffect(() => {
+        const options = {
+            root: null,
+            rootMargin: "0px 0px 100px 0px",
+            threshold: 0.1
+        };
 
-        return `${day}/${month}/${year} às ${hours}:${minutes}`;
+        const observer = new IntersectionObserver((entries) => {
+            const [entry] = entries;
+            if (entry.isIntersecting && !loading && lista.length < visibleCount) {
+                hendleBusca();
+            }
+        }, options);
+
+        if (observerTarget.current) observer.observe(observerTarget.current);
+        return () => { if (observerTarget.current) observer.unobserve(observerTarget.current); };
+    }, [loading, lista.length, visibleCount, hendleBusca]);
+
+    const retornaCorStatus = (s: string) => {
+        const cores: any = { "AGUARDANDO_ENTRADA": "info", "AGUARDANDO_SAIDA": "warning", "SAIDA_LIBERADA": "success" };
+        return cores[s] || "error";
     };
-    const handleConvetData = (data: any) => {
-        return new Date(data).toLocaleDateString("pt-BR", {
-            day: "2-digit",
-            month: "long",
-            year: "numeric",
-            hour: "2-digit",
-            minute: "2-digit",
-        });
-    }
-    const renderSkeletons = () => {
-        return Array.from({ length: 4 }).map((_, i) => (
-            <CardSkeleton key={i} />
-        ));
-    };
+
+    const handleConvetData = (data: any) => new Date(data).toLocaleDateString("pt-BR", {
+        day: "2-digit", month: "short", year: "numeric", hour: "2-digit", minute: "2-digit"
+    });
+
     return (
         <Template.area_pedidos>
-            {/* <Template.titulo>Solicitações</Template.titulo> */}
             <Template.pedidos>
-                {loading ? (
-                    renderSkeletons()
-                ) : !loading && lista.length === 0 ? (
-                    <Template.semItens>
-                        <Template.iconSemItens />
-                        Nenhum item encontrado
-                    </Template.semItens>
+                {lista.length === 0 && loading ? (
+                    Array.from({ length: 4 }).map((_, i) => <CardSkeleton key={i} />)
                 ) : (
-
                     lista.map((item) => (
                         <div key={item.id}>
-                            <Template.dataPedido >
-                                {"Criado " + handleConvetData(item?.dataCriacao)}
+                            <Template.dataPedido>
+                                {handleConvetData(item?.dataCriacao)}
                             </Template.dataPedido>
-                            <Template.cardItem  >
+                            <Template.cardItem>
                                 {item?.prioridadeAtrasoAtivo &&
-                                    <Alert icon={<WarningAmberIcon fontSize="small" sx={{ fontSize: '0.75rem' }} />} severity="warning"
-                                        sx={{
-                                            padding: "0 5px",
-                                            fontSize: "0.52rem",
-                                            display: "flex",
-                                            alignItems: "center",
-                                            "& .MuiAlert-icon": {
-                                                fontSize: "0.9rem",
-                                                marginRight: "4px",
-                                            }
-
-                                        }}
+                                    <Alert
+                                        icon={<WarningAmberIcon sx={{ fontSize: '1rem' }} />}
+                                        severity="warning"
+                                        sx={{ borderRadius: '8px', mb: 1, py: 0, fontSize: '0.7rem', border: '1px solid #ffe58f' }}
                                     >
-                                        {item.prioridadeAviso ? item.prioridadeAviso : item.prioridadeAtraso}
+                                        {item.prioridadeAviso || item.prioridadeAtraso}
                                     </Alert>
                                 }
                                 <Template.card_item_header>
-                                    <Template.numeroDoPedido>Protocolo #{item?.protocolo}</Template.numeroDoPedido>
+                                    <Template.numeroDoPedido>
+                                        <strong>N: </strong>{item?.protocolo}
+                                    </Template.numeroDoPedido>
                                     <Template.AreaStatus>
-                                        <Chip style={{ width: 140, fontSize: 9 }} color={retornaCorStatus(item?.status)} label={item?.status.replace("_", " ")} variant="outlined" />
+                                        <Chip
+                                            sx={{
+                                                height: 22,
+                                                fontSize: '10px',
+                                                fontWeight: 700,
+                                                textTransform: 'uppercase',
+                                                borderRadius: '6px'
+                                            }}
+                                            color={retornaCorStatus(item?.status)}
+                                            label={item?.status.replace("_", " ")}
+                                            variant="outlined"
+                                        />
                                         {item?.entrada?.dataEntrada &&
-                                            <span style={{ fontSize: 11 }}><strong>Entrada: </strong><small>{handleConvertData(item?.entrada?.dataEntrada)}</small></span>
+                                            <Template.data><strong>Entrada: </strong>{handleConvetData(item?.entrada?.dataEntrada)}</Template.data>
 
                                         }
-
                                     </Template.AreaStatus>
                                 </Template.card_item_header>
+
                                 <Template.card_item_center>
                                     <Template.Image src={item?.visitante?.imagem} />
                                     <Template.Areaitem>
@@ -122,48 +110,43 @@ export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visib
                                         </Template.inforLabel>
 
                                     </Template.Areaitem>
-                                    <Template.btn>
-                                        <Button
-                                            onClick={() => hendleDetalhesPedidos(item?.id)}
-                                            variant="contained"
-                                            sx={{
-                                                width: { xs: 40, sm: 45, md: 56 },   // mobile first
-                                                height: { xs: 40, sm: 45, md: 48 },
-                                                minWidth: "auto",
-                                                borderRadius: { xs: "10px", sm: "12px", md: "14px" },
-                                                background: "linear-gradient(135deg, #42A5F5, #1E88E5)",
-                                                boxShadow: "0 3px 8px rgba(30,136,229,0.28)",
-                                                display: "flex",
-                                                alignItems: "center",
-                                                justifyContent: "center",
-                                                transition: "0.25s",
-                                                padding: 0,
-                                                "& svg": {
-                                                    fontSize: { xs: "20px", sm: "22px" }, // ícone também reduz no celular
-                                                },
-                                                "&:hover": {
-                                                    background: "linear-gradient(135deg, #1E88E5, #1565C0)",
-                                                    boxShadow: "0 6px 16px rgba(21,101,192,0.35)",
-                                                    transform: "translateY(-2px)",
-                                                },
-                                            }}
-                                        >
-                                            <ChevronRight />
-                                        </Button>
-                                    </Template.btn>
+
+                                    <Button
+                                        onClick={() => hendleDetalhesPedidos(item?.id)}
+                                        variant="outlined"
+                                        sx={{
+                                            minWidth: '40px',
+                                            width: '40px',
+                                            height: '40px',
+                                            borderRadius: '10px',
+                                            borderColor: '#e2e8f0',
+                                            color: '#64748b',
+                                            backgroundColor: '#fff',
+                                            '&:hover': {
+                                                borderColor: '#94a3b8',
+                                                backgroundColor: '#f8fafc',
+                                                color: '#0f172a',
+                                            },
+                                            '& .lucide': { width: 18 }
+                                        }}
+                                    >
+                                        <ChevronRight />
+                                    </Button>
                                 </Template.card_item_center>
                             </Template.cardItem>
                         </div>
-
                     ))
-                )
-                }
+                )}
             </Template.pedidos>
-            {visibleCount > lista.length && (
-                <div style={{ textAlign: "center", marginTop: "20px" }}>
-                    <Template.buttonNext onClick={exibirMais}>Exibir mais</Template.buttonNext>
-                </div>
-            )}
+
+            <Template.sentinela ref={observerTarget}>
+                {loading && lista.length > 0 && (
+                    <Template.loadingFooter>
+                        <CircularProgress size={20} thickness={5} sx={{ color: '#9ca3af' }} />
+                        <span>Carregando mais registros...</span>
+                    </Template.loadingFooter>
+                )}
+            </Template.sentinela>
         </Template.area_pedidos>
-    )
-}
+    );
+};

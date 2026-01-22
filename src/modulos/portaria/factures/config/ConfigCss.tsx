@@ -6,8 +6,6 @@ export default {
    height: 100vh;
     `,
   Container_int: styled.main`
-     background-color:var(--cor-auth);
-
       padding:0 26px;
       @media screen and (max-width: 560px) {
         padding: 0;

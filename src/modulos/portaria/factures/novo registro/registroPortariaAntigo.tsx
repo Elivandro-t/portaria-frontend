@@ -5,7 +5,7 @@ import Api from "../../service/api"
 import BlocosApi from "../../service/api_secundaria"
 import filiaçApi from "../../service/filiaisApi/filiasAPi"
 import { notify } from "../../service/snackbarService";
-import { subjet } from "../../service/jwt/jwtservice";
+import { subjet } from "../../../../jwt/jwtservice";
 import serviceTipoPessoa from "../../service/tipoPessoaApi/serviceTipoPessoa";
 import { BtnGlobal } from "../../../../components/btnGlobal/btnGlobal";
 import styled from "styled-components";

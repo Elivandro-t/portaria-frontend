@@ -9,9 +9,9 @@ export const LoadingR = () => {
         const redirect =sessionStorage.getItem("redirectAfterLogin") || "/";
                sessionStorage.removeItem("redirectAfterLogin");
             if (isLogged) {
-            navigate(redirect,{ replace: true, state: { refresh: Date.now() } });
+            window.location.href = redirect;
             }else{
-                navigate("/login", { replace: false })
+                navigate("/login", { replace: true })
 
             }
     };

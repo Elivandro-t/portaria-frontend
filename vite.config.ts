@@ -1,28 +1,29 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react';
+// import basicSsl from '@vitejs/plugin-basic-ssl'
+
 import { VitePWA } from 'vite-plugin-pwa'
 
 export default defineConfig({
   plugins: [react(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png'],
-      manifest: {
+includeAssets: ['favicon.ico', 'robots.txt', 'apple-touch-icon.png', 'ptcontroleBanner.png'],      manifest: {
         name: 'Portaria cd',
         short_name: 'Portaria',
         description: 'Meu aplicativo React rodando como PWA!',
-        start_url: '.',
+        start_url: '/',
         display: 'standalone',
         background_color: '#ffffff',
         theme_color: '#000000',
         icons: [
           {
-            src: 'src/assets/ptcontroleBanner.png',
+            src: '/ptcontroleBanner.png',
             sizes: '192x192',
             type: 'image/png'
           },
           {
-            src: 'src/assets/ptcontroleBanner.png',
+            src: '/ptcontroleBanner.png',
             sizes: '512x512',
             type: 'image/png'
           }
