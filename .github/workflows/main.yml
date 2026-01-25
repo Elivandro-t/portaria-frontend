@@ -26,6 +26,6 @@ jobs:
         - name: deploy local no docker compose
           run: |
             cd /media/grupomateus/3f9a2e1e-ae3c-4ea5-9750-035aa9017e4d/servidor
-            docker compose pull portaria-front:7.0
+            docker compose pull portaria-front
             docker compose up -d portaria-front
         
