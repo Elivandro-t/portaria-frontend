@@ -16,7 +16,6 @@ import { SlidePortariaComponent } from "./slideVisitanteExiste/slideVisitante";
 import { AlertComponent } from "../../../../components/alert/alertaComponent";
 import { LoadingSecundary } from "../../../../components/LoadingSecundary/LoadingSecundary";
 import { AutoCompleteComponet } from "./BuscaAutoComplete/autoComplete";
-import IconButton from "@mui/material/IconButton";
 type FormData = {
     typeMethod: string,
     placaVeiculo: string;

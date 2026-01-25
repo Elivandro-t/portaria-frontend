@@ -3,8 +3,6 @@ import TextField from "@mui/material/TextField";
 import ApiVisitante from "../../../service/visitanteApi/visitanteApi";
 import { useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
-import IconButton from "@mui/material/IconButton";
-
 interface VisitanteData {
   id: any;
   nomeCompleto: string;

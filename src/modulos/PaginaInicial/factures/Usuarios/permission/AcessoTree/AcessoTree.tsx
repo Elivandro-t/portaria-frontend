@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box';
 import { SimpleTreeView } from '@mui/x-tree-view/SimpleTreeView';
 import { TreeItem } from '@mui/x-tree-view/TreeItem';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 import { BtnGlobal } from '../../../../../../components/btnGlobal/btnGlobal';
 import Template from "../controle_de_filial_page/peermissionCss"
 import PermissionApi from "../../../../../portaria/service/usuarioApi"
