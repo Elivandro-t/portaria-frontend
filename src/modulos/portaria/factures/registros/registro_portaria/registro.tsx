@@ -1,6 +1,6 @@
 import Template from "./registro_css"
 import Api from "../../../service/api_secundaria"
-import { useContext, useEffect, useState } from "react"
+import { useContext, useEffect, useRef, useState } from "react"
 import { contextProvider } from "../../../../../reducer/userProvider/userProvider"
 import { useNavigate } from "react-router-dom"
 import { LoadingSecundary } from "../../../../../components/LoadingSecundary/LoadingSecundary"
@@ -11,10 +11,10 @@ function MeusRegistros() {
     const user = subjet()
     const [size, setSize] = useState(20); // começa com 10 itens
     const [totalElements, setTotalElements] = useState(0);
-    const usuario = useContext(contextProvider);
+    const context = useContext(contextProvider);
     const [lista, setLista] = useState<any[]>([])
     const [loadingItens, setLoadingItens] = useState(false);
-    const [status, setStatus] = useState("")
+    const [status, setStatus] = useState("aguardando entrada")
     const carregarRegistros = async (novoSize?: number) => {
         if (loadingItens) return; // Se já estiver carregando, bloqueia novas chamadas
 
@@ -22,18 +22,18 @@ function MeusRegistros() {
         const tamanho = novoSize ?? size;
 
         try {
-            const resposta = await Api.Solicitacoes(user?.filial, usuario?.busca, tamanho, status);
+            const resposta = await Api.Solicitacoes(user?.filial, context?.busca, tamanho, status);
             if (resposta.content) {
                 setLista(resposta.content);
                 setTotalElements(resposta.totalElements);
             }
         } finally {
             // Delay artificial para o usuário "sentir" o carregamento e não carregar tudo de uma vez
-            setTimeout(() => {
-                setLoadingItens(false);
-            }, 800);
+            setLoadingItens(false);
         }
     }
+        const buscaAnterior = useRef<string | null>(null);
+
     const exibirMais = () => {
         if (!loadingItens && lista.length < totalElements) {
             const novoSize = size + 5; // Carregando de 5 em 5 como solicitado
@@ -41,13 +41,22 @@ function MeusRegistros() {
             carregarRegistros(novoSize);
         }
     }
-    useEffect(() => {
-        carregarRegistros()
-        setTimeout(() => {
-            setLoadingItens(false)
-        }, 3000)
+      useEffect(() => {
+    // 🔍 se a busca foi LIMPA agora (antes tinha valor)
+    if (
+        buscaAnterior.current &&
+        (!context?.busca || context.busca.trim() === "")
+    ) {
+        setStatus("aguardando entrada"); // volta para geral
+    }
+    buscaAnterior.current = context?.busca ?? null;
 
-    }, [user?.filial, usuario?.busca, status])
+    setLista([]);
+    setSize(20);
+    carregarRegistros(20);
+
+}, [user?.filial, status, context?.busca]);
+
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
 
@@ -67,16 +76,17 @@ function MeusRegistros() {
     return (
         <Template.container>
             <Template.container_int>
-                <BtnGlobal titulo={"Entrada"} click={handleFiltroEntrada} isvalid={true}> </BtnGlobal>
-                <BtnGlobal titulo={"Saida"} click={handleFiltroSaida} isvalid={false}> </BtnGlobal>
+                <BtnGlobal titulo={"Entrada"} click={handleFiltroEntrada} isvalid={status==="aguardando entrada"}></BtnGlobal>
+                <BtnGlobal titulo={"Saida"} click={handleFiltroSaida} isvalid={status=="aguardando saida"}> </BtnGlobal>
 
             </Template.container_int>
             <ItensRegistro lista={lista} hendleDetalhesPedidos={hendleDetalhesPedidos} hendleBusca={exibirMais} visibleCount={totalElements} loading={loadingItens}></ItensRegistro>
             {loading &&
                 <LoadingSecundary></LoadingSecundary>
             }
-             
+
         </Template.container>
     )
 }
 export default MeusRegistros;
+

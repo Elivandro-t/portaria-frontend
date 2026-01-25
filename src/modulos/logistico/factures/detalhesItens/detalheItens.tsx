@@ -73,7 +73,7 @@ const DetahesRegistros =  () => {
 
             {/* LISTAGEM DE RESUMOS */}
             {itens.map((c, index) => (
-               <CardItensComponents c={c} key={index}/>
+               <CardItensComponents c={c} key={index} handleFunction={carregarDadosLogistico}/>
             ))
             }
 

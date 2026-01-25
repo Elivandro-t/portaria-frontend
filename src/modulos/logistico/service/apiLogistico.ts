@@ -1,7 +1,10 @@
 import axios from "axios";
 const base = import.meta.env.VITE_API_URL_LOGISTICO
-const listaItens = async (endpoint: any,filial:any) => {
+const listaItens = async (endpoint: any,filial:any,listaFiliais:any) => {
      const params = new URLSearchParams();
+     if(listaFiliais!=null){
+        params.append("filiais",listaFiliais)
+     }
 
     if(filial!=null){
        params.append("filial",filial)
@@ -28,6 +31,29 @@ const cadastro = async (enpoint: any, body: any) => {
         return null;
     }
 }
+const update = async (enpoint: any, body: any) => {
+    const resposta = await axios.put(base + enpoint, body);
+    if (resposta.data) {
+        return resposta.data;
+    } else {
+        return null;
+    }
+}
+const deleteContainer = async (enpoint: any, registroId?: any,
+  filial?: any) => {
+    const params = new URLSearchParams();
+    if(registroId!=null && filial!=null){
+        params.append("registroId",registroId);
+        params.append("filial",filial);
+    }
+    const resposta = await axios.delete(base + enpoint,{params:Object.fromEntries(params)});
+    if (resposta.data) {
+        return resposta.data;
+    } else {
+        return null;
+    }
+}
+
 const listaItensTipo = async (enpoint: any, tipo: any, filial: any) => {
     const params = new URLSearchParams();
     if (tipo !== null && filial != null) {
@@ -42,8 +68,8 @@ const listaItensTipo = async (enpoint: any, tipo: any, filial: any) => {
     }
 }
 export default {
-    lista: async (filial:any) => {
-        const json = await listaItens("/communit/v1/runmit/lista",filial);
+    lista: async (filial:any,listaFiliais:any) => {
+        const json = await listaItens("/communit/v1/runmit/lista",filial,listaFiliais);
         return json;
     },
     listaGerais: async (filial:any) => {
@@ -57,5 +83,14 @@ export default {
     cadastro: async (data: any) => {
         const json = await cadastro("/communit/v1/runmit/registro", data);
         return json; 
+    },
+    update: async (data: any) => {
+        const json = await update("/communit/v1/runmit/update", data);
+        return json; 
+    },
+    delete: async (id: any,filial:any) => {
+        const json = await deleteContainer("/communit/v1/runmit/delete/cardlogistico", id,filial);
+        return json; 
     }
 }
+

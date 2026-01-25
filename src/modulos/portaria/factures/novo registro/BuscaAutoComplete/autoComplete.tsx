@@ -3,6 +3,7 @@ import TextField from "@mui/material/TextField";
 import ApiVisitante from "../../../service/visitanteApi/visitanteApi";
 import { useEffect, useMemo, useState } from "react";
 import Box from "@mui/material/Box";
+import IconButton from "@mui/material/IconButton";
 
 interface VisitanteData {
   id: any;
@@ -14,13 +15,14 @@ interface VisitanteData {
 type Props = {
   value: string;
   setValue: (v: string) => void;
-    onSelectData: (data: { id: number} | null) => void;
+  onSelectData: (data: { id: number } | null) => void;
+  handleBusca: () => void
 
 };
 
-export const AutoCompleteComponet = ({ setValue, value,onSelectData }: Props) => {
+export const AutoCompleteComponet = ({ setValue, value, onSelectData, handleBusca }: Props) => {
   const [visitante, setVisitente] = useState<VisitanteData[]>([]);
-  const [inpValue,setInptValue]=useState("")
+  const [inpValue, setInptValue] = useState("")
 
   useEffect(() => {
     const resposta = async () => {
@@ -31,12 +33,12 @@ export const AutoCompleteComponet = ({ setValue, value,onSelectData }: Props) =>
     };
     resposta();
   }, []);
-const randomLista = (ar:VisitanteData[])=>{
-    return [...ar].sort(()=>Math.random()-0.5).slice(0, 3);
+  const randomLista = (ar: VisitanteData[]) => {
+    return [...ar].sort(() => Math.random() - 0.5).slice(0, 3);
   }
   const sugestoesRandom = useMemo(() => {
-  return randomLista(visitante);
-}, [visitante]);
+    return randomLista(visitante);
+  }, [visitante]);
 
   return (
     <Autocomplete<VisitanteData, false, false, true>
@@ -54,23 +56,23 @@ const randomLista = (ar:VisitanteData[])=>{
       }}
 
       options={value
-    ? visitante    // digitando → mostra todos
-    : sugestoesRandom }
+        ? visitante    // digitando → mostra todos
+        : sugestoesRandom}
 
       inputValue={inpValue || value || ""}   // ✅ controle SOMENTE por string
 
-      onInputChange={(__, newInputValue,reason) => {
+      onInputChange={(__, newInputValue, reason) => {
         // ✅ TEXTO DIGITADO
-        if(reason=="input"){
-        setValue(newInputValue);
-        setInptValue("")
-        onSelectData(null); // Limpa id/placa
+        if (reason == "input") {
+          setValue(newInputValue);
+          setInptValue("")
+          onSelectData(null); // Limpa id/placa
         }
 
       }}
 
       onChange={(__, newInputValue) => {
-       if (typeof newInputValue === "object" && newInputValue) {
+        if (typeof newInputValue === "object" && newInputValue) {
           setInptValue(newInputValue.nomeCompleto);
           // ✅ dado oculto
           onSelectData({
@@ -102,11 +104,23 @@ const randomLista = (ar:VisitanteData[])=>{
       )}
 
       renderInput={(params) => (
-        <TextField
-          {...params}
-          label="Busque um Visitante ou Digite um nome para continuar"
-          autoComplete="new-password"
-        />
+        <div style={{ display: "flex" }}>
+          <TextField
+           style={{border:0}}
+            {...params}
+            onKeyDown={e => {
+              if (e.key === "Enter") {
+                e.preventDefault()
+                handleBusca()
+              }
+            }}
+            label="Busque um Visitante ou Digite um nome para cadastrar"
+            autoComplete="new-password"
+          />
+          <button style={{width:50}} onClick={handleBusca}>
+            🔍
+          </button>
+        </div>
       )}
     />
   );

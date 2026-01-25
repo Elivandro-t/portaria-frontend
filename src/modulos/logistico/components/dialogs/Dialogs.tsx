@@ -22,5 +22,5 @@ export const Dialogs = ({ children, handleInative }: children) => {
                 {children}
             </Modal.modal>
         </Modal.container>
-    )
+    );
 }

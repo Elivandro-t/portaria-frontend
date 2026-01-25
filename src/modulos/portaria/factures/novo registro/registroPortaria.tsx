@@ -144,8 +144,6 @@ export const RegistrosPortaria = () => {
                     setModo("SLIDER");
                     setLoading(false)
                 }, 2000)
-                // setValue("nomeCompleto", resposta.nomeCompleto || "");
-                // setValue("numeroTelefone", resposta.numeroTelefone || "");
             } else {
 
                 setTimeout(() => {
@@ -190,7 +188,8 @@ export const RegistrosPortaria = () => {
             <Template.container_principal>
                 {modo === "BUSCA" &&
                     <Template.AreaBuscaPlaca style={{ display: "flex" }}>
-                        <AlertComponent link={true} linkRouter={"/portaria/controle/registro"} titulo={"info"} msg={"Cadastro de visitante!"}></AlertComponent>
+                        {/* linkRouter={"/portaria/controle/registro"} */}
+                        <AlertComponent link={true}  titulo={"info"} msg={"Cadastro de visitante!"}></AlertComponent>
                         <Template.busca>
 
                             {/* <input
@@ -204,10 +203,8 @@ export const RegistrosPortaria = () => {
                             <IconButton onClick={buscaVisitante}>
                                 🔍
                             </IconButton> */}
-                            <AutoCompleteComponet value={value} setValue={setValueS} onSelectData={setVisitanteID} />
-                            <IconButton onClick={buscaVisitante}>
-                                🔍
-                            </IconButton>
+                            <AutoCompleteComponet handleBusca={buscaVisitante} value={value} setValue={setValueS} onSelectData={setVisitanteID}  />
+                           
                         </Template.busca>
 
                         {value == "" &&

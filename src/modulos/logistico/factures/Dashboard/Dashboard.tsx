@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import api from "../../service/apiLogistico";
-import apiFiliais from "../../../portaria/service/filiaisApi/filiasAPi";
+import apiUsuario from "../../../PaginaInicial/service/apiUsuario";
 import { notify } from "../../../portaria/service/snackbarService";
 import Template from "./Dashboard.css"; // Certifique-se que o caminho está correto
 import Home from "../HomeLogistico/homeLogisticoCss";
@@ -12,6 +12,7 @@ import { CardItensComponents } from "../../components/cardItens/cardItens";
 import { FiltroFIlial } from "../../components/filtroFIlial/filtroFIlial";
 import ListAltIcon from '@mui/icons-material/ListAlt'; // Ou FormatListBulleted
 import AddIcon from '@mui/icons-material/Add';
+import { subjet } from "../../../../jwt/jwtservice";
 const actions = [
     { icon: <AddIcon />, name: 'Adicionar', router: "/Logistico/novo-logistico" },
     { icon: <ListAltIcon />, name: 'Todas os itens', router: "/Logistico/listaFiliais" },
@@ -21,13 +22,14 @@ const Dashboard = () => {
     const [loadingInfor, setLoadinInfor] = useState(false);
     const [itens, setItens] = useState<any[]>([]);
     const from = location.pathname + location.search + location.hash;
-    sessionStorage.setItem("redirectAfterLogin", from);
     const { filial } = useParams();
+    const user = subjet()
     const carregarDadosLogistico = async (filial?: any) => {
         setItens([]);
         setLoadinInfor(true);
+        const filiais = listaFiliais.flatMap(item => item.filial);
         try {
-            const resposta = await api.lista(filial);
+            const resposta = await api.lista(filial,filiais);
             if (resposta?.logisticoFilias) {
                 setItens(resposta.logisticoFilias);
             }
@@ -40,9 +42,9 @@ const Dashboard = () => {
 
     const carregarFiliais = useCallback(async () => {
         try {
-            const resposta = await apiFiliais.lista();
-            if (resposta?.filial) {
-                setListaFiliais(resposta.filial);
+            const resposta = await apiUsuario.FiliaisUsuario(user?.id);
+            if (resposta?.acess) {
+                setListaFiliais(resposta.acess);
             }
         } catch (error) {
             notify("Erro ao carregar filiais", "error");
@@ -50,9 +52,14 @@ const Dashboard = () => {
     }, []);
 
     useEffect(() => {
-        carregarDadosLogistico();
+        sessionStorage.setItem("redirectAfterLogin", from);
         carregarFiliais();
     }, [carregarFiliais]);
+    useEffect(() => {
+        if (listaFiliais.length > 0) {
+            carregarDadosLogistico(filial);
+        }
+    }, [listaFiliais, filial]);
     const [loadingred, setLoadingRef] = useState(false);
 
     const handleClick = async () => {
@@ -70,8 +77,8 @@ const Dashboard = () => {
             {/* ÁREA DA FILIAL (FILTRO) */}
             <Template.HeaderCard>
                 <Template.TitleSection>
-                    <small>Gestão de Materiais</small>
-                    <h2>Painel Logístico - Unidade {filial || "Geral"}</h2>
+                    <small>Materiais Logistico</small>
+                    <h2>Painel Logístico - {filial || "Geral"}</h2>
                 </Template.TitleSection>
                 <FiltroFIlial listaFiliais={listaFiliais} loadingRel={loadingred} carregarDadosLogistico={(n: any) => carregarDadosLogistico(n)} handleClick={handleClick} />
 
@@ -82,10 +89,9 @@ const Dashboard = () => {
 
             {/* LISTAGEM DE RESUMOS */}
             {itens.map((c, index) => (
-                <CardItensComponents c={c} key={index} />
+                <CardItensComponents c={c} key={index} handleFunction={carregarDadosLogistico} />
             ))
             }
-
             <Home.ButtonContainer>
                 {/* <Home.StyledActionButton onClick={handerNavigate} title="Novo Registro">
                     <AddIcon sx={{ fontSize: 32 }} />

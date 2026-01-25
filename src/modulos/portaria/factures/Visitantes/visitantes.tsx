@@ -65,28 +65,48 @@ export const VisitantesListaComponets = () => {
     onSubmit(valueConvertido);
   }
   return (
-    <>
-      <Template.container>
-        <Template.FormSub >
-          <Template.paginator>
+  <>
+    <Template.container>
+      <Template.titulo>Lista de Visitantes</Template.titulo>
+      
+      <Template.FormSub>
+        <Template.paginator>
+          {/* Lado Esquerdo: Busca */}
+          <Template.InputWrapper>
             <Template.Campos
-              autoComplete="current-password"
-              placeholder="Buscar visitante"
+              placeholder="🔍 Buscar visitante por nome ou documento..."
+              value={busca}
               onChange={e => setBusca(e.target.value)}
-              onKeyDown={onSubmit}
+              onKeyDown={(e) => e.key === 'Enter' && onSubmit()}
             />
-            <Paginator totalPage={totalPage} handleNextPage={handleNextPage} />
-          </Template.paginator>
-          {lista.length === 0 &&
-            <div>Nada encontrado</div>
-          }
-          <TableComponent lista={lista} handleDelete={handleDelete} handleBloqueio={handleBloqueio} />
-        </Template.FormSub>
-        {ativoBtn &&
-          <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={handleAPi} message={titulo} ativoBtn={ativoBtn} />
-        }
-      </Template.container >
+          </Template.InputWrapper>
 
-    </>
-  )
+          {/* Lado Direito: Paginador (Ocupa o espaço natural) */}
+          <Paginator totalPage={totalPage} handleNextPage={handleNextPage} />
+        </Template.paginator>
+
+        {lista.length === 0 ? (
+          <div style={{ textAlign: 'center', padding: '40px', color: '#64748b' }}>
+            Nenhum visitante encontrado.
+          </div>
+        ) : (
+          <TableComponent 
+            lista={lista} 
+            handleDelete={handleDelete} 
+            handleBloqueio={handleBloqueio} 
+          />
+        )}
+      </Template.FormSub>
+
+      {ativoBtn && (
+        <PopupComponent 
+          handleCancel={() => setAtivo(false)} 
+          handleConfirm={handleAPi} 
+          message={titulo} 
+          ativoBtn={ativoBtn} 
+        />
+      )}
+    </Template.container>
+  </>
+);
 }

@@ -1,13 +1,11 @@
 import { useEffect, useState, type ChangeEvent } from "react";
 import Template from "./registroFiliaisCss"
-import { TextField, IconButton, Avatar } from '@mui/material';
 import SearchIcon from "@mui/icons-material/Search";
 import Api from "../../../service/apiRegistro/apiRegistro"
 import portariaApi from "../../../service/api"
 
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ImageIcon from '@mui/icons-material/Image';
-import ImageNotSupportedIcon from '@mui/icons-material/ImageNotSupported';
 import DeleteIcon from '@mui/icons-material/Delete';
 
 import apiFiliais from "../../../service/filiaisApi/filiasAPi"
@@ -24,6 +22,7 @@ const listaSelect = [
 import SelectVariants from "../../../../../components/select/selectFiltro";
 import { PopupComponent } from "../../../../../components/popup/popupComponent";
 import { subjet } from "../../../../../jwt/jwtservice";
+import { Avatar, Box, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 export const ListaRegistroComponent = () => {
   const [lista, setLista] = useState<any[]>([])
   const [ativo, setAtivo] = useState(false);
@@ -115,205 +114,169 @@ export const ListaRegistroComponent = () => {
   }
   const retornaCorStatus = (status: any) => {
     switch (status) {
-      case "AGUARDANDO_ENTRADA":
-        return "blue";
-      case "AGUARDANDO_SAIDA":
-        return "#787018";
-      case "SAIDA_LIBERADA":
-        return "green";
-      default:
-        return "red";
+      case "AGUARDANDO_ENTRADA": return "#3b82f6"; // Azul vibrante
+      case "AGUARDANDO_SAIDA": return "#eab308";   // Amarelo âmbar
+      case "SAIDA_LIBERADA": return "#22c55e";     // Verde esmeralda
+      default: return "#ef4444";                    // Vermelho
     }
-  }
+}
   const handleVisualItem = (id: any) => {
     setLoading(true)
     setTimeout(() => {
       navigate(`/controle/detalhes-registro?order=${id}`, { replace: false, state: { refresh: Date.now() } })
     }, 2000)
   }
+
+  // ... sua lógica permanece idêntica
   return (
-    <>
-      <Template.container>
-        <Template.titulo>Histórico Portaria</Template.titulo>
-        <Template.FormSub >
-          <Template.CamposInput>
+    <Template.container>
+      {/* Cabeçalho com MUI Stack */}
+      <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 3 }}>
+        <Typography variant="h4" sx={{ fontWeight: 700, color: '#1e293b' }}>
+          Histórico Portaria
+        </Typography>
+      </Stack>
+
+      <Paper elevation={0} sx={{ p: 2, borderRadius: '16px', border: '1px solid #e2e8f0' }}>
+        <Template.FormSub>
+          {/* Barra de Busca e Filtros Otimizada */}
+          <Box sx={{ 
+            display: 'flex', 
+            gap: 2, 
+            alignItems: 'center', 
+            flexWrap: 'wrap',
+            bgcolor: '#f8fafc',
+            p: 2,
+            borderRadius: '12px'
+          }}>
             <TextField
               variant="outlined"
               size="small"
-              placeholder="Buscar..."
+              placeholder="Pesquisar por nome ou placa..."
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
+              sx={{ bgcolor: 'white', minWidth: 250 }}
             />
-            <SelectVariants value={selectedValue} onChange={setSelectedValue} titulo={"Ativo"} list={listaSelect} />
+            
+            <SelectVariants value={selectedValue} onChange={setSelectedValue} titulo={"Status"} list={listaSelect} />
             <SelectVariants value={selectedFilial} onChange={setSelectedFilial} titulo={"Filial"} list={filiais} />
-            <IconButton
-              onClick={onSubmit}
-              sx={{
-                backgroundColor: "#1976d2",
-                color: "#fff",
-                "&:hover": { backgroundColor: "#1565c0" },
-              }}
-            >
-              <SearchIcon />
-            </IconButton>
+            
+            <Tooltip title="Pesquisar">
+              <IconButton 
+                onClick={() => onSubmit()} 
+                sx={{ bgcolor: '#6366f1', color: 'white', '&:hover': { bgcolor: '#4f46e5' } }}
+              >
+                <SearchIcon />
+              </IconButton>
+            </Tooltip>
+
+            <Box sx={{ flexGrow: 1 }} />
             <Paginator totalPage={totaPage} handleNextPage={handleNextPage} />
-          </Template.CamposInput>
+          </Box>
 
           <Template.TableContainer>
             <Template.Table>
               <thead>
                 <tr>
-                  <th>Avatar</th>
+                  <th>Visitante</th>
                   <th>Protocolo</th>
-                  <th>Nome do Visitante</th>
-                  <th>Ocupacao Liberada</th>
-                  <th>Tipo de Acesso</th>
-                  <th>Placa</th>
-                  <th>Local da Visita</th>
+                  <th>Tipo / Placa</th>
+                  <th>Local</th>
                   <th>Status</th>
-                  <th>Data Entrada</th>
-                  <th>Data Saída</th>
-                  <th>Fiscal Entrada</th>
-                  <th>Fiscal Saída</th>
-                  <th>Criador</th>
-                  <th>Origem</th>
-                  <th></th> {/* ações */}
+                  <th>Entrada</th>
+                  <th>Saída</th>
+                  <th>Fiscal</th>
+                  <th style={{ textAlign: 'right' }}>Ações</th>
                 </tr>
               </thead>
               <tbody>
-                {lista.length == 0 &&
-                  <Template.erro>
-                    <Template.semItens>
-                      <Template.iconSemItens></Template.iconSemItens>
-                      Nenhum item encontrado
-                    </Template.semItens>
-                  </Template.erro>
-                }
-                {
-                  lista.flatMap((item, key) => (
+                {lista.length === 0 ? (
+                  <tr>
+                    <td colSpan={10}>
+                      <Template.semItens>
+                        <Template.iconSemItens />
+                        <Typography variant="h6" color="textSecondary">Nenhum registro encontrado</Typography>
+                        <Typography variant="body2" color="textSecondary">Tente ajustar seus filtros de busca.</Typography>
+                      </Template.semItens>
+                    </td>
+                  </tr>
+                ) : (
+                  lista.map((item, key) => (
                     <tr key={key}>
                       <td>
-                        {item?.visitante?.imagem ? (
-                          <Avatar sx={{ width: 35, height: 35, objectFit: 'contain' }} alt={item?.visitante?.nomeCompleto} src={item?.visitante?.imagem} />
-
-                        ) : (
-                          <Avatar sx={{ width: 35, height: 35, objectFit: 'contain' }} alt={item?.visitante?.nomeCompleto} src="/static/images/avatar/2.jpg" />
-
-                        )
-                        }
+                        <Stack direction="row" spacing={1.5} alignItems="center">
+                          <Avatar 
+                            sx={{ width: 40, height: 40, border: '2px solid #e2e8f0' }} 
+                            src={item?.visitante?.imagem || "/static/images/avatar/2.jpg"} 
+                          />
+                          <Box>
+                            <Typography variant="body2" sx={{ fontWeight: 600 }}>{item?.nomeCompleto || "---"}</Typography>
+                            <Typography variant="caption" color="textSecondary">{item?.filialSocitado}</Typography>
+                          </Box>
+                        </Stack>
                       </td>
-                      <td>#{item?.protocolo || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
-                      <td>{item?.nomeCompleto || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
-                      <td>{item?.ocupacaoLiberada || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
-                      <td>{item?.visitante?.tipoAcesso || item.visitante?.recorrencia?.nome || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
-                      <td>{item?.placaVeiculo || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
-                      <td>{item?.bloco || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
+                      <td><Typography variant="caption" sx={{ fontFamily: 'monospace', fontWeight: 700 }}>#{item?.protocolo || 'PENDENTE'}</Typography></td>
+                      <td>
+                        <Typography variant="body2">{item?.visitante?.tipoAcesso || "Visitante"}</Typography>
+                        <Typography variant="caption" sx={{ bgcolor: '#f1f5f9', px: 0.5, borderRadius: 1 }}>{item?.placaVeiculo || "Sem Veículo"}</Typography>
+                      </td>
+                      <td>{item?.bloco}</td>
                       <td><Template.Chip color={retornaCorStatus(item?.status)}>{item?.status.replace("_", " ")}</Template.Chip></td>
-                      <td>{item?.entrada?.dataEntrada ? new Date(item?.entrada?.dataEntrada).toLocaleString("pt-BR") : (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando Entrada"}</Template.Chip>)}</td>
-                      <td>{item?.saida?.dataSaida ? new Date(item?.saida.dataSaida).toLocaleString("pt-BR") : (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando Saida"}</Template.Chip>)}</td>
-                      <td>{item?.entrada?.nomeFiscal || (<Template.Chip color={retornaCorStatus(item?.status)}>{"N/A"}</Template.Chip>)}</td>
-                      <td>{item?.saida?.nomeFiscal || (<Template.Chip color={retornaCorStatus(item?.status)}>{"N/A"}</Template.Chip>)}</td>
-                      <td>{item?.autorizador?.nome || (<Template.Chip color={retornaCorStatus(item?.status)}>{"Aguardando processamento"}</Template.Chip>)}</td>
-                      <td>{item?.filialSocitado}</td>
-
-                      <td >
+                      <td><Typography variant="caption">{item?.entrada?.dataEntrada ? new Date(item.entrada.dataEntrada).toLocaleString() : "---"}</Typography></td>
+                      <td><Typography variant="caption">{item?.saida?.dataSaida ? new Date(item.saida.dataSaida).toLocaleString() : "---"}</Typography></td>
+                      <td><Typography variant="caption" sx={{ fontWeight: 500 }}>{item?.entrada?.nomeFiscal || "---"}</Typography></td>
+                      <td>
                         <Template.trBTN>
-                          <IconButton
-                            aria-label="deletar"
-                            onClick={() => handleVisualItem(item.id)}
-                            sx={{
-                              color: 'black',
-                              '&:hover': {
-                                backgroundColor: '#f0f0f0',
-                              },
-                            }}
-                          >
-                            <VisibilityIcon />
-                          </IconButton>
-                          {item?.entrada?.imagem ? (
-                            <IconButton onClick={() => handleModalImg(item)}>
-                              <ImageIcon />
-                            </IconButton>
-                          ) : (
-                            <IconButton disabled>
-                              <ImageNotSupportedIcon />
-
-                            </IconButton>
-                          )
-                          }
-                          <IconButton
-                            aria-label="deletar"
-                            onClick={() => hendleDelete(item)}
-                            sx={{
-                              color: 'black',
-                              '&:hover': {
-                                backgroundColor: '#f0f0f0',
-                              },
-                            }}
-                          >
-                            <DeleteIcon />
-                          </IconButton>
-
+                          <Tooltip title="Visualizar Detalhes">
+                            <IconButton size="small" onClick={() => handleVisualItem(item.id)}><VisibilityIcon fontSize="small" /></IconButton>
+                          </Tooltip>
+                          {item?.entrada?.imagem && (
+                            <Tooltip title="Ver Fotos">
+                              <IconButton size="small" onClick={() => handleModalImg(item)} color="primary"><ImageIcon fontSize="small" /></IconButton>
+                            </Tooltip>
+                          )}
+                          <Tooltip title="Excluir">
+                            <IconButton size="small" onClick={() => hendleDelete(item)} color="error"><DeleteIcon fontSize="small" /></IconButton>
+                          </Tooltip>
                         </Template.trBTN>
                       </td>
                     </tr>
                   ))
-                }
+                )}
               </tbody>
             </Template.Table>
           </Template.TableContainer>
         </Template.FormSub>
-        {ativo &&
-          <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={handleDeleteHistory} message={msg} ativoBtn={ativoBtn} />
-        }
-        {
-          exibeImagem &&
-          <ModalGlobalComponent cancelar={() => setExibeImagem(false)} >
+      </Paper>
 
-            <Template.visitante>
-              <Template.imgemVisitante src={item?.visitante?.imagem} />
-              <h5>Visitante: {item?.visitante.nomeCompleto}</h5>
-            </Template.visitante>
+      {/* Modal de Imagem Refatorado com MUI */}
+      {exibeImagem && (
+        <ModalGlobalComponent cancelar={() => setExibeImagem(false)}>
+          <Box sx={{ p: 1 }}>
+            <Stack direction="row" spacing={2} alignItems="center" sx={{ mb: 3 }}>
+              <Avatar src={item?.visitante?.imagem} sx={{ width: 60, height: 60 }} />
+              <Typography variant="h6">Evidências: {item?.visitante.nomeCompleto}</Typography>
+            </Stack>
+            
             <Template.imagemArea>
-              {item?.entrada?.imagem &&
-                <Template.divArea>
-                  <Template.tituloLabel>Entrada: {new Date(item?.entrada?.dataEntrada as any).toLocaleDateString("pt-BR", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })}</Template.tituloLabel>
-                  <Template.btnDownload>
-                    <IconButton onClick={() => handleExibeImagem(item?.entrada?.imagem, "ImagemEntrada")} >
-                      <DownloadIcon sx={{ color: '#75affa' }} />
+              {['entrada', 'saida'].map((tipo) => item?.[tipo]?.imagem && (
+                <Template.divArea key={tipo}>
+                  <Stack direction="row" justifyContent="space-between" alignItems="center" sx={{ mb: 1 }}>
+                    <Typography variant="subtitle2" sx={{ textTransform: 'capitalize' }}>{tipo}</Typography>
+                    <IconButton size="small" onClick={() => handleExibeImagem(item?.[tipo]?.imagem, `Foto_${tipo}`)}>
+                      <DownloadIcon fontSize="small" color="primary" />
                     </IconButton>
-                  </Template.btnDownload>
-                  <Template.imgem src={item?.entrada?.imagem} alt="Imagem entrada" />
+                  </Stack>
+                  <Template.imgem src={item?.[tipo]?.imagem} alt={`Imagem ${tipo}`} />
                 </Template.divArea>
-
-              }
-              {item?.saida?.imagem &&
-                <Template.divArea>
-                  <Template.tituloLabel>Saida {new Date(item?.saida?.dataSaida as any).toLocaleDateString("pt-BR", {
-                    day: "2-digit",
-                    month: "long",
-                    year: "numeric",
-                  })} </Template.tituloLabel>
-                  <Template.btnDownload >
-                    <IconButton onClick={() => handleExibeImagem(item?.saida?.imagem, "ImagemSaida")} >
-                      <DownloadIcon sx={{ color: '#75affa' }} />
-                    </IconButton>
-                  </Template.btnDownload>
-                  <Template.imgem src={item?.saida?.imagem} alt="Imagem saida" />
-                </Template.divArea>}
+              ))}
             </Template.imagemArea>
+          </Box>
+        </ModalGlobalComponent>
+      )}
 
-          </ModalGlobalComponent>
-        }
-        {loading &&
-          <LoadingSecundary />
-        }
-
-      </Template.container>
-    </>
-  )
+      {loading && <LoadingSecundary />}
+      {ativo && <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={handleDeleteHistory} message={msg} ativoBtn={ativoBtn} />}
+    </Template.container>
+  );
 }

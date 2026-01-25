@@ -20,7 +20,6 @@ export const HeaderComponent = ({ ativoBusca,filial }: props) => {
     }
 
     return (
-        <>
             <Header.areaHeader>
                 <Header.container>
                     <Header.areaLogo>
@@ -43,8 +42,6 @@ export const HeaderComponent = ({ ativoBusca,filial }: props) => {
                     }
                 </Header.container>
             </Header.areaHeader>
-
-        </>
 
     )
 }

@@ -46,6 +46,7 @@ export default {
     width: 100%;
     display: flex;
     flex-direction: column;
+    
     gap: 10px;
     `,
   label: styled.label`
@@ -176,7 +177,7 @@ export default {
 
 
 
-/////////////////
+  /////////////////
 
   CardCentro: styled.div`
     border-radius: 8px;
@@ -220,7 +221,7 @@ export default {
        width: auto;
     }
   `,
-   AreaItemJustRigth: styled.div`
+  AreaItemJustRigth: styled.div`
     display: flex;
     flex-direction: column;
     margin-top: 5px;
@@ -245,8 +246,8 @@ export default {
       gap: 10px;
       opacity: 0.8;
     `,
-  
-    iconSemItens: styled(MdInbox)`
+
+  iconSemItens: styled(MdInbox)`
       font-size: 60px;
       color: #999;
     `,
@@ -298,39 +299,39 @@ export default {
     margin: 10px 0;
   `,
 
-    SummaryRow: styled.div`
+  SummaryRow: styled.div`
       display: flex;
       justify-content: space-between;
   
     `,
-  
-    heanderPedido: styled.div`
+
+  heanderPedido: styled.div`
       display: flex;
       justify-content: space-between;
       align-items: center;
       padding: 5px 20px;
       gap: 10px;
     `,
-  
-    tituloPedido: styled.h4`
+
+  tituloPedido: styled.h4`
       font-size: 14px;
       color: #1e88e5;
       padding: 2px;
     `,
-  
-    p: styled.p`
+
+  p: styled.p`
       font-weight: 600;
       font-size: 14px;
     `,
-  
-    status: styled.div`
+
+  status: styled.div`
       display: flex;
       align-items: center;
       gap: 5px;
       color: var(--cor-texto-titulo);
     `,
-  
-    Image: styled.img`
+
+  Image: styled.img`
       width: 100%;
       height: 200px;
       border-radius: 5%;
@@ -342,13 +343,13 @@ export default {
         height: 150px;
       }
     `,
-  
-    description: styled.div`
+
+  description: styled.div`
       width: 100%;
       word-wrap: break-word;
     `,
-  
-    Label: styled.span`
+
+  Label: styled.span`
       font-size: 0.65rem;
       font-weight: bold;
       color: #3b004f;
@@ -359,18 +360,22 @@ export default {
         font-size: 0.8rem;
       }
     `,
-    AreaBuscaPlaca:styled.div`
+  AreaBuscaPlaca: styled.div`
        flex-direction: column;
       margin:5em auto;
       padding: 30px 20px;
+       width: 100%;
       font-size: 16px;
       border-radius: 10px;
       color: #134c72;
                box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+      @media screen and (min-width: 600px){
+     width: auto;
+    }
       
       gap: 10px;
     `,
-    busca:styled.div`
+  busca: styled.div`
     display: flex;
     width: 100%;
     border-radius: 5px;
@@ -389,8 +394,8 @@ export default {
   } */
      
     `,
-  
-    LabelSubtitulo: styled.span`
+
+  LabelSubtitulo: styled.span`
       font-family: "Inter", sans-serif;
       font-weight: 500;
       color: var(--cor-texto-campos);
@@ -401,8 +406,8 @@ export default {
         font-size: 0.75rem;
       }
     `,
-  
-    edit: styled.div`
+
+  edit: styled.div`
       margin: 0;
     `,
 

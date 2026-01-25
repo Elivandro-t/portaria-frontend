@@ -1,11 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import apiFiliais from "../../../portaria/service/filiaisApi/filiasAPi";
+import apiUsuario from "../../../PaginaInicial/service/apiUsuario";
 import { notify } from "../../../portaria/service/snackbarService";
 import Template from "./../Dashboard/Dashboard.css"; // Certifique-se que o caminho está correto
 import { SemItens } from "../../components/SemItens";
 import { Loading } from "../../components/Loading/loading";
 import { MdAdd, MdRefresh } from "react-icons/md";
+import { subjet } from "../../../../jwt/jwtservice";
 const ListaItensFiliasi = () => {
     const [listaFiliais, setListaFiliais] = useState<any[]>([]);
     const [loadingInfor, setLoadinInfor] = useState(false);
@@ -27,17 +28,18 @@ const ListaItensFiliasi = () => {
     //         setLoadinInfor(false);
     //     }
     // };
+    const user = subjet()
+
     const [filialFiltrada, setFilialFiltrada] = useState<any[]>([])
-
-
     const carregarFiliais = useCallback(async () => {
         try {
             setListaFiliais([])
             setLoadinInfor(true);
-            const resposta = await apiFiliais.lista();
-            if (resposta?.filial) {
-                setListaFiliais(resposta.filial);
-                setFilialFiltrada(resposta.filial)
+            const resposta = await apiUsuario.FiliaisUsuario(user?.id);
+            if (resposta?.acess) {
+                setListaFiliais(resposta.acess);
+                setFilialFiltrada(resposta.acess)
+                console.log(resposta.acess)
             }
         } catch (error) {
             setLoadinInfor(false);
@@ -114,7 +116,7 @@ const ListaItensFiliasi = () => {
             {/* LISTAGEM DE RESUMOS */}
             {filialFiltrada.map((c, index) => (
                 <Template.Container key={index}>
-                    <Template.Card style={{cursor:"pointer"}} onClick={()=>handerNavigate(c?.numeroFilial)}>
+                    <Template.Card style={{cursor:"pointer"}} onClick={()=>handerNavigate(c?.filial)}>
                         <Template.CardHeaderPrincipal>
                             <div className="info-title">
                                 <span className="tag">Resumo  CD-{c.numeroFilial}</span>

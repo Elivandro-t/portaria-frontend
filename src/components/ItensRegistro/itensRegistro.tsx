@@ -34,6 +34,7 @@ export const ItensRegistro = ({ lista, hendleDetalhesPedidos, hendleBusca, visib
         if (observerTarget.current) observer.observe(observerTarget.current);
         return () => { if (observerTarget.current) observer.unobserve(observerTarget.current); };
     }, [loading, lista.length, visibleCount, hendleBusca]);
+    
 
     const retornaCorStatus = (s: string) => {
         const cores: any = { "AGUARDANDO_ENTRADA": "info", "AGUARDANDO_SAIDA": "warning", "SAIDA_LIBERADA": "success" };

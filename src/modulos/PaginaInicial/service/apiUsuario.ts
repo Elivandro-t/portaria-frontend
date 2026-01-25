@@ -187,7 +187,11 @@ const BuscaUsuario = async (endpoint: any, usuarioId: any) => {
     throw erro;
   }
 }
-
+const addFilial = async(endpoint:any,body:any)=>{
+  console.log(JSON.stringify(body))
+  const resposta  = await axios.put(base+endpoint,body)
+  return resposta.data;
+}
 const ReseteSenha = async (endpoint: string) => {
   try {
     const response = await axios.post(base + endpoint);
@@ -279,8 +283,16 @@ const api = {
     const json = await BuscaUsuario("/portaria/v1/usuario/busca/unit", usuarioId)
     return json;
   },
+  FiliaisUsuario: async (usuarioId: any) => {
+    const json = await BuscaUsuario("/portaria/v1/usuario/busca/filiais", usuarioId)
+    return json;
+  },
   selecionarImagem: async (usuarioId: any, file: File) => {
     const json = await salvaImagemUsuario("/portaria/v1/usuario/avatar", usuarioId, file);
+    return json;
+  },
+  addFiliais:async(lista:any,usuarioId:any)=>{
+    const json = await addFilial(`/module/v1/filial/add/${usuarioId}`,lista);
     return json;
   }
 }

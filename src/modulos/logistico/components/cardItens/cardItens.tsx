@@ -3,12 +3,18 @@ import Template from "../../factures/Dashboard/Dashboard.css"
 import { Dialogs } from "../dialogs/Dialogs";
 import { UpdateRegistro } from "../update/update";
 import PositionedMenu from "../btn/btnMenu";
+import apiMaterial from "../../service/apiLogistico"
+import { notify } from "../../../portaria/service/snackbarService";
+import { subjet } from "../../../../jwt/jwtservice";
 
 type props = {
-    c: any
+    c: any,
+    handleFunction: () => void,
 }
 
-export const CardItensComponents = ({ c }: props) => {
+export const CardItensComponents = ({ c, handleFunction }: props) => {
+    const user = subjet();
+    const permission = user?.permissoes;
     function handleConvertData(data: any) {
         const date = new Date(data);
 
@@ -25,19 +31,28 @@ export const CardItensComponents = ({ c }: props) => {
     const handeClick = () => {
         setActiveModal(!activeModal)
     }
+    const handeClickDelete = async () => {
+        // setActiveModal(!activeModal);
+        const resposta = await apiMaterial.delete(c.id, c.numeroFIlial);
+        if (resposta) {
+            handleFunction();
+            notify("Deletado", "success")
+        }
+    }
     return (
         <Template.Container >
             <Template.Card>
                 <Template.CardHeaderPrincipal>
                     <div className="info-title" style={{ paddingTop: 5 }}>
                         <span className="tag">Resumo do Dia</span>
-                        {/* {c?.numeroFIlial} -  */}
-                        <h3>{c?.nomeFilial}</h3>
+                        <h3>{c?.numeroFIlial} - {c?.nomeFilial}</h3>
                     </div>
                     <Template.info_date className="info-date">
                         <span>📅  {handleConvertData(c?.dataCriacao)}</span>
-                        <PositionedMenu hendleClick={handeClick} />
+                        {permission?.includes("DELETE_LOGISTICO") &&
+                            <PositionedMenu hendleClick={handeClick} hendleClickDelete={handeClickDelete} />
 
+                        }
                     </Template.info_date>
                 </Template.CardHeaderPrincipal>
 
@@ -47,7 +62,7 @@ export const CardItensComponents = ({ c }: props) => {
                             <th>Tipo</th>
                             <th>Disponível</th>
                             <th >Manutenção</th>
-                            {/* <th>Data</th> */}
+                            <th>qtd estoque</th>
                             {/* <th>Ações</th> */}
                         </tr>
                     </Template.Thead>
@@ -55,20 +70,20 @@ export const CardItensComponents = ({ c }: props) => {
                         {c.itens.map((item: any, i: any) => (
                             <Template.Tr key={i}>
                                 <td className="bold">{item?.tipo}</td>
-                                <td className="status-ativo">{item?.qtdAtivo}</td>
-                                <td className="status-manutencao">{item?.qtdManutencao}</td>
-                                {/* <td>{handleConvertData(c.dataCriacao)}</td> */}
+                                <td className="status-ativo">{item?.qtdAtivo} UND</td>
+                                <td className="status-manutencao">{item?.qtdManutencao} UND</td>
+                                <td className="status-total">Total: {item?.quantidadeTotal}</td>
                                 {/* <td>
                                     <Template.ViewButton>Detalhes</Template.ViewButton>
                                 </td> */}
-                               
+
                             </Template.Tr>
                         ))}
                     </Template.Tbody>
                 </Template.Table>
-                 {activeModal &&
-                                    <Dialogs handleInative={handeClick}><UpdateRegistro itemMP={c.itens} ></UpdateRegistro></Dialogs>
-                                }
+                {activeModal &&
+                    <Dialogs handleInative={handeClick} ><UpdateRegistro onClickhTogle={handleFunction} registroId={c.id} itemMP={c.itens} ></UpdateRegistro></Dialogs>
+                }
             </Template.Card>
         </Template.Container>
     );

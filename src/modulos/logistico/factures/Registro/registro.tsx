@@ -5,7 +5,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
 
-import apiFiliais from "../../../portaria/service/filiaisApi/filiasAPi";
+import filiasUsuaro from "../../../PaginaInicial/service/apiUsuario";
 import { jsonMaterial } from "../../components/json";
 import apiCadastro from "../../service/apiLogistico";
 import { subjet } from "../../../../jwt/jwtservice";
@@ -27,8 +27,8 @@ const RegistroLogistico = () => {
     // Carregar filiais
     useEffect(() => {
         const fetchFiliais = async () => {
-            const resposta = await apiFiliais.lista();
-            if (resposta?.filial) setFiliais(resposta.filial);
+            const resposta = await filiasUsuaro.FiliaisUsuario(user?.id);
+            if (resposta?.acess) setFiliais(resposta.acess);
         };
         fetchFiliais();
     }, []);
@@ -61,7 +61,7 @@ const RegistroLogistico = () => {
         try {
             const data = {
                 usuario: user?.nome,
-                numeroFIlial: filial?.numeroFilial,
+                numeroFIlial: filial?.filial,
                 nomeFilial: filial.nome,
                 usuarioId: user?.id,
                 itens: campos
@@ -97,7 +97,7 @@ const RegistroLogistico = () => {
                     >
                         {filiais.map((item) => (
                             <MenuItem key={item.id} value={item}>
-                                {item.numeroFilial} - {item.nome}
+                                {item.filial} - {item.nome}
                             </MenuItem>
                         ))}
                     </Select>

@@ -3,7 +3,7 @@ import Template from "./UsuariosCss"
 import Api from "../../service/apiUsuario"
 import AddIcon from "@mui/icons-material/Add";
 import Avatar from '@mui/material/Avatar';
-import { TextField, IconButton } from '@mui/material';
+import { TextField, IconButton, Box, Tooltip, Typography } from '@mui/material';
 import EditIcon from "@mui/icons-material/Edit";
 import SearchIcon from "@mui/icons-material/Search";
 import LockIcon from '@mui/icons-material/Lock';
@@ -16,8 +16,10 @@ import { PopupUpdatePerfilComponent } from "../../../../components/updatePerfilC
 import { Paginator } from "../../../../components/paginator/paginator";
 import { LoadingSecundary } from "../../../../components/LoadingSecundary/LoadingSecundary";
 import { subjet } from "../../../../jwt/jwtservice";
+// ... seus imports permanecem iguais
+
 export const UsuarioListaComponets = () => {
-  const [lista, setLista] = useState<any[]>([])
+ const [lista, setLista] = useState<any[]>([])
   const [id, setId] = useState('');
   const [busca, setBusca] = useState("")
   const [totaPage, setTotalPage] = useState(0);
@@ -88,142 +90,140 @@ export const UsuarioListaComponets = () => {
   return (
     <>
       <Template.container>
-        <Template.titulo>Lista de Usuarios</Template.titulo>
-        <Template.FormSub >
+        <Box sx={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', mb: 2 }}>
+          <Template.titulo>Gestão de Usuários</Template.titulo>
+          {/* O Paginator fica melhor posicionado aqui ou no final */}
+        </Box>
+
+        <Template.FormSub>
           <Template.CamposInput>
             <TextField
               variant="outlined"
               size="small"
-              placeholder="Buscar..."
+              placeholder="Pesquisar por nome ou e-mail..."
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
+              sx={{ minWidth: '300px', backgroundColor: '#fff' }}
             />
             <IconButton
               onClick={onSubmit}
-              sx={{
-                backgroundColor: "#1976d2",
-                color: "#fff",
-                "&:hover": { backgroundColor: "#1565c0" },
-              }}
+              sx={{ backgroundColor: "#6366f1", color: "#fff", "&:hover": { backgroundColor: "#4f46e5" } }}
             >
               <SearchIcon />
             </IconButton>
-            <IconButton
-              onClick={handleNovoUsuario} // sua função para abrir o formulário
-              sx={{
-                backgroundColor: "#4caf50",       // verde
-                color: "#fff",                     // ícone branco
-                "&:hover": { backgroundColor: "#43a047" }, // verde mais escuro no hover
-              }}
-            >
-              <AddIcon />
-            </IconButton>
+            
+            <Tooltip title="Cadastrar Novo Usuário">
+                <IconButton
+                onClick={handleNovoUsuario}
+                sx={{ backgroundColor: "#22c55e", color: "#fff", "&:hover": { backgroundColor: "#16a34a" } }}
+                >
+                <AddIcon />
+                </IconButton>
+            </Tooltip>
+
+            <Box sx={{ flexGrow: 1 }} /> {/* Empurra o paginador para a direita */}
             <Paginator totalPage={totaPage} handleNextPage={handleNextPage} />
           </Template.CamposInput>
+
           <Template.TableContainer>
             <Template.Table>
               <thead>
                 <tr>
-                  <th>Avatar</th>
-                  <th>Nome</th>
-                  <th>Email</th>
-                  <th>Função</th>
-                  <th>Filial</th>
-                  <th>Pefil</th>
+                  <th>Membro</th>
+                  <th>E-mail</th>
+                  <th>Função / Filial</th>
+                  <th>Perfil</th>
                   <th>Device</th>
-                  <th>Ultima Sessão</th>
+                  <th>Último Acesso</th>
                   <th>Status</th>
-                  {permission?.includes("ADICIONAR_ACESSo")&&
-                  <th></th>}
+                  {permission?.includes("ADICIONAR_ACESSO") && <th style={{ textAlign: 'right' }}>Ações</th>}
                 </tr>
               </thead>
               <tbody>
-                {lista.length == 0 &&
-                  <Template.erro>Sem dados</Template.erro>
-                }
-                {
-                  lista.flatMap((item, key) => (
+                {lista.length === 0 ? (
+                  <tr>
+                    <td colSpan={10} style={{ textAlign: 'center', padding: '40px' }}>
+                       <Typography color="textSecondary">Nenhum usuário encontrado</Typography>
+                    </td>
+                  </tr>
+                ) : (
+                  lista.map((item, key) => (
                     <tr key={key}>
                       <td>
-                        {item?.avatar ? (
-                          <Avatar sx={{ width: 40, height: 40, objectFit: 'contain' }} alt={item?.nome} src={item?.avatar} />
-
-                        ) : (
-                          <Avatar sx={{ width: 40, height: 40, objectFit: 'contain' }} alt={item.nome} src="/static/images/avatar/2.jpg" />
-
-                        )
-                        }
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1.5 }}>
+                          <Avatar 
+                            sx={{ width: 38, height: 38, border: '1px solid #e2e8f0' }} 
+                            src={item?.avatar || "/static/images/avatar/2.jpg"} 
+                          />
+                          <Typography variant="body2" sx={{ fontWeight: 600, color: '#1e293b' }}>
+                            {item.nome}
+                          </Typography>
+                        </Box>
                       </td>
-                      <td>{item.nome}</td>
                       <td>{item.email}</td>
-                      <td>{item.ocupacaoOperacional}</td>
-                      <td>{item.filial}</td>
-                      <td>{item?.perfil?.nome}</td>
                       <td>
-                        <Template.device> {item?.sessionDevice?item?.sessionDevice:"0"}</Template.device>   
-                       </td>
-                      <td>{item?.sessionLastLogin?handleConvetData(item?.sessionLastLogin):"Sem acesso"}</td>
+                        <Typography variant="caption" sx={{ display: 'block', fontWeight: 600 }}>{item.ocupacaoOperacional}</Typography>
+                        <Typography variant="caption" color="textSecondary">{item.filial}</Typography>
+                      </td>
                       <td>
-                        <Template.ativo ativo={item?.ativo}></Template.ativo>
+                         <Box sx={{ px: 1, py: 0.5, bgcolor: '#f1f5f9', borderRadius: '6px', display: 'inline-block' }}>
+                            <Typography variant="caption" sx={{ fontWeight: 700 }}>{item?.perfil?.nome || 'N/A'}</Typography>
+                         </Box>
                       </td>
-                      {permission?.includes("ADICIONAR_ACESSO")&&
-                        <td >
-                        <Template.trBTN>
-                          <IconButton
-                            aria-label="editar"
-                            onClick={() => hendleUpdate(item)}
-                            sx={{
-                              color: "black",
-                              "&:hover": { backgroundColor: "#e0e0e0" },
-                            }}
-                          >
-                            <EditIcon />
-                          </IconButton>
-                          {item.ativo ? (
-                            <IconButton
-                              aria-label="LockIcon"
-                              onClick={() => handleAtivoFalse(item.id)}
-                              sx={{
-                                color: "green",
-                                "&:hover": { backgroundColor: "#e0e0e0" },
-                              }}
-                            >
-                              <LockOpenIcon />
-                            </IconButton>
-                          ) : (
-                            <IconButton
-                              aria-label="LockOpenIcon"
-                              onClick={() => handleAtivo(item.id)}
-                              sx={{
-                                color: "red",
-                                "&:hover": { backgroundColor: "#e0e0e0" },
-                              }}
-                            >
-                              <LockIcon />
-                            </IconButton>
-                          )}
-                        </Template.trBTN>
+                      <td>
+                        <Template.device>{item?.sessionDevice || "0"}</Template.device>
                       </td>
-                      }
+                      <td style={{ fontSize: '11px', color: '#64748b' }}>
+                        {item?.sessionLastLogin ? handleConvetData(item?.sessionLastLogin) : "Sem acesso"}
+                      </td>
+                      <td>
+                        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+                          <Template.ativo ativo={item?.ativo} />
+                          <Typography variant="caption" sx={{ fontWeight: 600 }}>
+                            {item?.ativo ? "Ativo" : "Inativo"}
+                          </Typography>
+                        </Box>
+                      </td>
+                      {permission?.includes("ADICIONAR_ACESSO") && (
+                        <td>
+                          <Template.trBTN>
+                            <Tooltip title="Editar">
+                              <IconButton size="small" onClick={() => hendleUpdate(item)}>
+                                <EditIcon fontSize="small" sx={{ color: '#64748b' }} />
+                              </IconButton>
+                            </Tooltip>
+                            
+                            <Tooltip title={item.ativo ? "Bloquear" : "Ativar"}>
+                                <IconButton 
+                                    size="small" 
+                                    onClick={() => item.ativo ? handleAtivoFalse(item.id) : handleAtivo(item.id)}
+                                    sx={{ color: item.ativo ? "#ef4444" : "#22c55e" }}
+                                >
+                                    {item.ativo ? <LockOpenIcon fontSize="small" /> : <LockIcon fontSize="small" />}
+                                </IconButton>
+                            </Tooltip>
+                          </Template.trBTN>
+                        </td>
+                      )}
                     </tr>
                   ))
-                }
+                )}
               </tbody>
             </Template.Table>
           </Template.TableContainer>
         </Template.FormSub>
-        {/* {ativo &&
-          <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={function (): void {
-            throw new Error("Function not implemented.");
-          }} message={"Deseja realmente atualizar o item com ID"} ativoBtn={ativo} />
-        } */}
-        {updateAtivo &&
-          <PopupUpdatePerfilComponent ID={undefined} handleConfirm={(w)=>hendleBuscaApi(w,null,null)} handleCancel={() => setUpdateModal(false)} message={""} ativoBtn={false} />
-        }
-        {loading &&
-          <LoadingSecundary />
-        }
+
+        {updateAtivo && (
+          <PopupUpdatePerfilComponent 
+            ID={undefined} 
+            handleConfirm={(w) => hendleBuscaApi(w, null, null)} 
+            handleCancel={() => setUpdateModal(false)} 
+            message={""} 
+            ativoBtn={false} 
+          />
+        )}
+        {loading && <LoadingSecundary />}
       </Template.container>
     </>
-  )
-}
+  );
+};

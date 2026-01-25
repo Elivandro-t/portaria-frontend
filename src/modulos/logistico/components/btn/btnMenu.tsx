@@ -4,9 +4,10 @@ import MenuItem from '@mui/material/MenuItem';
 import IconButton from "@mui/material/IconButton";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
 type props = {
-    hendleClick:()=>void
+    hendleClick:()=>void,
+     hendleClickDelete:()=>void
 }
-export default function PositionedMenu({hendleClick}:props) {
+export default function PositionedMenu({hendleClick,hendleClickDelete}:props) {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const open = Boolean(anchorEl);
   const handleClick = (event: React.MouseEvent<HTMLElement>) => {
@@ -17,6 +18,10 @@ export default function PositionedMenu({hendleClick}:props) {
   };
 const handleBtn = ()=>{
     hendleClick()
+     setAnchorEl(null);
+}
+const handleBtnDelete = ()=>{
+    hendleClickDelete()
      setAnchorEl(null);
 }
   return (
@@ -51,7 +56,7 @@ const handleBtn = ()=>{
         }}
       >
         <MenuItem onClick={handleBtn}>Editar</MenuItem>
-        <MenuItem onClick={handleClose}>Deletar</MenuItem>
+        <MenuItem onClick={handleBtnDelete}>Deletar</MenuItem>
       </Menu>
     </div>
   );

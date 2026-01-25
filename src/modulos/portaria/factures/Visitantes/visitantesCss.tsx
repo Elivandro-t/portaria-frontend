@@ -1,92 +1,89 @@
 import styled from "styled-components";
+
 interface CamposProps {
     hasError?: boolean;
 }
 
 export default {
     container: styled.div`
-    min-height: 70vh;
-   display: flex;
-    flex-direction: column;
-    gap: 10px;
-    padding: 5px 56px;
-    height: 100vh;
-    width: 100%;
+        min-height: 100vh;
+        display: flex;
+        flex-direction: column;
+        gap: 20px;
+        padding: 24px 56px;
+        background-color: #f8fafc;
+        width: 100%;
 
-   @media screen {
-    padding: 10px 10px;
-   }
-  
+        @media (max-width: 768px) {
+            padding: 15px;
+        }
+    `,
 
-    
-  `,
-    titulo: styled.h1`
-    font-size: 24px;
-    font-weight: bold;
-    margin-bottom: 5px;
-    color: var(--cor-titulo);
-  `,
     FormSub: styled.div`
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
+        width: 100%;
+        display: flex;
+        flex-direction: column;
+        gap: 16px;
+        background: #ffffff;
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
     `,
-    label: styled.label`
-    font-size: 0.95rem;        // tamanho equilibrado
-    font-weight: 500;          // levemente forte, mas não pesado
-    color: var(--cor-texto-campos);            // tom claro suave (ótimo em fundos escuros)
-    font-family: "Inter", sans-serif;
-    letter-spacing: 0.3px;     // pequeno espaçamento entre letras
-    margin-bottom: 6px;        // dá um respiro entre label e input
-    display: inline-block;
+
+    // Resolve o problema da grade de busca
+    paginator: styled.div`
+        width: 100%;
+        display: flex;
+        justify-content: space-between; // Busca na esquerda, Paginador na direita
+        align-items: center;
+        flex-wrap: wrap; // Quebra linha em telas pequenas (mobile)
+        gap: 15px;
+        margin-bottom: 10px;
     `,
-    CamposInput: styled.div`
-    width: 50%;
-    position: relative;
-     margin: 5px 0;
+
+    // Wrapper para segurar o input e o erro juntos
+    InputWrapper: styled.div`
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+        flex: 1; // Faz a busca ocupar o espaço disponível
+        max-width: 400px; // Limita o tamanho para não ficar gigante
     `,
-    Select: styled.div`
-    width: 50%;
-    display: flex;
-    flex-direction: column;
-    gap: 10px; 
-     margin: 5px 0;
-    `,
+
     Campos: styled.input.withConfig({
         shouldForwardProp: (prop) => prop !== "hasError",
-    }) <CamposProps>`
-    width: 320px;
-    height: 38px;
-    border:1px solid #d6d6d6;
-    background-color:#FFF;
-    border-radius: 5px;
-    border: 1px solid ${({ hasError }) => (hasError ? '#ff4d4f' : '#ccc')};
-    &:focus {
-        outline: none;
-        border-color: ${({ hasError }) => (hasError ? '#ff4d4f' : '#007BFF')};
-    }
-    padding:5px;
+    })<CamposProps>`
+        width: 100%; // Ocupa 100% do Wrapper
+        height: 40px;
+        background-color: #ffffff;
+        border-radius: 8px;
+        border: 1px solid ${({ hasError }) => (hasError ? '#ef4444' : '#e2e8f0')};
+        padding: 0 16px;
+        font-size: 0.875rem;
+        transition: all 0.2s ease;
 
+        &:focus {
+            outline: none;
+            border-color: #6366f1;
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
 
+        &::placeholder {
+            color: #94a3b8;
+        }
     `,
-    Options: styled.option``,
-    Erros: styled.div`
-    position: absolute;
-    color:#ff4d4f;
-     color: #ff4d4f;
-      font-size: 12px;
-      margin: 0px 10px;
-     
-    
+
+    Erros: styled.span`
+        color: #ef4444;
+        font-size: 0.75rem;
+        font-weight: 500;
+        margin-left: 4px;
     `,
-    paginator:styled.div`
-    width: 100%;
-      display: flex;
-      align-items: center;
-      flex-direction: row-reverse;
-      gap: 10px;
+
+    titulo: styled.h1`
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1e293b;
+        margin-bottom: 10px;
     `
-   
-    
-}
+};

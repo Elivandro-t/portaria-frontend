@@ -8,52 +8,79 @@ import PermissionApi from "../../../../../portaria/service/usuarioApi"
 import { notify } from '../../../../../portaria/service/snackbarService';
 import { FiltroFIlial } from '../../filtroFIlial/filtroFIlial';
 import apiFiliais from "../../../../../portaria/service/filiaisApi/filiasAPi";
+import filiaisUsuario from "../../../../service/apiUsuario"
 
 type acess = {
     modulos: any[],
     handleReset: () => void,
-    usuario:any,
+    usuario: any,
 }
-export default function AcessoTree({ handleReset, usuario,modulos }: acess) {
+export default function AcessoTree({ handleReset, usuario, modulos }: acess) {
+    //habileta os checked dentro do ckeckbox
     const [checked, setChecked] = useState<Record<string, boolean>>({});
+    const [checkedFilial, setCheckedFilial] = useState<Record<string, boolean>>({});
 
     const handleTogle = (key: any) => {
         setChecked((prev) => ({ ...prev, [key]: !prev[key] }));
     }
+    const handleTogleFilial = (key: number | string) => {
+        setCheckedFilial((prev) => ({ ...prev, [key]: !prev[key] }));
+        console.log("click")
+    }
+
     const [lista, setLista] = useState<any[] | null>([])
-    useEffect(() => {
-        const handleModule = async () => {
-            const json = await PermissionApi.ListaModulo();
-            if (json) {
-                setLista(json)
-            }
+    const [listaUsuario, setListaUsuario] = useState<any[] | null>([])
+    const handleModule = async () => {
+        const json = await PermissionApi.ListaModulo();
+        if (json) {
+            setLista(json)
         }
-        handleModule();
-    },[])
-    const [filial,setFilial]=useState("")
-    const handleSalve = async () => {
-        console.log(filial)
-        const lista = {
-            mod:{
-               filial:filial
+    }
+    const handleModuleFilias = useCallback(async () => {
+        const json = await filiaisUsuario.FiliaisUsuario(usuario?.id);
+        if (json.acess) {
+            setListaUsuario(json.acess)
+        }
+    }, [usuario?.id]
+    )
+    const [filial, setFilial] = useState("")
+
+    const handleSalveFIliais = async () => {
+        const data = {
+            lista: Object.entries(checkedFilial).map(([id, ativo]) => ({
+                permissionId: Number(id),
+                ativo
+            }))
+        }
+         await filiaisUsuario.addFiliais(data, usuario?.id);
+        const list = {
+            mod: {
+                filial: filial
             },
 
             lista: Object.entries(checked).map(([id, ativo]) => ({
-                permissionId: Number(id),
+                permissionId: Number(id.replace("mod-", "")),
                 ativo: ativo
             }))
         }
-        const json = await PermissionApi.handlePermission(lista, usuario?.id);
-        if (json.msg) {
-            notify(json.msg, "success");
-        }
-                handleReset()
+        await PermissionApi.handlePermission(list, usuario?.id);
 
     }
-   const initializedRef = useRef(false);
-       const [listaFiliais, setListaFiliais] = useState<any[]>([]);
-   
- const carregarFiliais = useCallback(async () => {
+
+    const handleSalvarTudo = async () => {
+        try {
+                await handleSalveFIliais()
+            notify("Permissões e filiais salvas com sucesso", "success");
+            handleReset();
+        } catch (error) {
+            notify("Erro ao salvar permissões", "error");
+            console.error(error);
+        }
+    };
+    const [listaFiliais, setListaFiliais] = useState<any[]>([]);
+
+
+    const carregarFiliais = async () => {
         try {
             const resposta = await apiFiliais.lista();
             if (resposta?.filial) {
@@ -62,81 +89,122 @@ export default function AcessoTree({ handleReset, usuario,modulos }: acess) {
         } catch (error) {
             notify("Erro ao carregar filiais", "error");
         }
-    }, []);
-useEffect(() => {
- if (!modulos || modulos.length === 0) {
+    };
+    useEffect(() => {
+        handleModule();
+        handleModuleFilias();
+        carregarFiliais()
+
+    }, [usuario.id, handleModuleFilias])
+    useEffect(() => {
+        // módulos
+        if (modulos?.length) {
+            const inicial: Record<string, boolean> = {};
+            modulos.forEach((m) => {
+                inicial[`mod-${m.id}`] = true;
+            });
+            setChecked(inicial);
+        } else {
             setChecked({});
-            return;
         }
 
-  const inicial: Record<string, boolean> = {};
+        // filiais
+        if (listaUsuario?.length) {
+            const inicialFilial: Record<string, boolean> = {};
+            listaUsuario.forEach((m) => {
+                inicialFilial[m.id] = true;
+            });
+            setCheckedFilial(inicialFilial);
+        } else {
+            setCheckedFilial({});
+        }
+    }, [modulos, listaUsuario]);
 
-  modulos.forEach((m) => {
-    inicial[m.id] = true;
-  });
-
-  setChecked(inicial);
-  initializedRef.current = true;
-  carregarFiliais()
-}, [usuario?.id]);
     return (
         <>
             <Box sx={{ minHeight: 352, minWidth: 250 }}>
                 <SimpleTreeView
                     onSelectedItemsChange={(e: any, ids: any) => {
-                        if (e?.code === 'Space') {
-                            e.preventDefault();
-                            handleTogle(Number(ids));
+                        if (e?.code !== 'Space') return;
 
+                        if (String(ids).startsWith("mod-")) {
+                            handleTogle(ids);
+                        } else {
+                            handleTogleFilial(Number(ids));
                         }
                     }}
-                    
                 >
-                    <TreeItem sx={{fontSize:13,fontFamily:"sans-serif"}} itemId="grid" label={"Acess " +"- "+usuario?.nome}>
+                    <TreeItem sx={{ fontSize: 13, fontFamily: "sans-serif" }} itemId="grid" label={"Acess " + "- " + usuario?.nome}>
                         {lista?.map(item => (
                             <TreeItem
-                                key={item.id}
-                                itemId={item.id.toString()}
+                                key={`mod-${item.id}`}
+                                itemId={`mod-${item.id}`}
+
                                 label={
                                     <div
                                         style={{ display: "flex", alignItems: "center", gap: 6 }}
 
                                         onClick={(e) => {
                                             e.stopPropagation();
-                                            handleTogle(item.id);
+                                            handleTogle(`mod-${item.id}`);
                                         }}
                                     >
                                         <input
                                             type="checkbox"
-                                            checked={!!checked[item.id]}
+                                            checked={!!checked[`mod-${item.id}`]}
                                             readOnly
                                         />
-                                        <span style={{fontFamily:"sans-serif",fontSize:13}}>{item.titulo}</span>
+                                        <span style={{ fontFamily: "sans-serif", fontSize: 13 }}>{item.titulo}</span>
                                     </div>
                                 }
                             />
                         ))}
                     </TreeItem>
-                     <TreeItem itemId="grid02" label={"Perfil"}>
+                    <TreeItem sx={{ fontSize: 13, fontFamily: "sans-serif" }} itemId="filiais" label={"Inclusão de Filias "}>
+                        {listaFiliais?.map((item, index) => (
+                            <TreeItem
+                                key={index}
+                                itemId={String(item.id)}
+                                label={
+                                    <div
+                                        style={{ display: "flex", alignItems: "center", gap: 6 }}
+
+                                        onClick={(e) => {
+                                            e.stopPropagation();
+                                            handleTogleFilial(item.id);
+                                        }}
+                                    >
+                                        <input
+                                            type="checkbox"
+                                            checked={!!checkedFilial[item.id]}
+                                            readOnly
+                                        />
+                                        <span style={{ fontFamily: "sans-serif", fontSize: 13 }}>{item.nome + item.numeroFilial}</span>
+                                    </div>
+                                }
+                            />
+                        ))}
+                    </TreeItem>
+                    <TreeItem itemId="grid02" label={"Perfil"}>
                         <TreeItem itemId={usuario?.perfil.nome.toString()} label={usuario?.perfil?.nome}>
 
                         </TreeItem>
-                     </TreeItem>
-                     <TreeItem itemId="grid03" label={"Filial Atual - "+usuario?.filial}>
-                        <TreeItem itemId={usuario?.filial.toString()} label={
+                    </TreeItem>
+                    <TreeItem itemId="grid03" label={"Filial Atual - " + usuario?.filial}>
+                        <TreeItem itemId={usuario.nome} label={
                             <div
-                                    style={{ display: "flex", alignItems: "center", gap: 6 }}
-                                    >
-                                        <FiltroFIlial listaFiliais={listaFiliais} carregarDadosLogistico={(n)=>setFilial(n) }/>
-                                    </div>
+                                style={{ display: "flex", alignItems: "center", gap: 6 }}
+                            >
+                                <FiltroFIlial listaFiliais={listaFiliais} carregarDadosLogistico={(n) => setFilial(n)} />
+                            </div>
                         }>
 
                         </TreeItem>
-                     </TreeItem>
+                    </TreeItem>
                 </SimpleTreeView>
             </Box>
             <Template.area_btn>
-                <BtnGlobal titulo="Salvar" isvalid={false} nome_btn={"undefined"} click={handleSalve} />
+                <BtnGlobal titulo="Salvar" isvalid={false} nome_btn={"undefined"} click={handleSalvarTudo} />
                 <BtnGlobal titulo="Cancelar" isvalid={true} nome_btn={"undefined"} click={handleReset} />
             </Template.area_btn>
         </>

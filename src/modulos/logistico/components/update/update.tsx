@@ -1,30 +1,64 @@
 import Template from "../../factures/Registro/registroCss";
-import {Button, TextField, CircularProgress } from '@mui/material';
+import { Button, TextField, CircularProgress } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
+import { useForm } from "react-hook-form";
+import { subjet } from "../../../../jwt/jwtservice";
+import api from "../../service/apiLogistico"
+import { notify } from "../../../portaria/service/snackbarService";
 
-// interface FilialItem {
-//     tipo: string;
-//     qtdAtivo: number | string;
-//     qtdManutencao: number | string;
-// }
 type props = {
-    itemMP: any[]
+    registroId: any,
+    itemMP: any[],
+    onClickhTogle: () => void
 }
-export const UpdateRegistro = ({ itemMP }: props) => {
+type ItemForm = {
+    id: number
+    qtdAtivo: any;
+    qtdManutencao: any;
+};
+type FormData = {
+    registroId: any,
+    usuarioId: any,
+    itens: ItemForm[];
+};
+export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => {
     const loading = false;
-    
+    const { handleSubmit, register } = useForm<FormData>({
+        defaultValues: {
+            itens: itemMP.map(item => ({
+                id: Number(item.id),
+                qtdAtivo: Number(item.qtdAtivo),
+                qtdManutencao: Number(item.qtdManutencao)
+            }))
+        }
+    })
+    const order = subjet()
+    const handleClick = async (data: FormData) => {
+        data.registroId = registroId;
+        data.usuarioId = order?.id;
+        data.itens = data.itens.map(item => ({
+            id: Number(item.id),
+            qtdAtivo: Number(item.qtdAtivo),
+            qtdManutencao: Number(item.qtdManutencao)
+        }));
 
+        if (data != null) {
+            console.log(JSON.stringify(data))
+            const resposta = await api.update(data);
+            if (resposta) {
+                notify("Salvo com sucesso", "success")
+                onClickhTogle()
+            }
+        }
+    }
     return (
         <Template.Card>
             <h2 style={{ marginBottom: '20px', color: '#334155' }}>Registro de Movimentação</h2>
-
-            {/* Seleção de Filial */}
-
-            {/* Grid de Itens */}
-            <Template.container_int>
+            <Template.container_int onSubmit={handleSubmit(handleClick)}>
                 {itemMP.map((item, index) => (
-                    <Template.form key={index} >
+                    <Template.form key={item.id} >
                         <TextField
+                            disabled
                             label="Tipo"
                             type="txt"
                             size="small"
@@ -35,14 +69,21 @@ export const UpdateRegistro = ({ itemMP }: props) => {
                             label="Qtd.Disponivel"
                             type="number"
                             size="small"
-                            value={item?.qtdAtivo}
+                            {...register(`itens.${index}.qtdAtivo`)}
+
                         />
 
                         <TextField
                             label="Qtd.Manutenção"
                             type="number"
                             size="small"
-                            value={item?.qtdManutencao}
+                            {...register(`itens.${index}.qtdManutencao`)}
+
+                        />
+
+                        <input
+                            type="hidden"
+                            {...register(`itens.${index}.id`)}
 
                         />
 
@@ -55,6 +96,7 @@ export const UpdateRegistro = ({ itemMP }: props) => {
             <Button
                 variant="contained"
                 fullWidth
+                onClick={handleSubmit(handleClick)}
                 size="large"
                 endIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
                 disabled={loading}
@@ -65,6 +107,3 @@ export const UpdateRegistro = ({ itemMP }: props) => {
         </Template.Card>
     );
 };
-{/* <td className="bold">{item?.tipo}</td>
-                                <td className="status-ativo">{item?.qtdAtivo}</td>
-                                <td className="status-manutencao">{item?.qtdManutencao}</td> */}

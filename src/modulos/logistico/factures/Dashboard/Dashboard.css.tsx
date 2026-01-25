@@ -11,12 +11,12 @@ const Template = {
   Main: styled.div`
     display: flex;
     flex-direction: column;
-    padding: 10px; /* Reduzi o padding lateral no mobile */
+    padding: 5px 0; /* Reduzi o padding lateral no mobile */
     min-height: 100vh;
     position: relative;
 
     @media (min-width: 768px) {
-      padding: 10px 20px;
+      padding: 10px 5px;
     }
   `,
 
@@ -216,6 +216,8 @@ const Template = {
     .bold { font-weight: 600; color: #1e293b; }
     .status-ativo { color: #16a34a; font-weight: 700; }
     .status-manutencao { color: #ca8a04; font-weight: 700; }
+    .status-total { color: #5964fc; font-weight: 700; }
+     /* #ca8a04 */
     @media (max-width: 768px) {
                  padding: 12px 5px;
 
