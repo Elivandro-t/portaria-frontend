@@ -1,0 +1,31 @@
+name: suite modulos
+on: 
+   push:
+       branches: 
+         - main
+jobs:
+    build:
+        runs-on: ubuntu-latest
+
+        steps:
+          - name: checkout de codigo
+            uses: actions/checkout@v4
+          - name: docker login
+            uses: docker/login-action@v3
+            with:
+              username: ${{secrets.DOKERHUB_USER}}
+              password: ${{secrets.DOCKERHUB_PASSWORD}}
+          - name: build e push de imagem
+            run: |
+              docker build -t elivandrolopes/front-portaria:7.0 .
+              docker push elivandrolopes/front-portaria:7.0
+    deploy:
+      needs: build
+      runs-on: [self-hosted,linux]
+      steps:
+        - name: deploy local no docker compose
+          run: |
+            cd /media/grupomateus/3f9a2e1e-ae3c-4ea5-9750-035aa9017e4d/servidor
+            docker compose pull portaria-front-app
+            docker compose up -d portaria-front-app
+        
