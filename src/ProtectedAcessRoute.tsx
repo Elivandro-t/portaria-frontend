@@ -49,8 +49,6 @@ export const ProtectedRoute = ({ children, allowedPermissions }: ProtectedRouteP
   const hasPermission = userPermissions?.acess?.some((p: any) =>
     p?.permission_name.includes(allowedPermissions)
   );
-
-  console.log("permissao " + hasPermission);
   if (loading) {
     return ; 
   }
