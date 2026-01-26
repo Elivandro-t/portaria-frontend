@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom"
 import { HeaderSecundarioComponent } from "../headerSecundario/HeaderSecundario"
 import Template from "./controleCss"
-export const ControleDeAcesso = ()=>{
+const ControleDeAcesso = ()=>{
     return(
      <Template.container>
         <HeaderSecundarioComponent titulo={"Portaria - Controle de Acesso"} ativo={true}></HeaderSecundarioComponent>
@@ -9,3 +9,5 @@ export const ControleDeAcesso = ()=>{
      </Template.container>
     )
 }
+
+export default ControleDeAcesso;

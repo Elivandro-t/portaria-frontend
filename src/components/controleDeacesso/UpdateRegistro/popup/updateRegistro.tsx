@@ -8,7 +8,10 @@ import api from "../../../../modulos/portaria/service/api";
 import { notify } from "../../../../modulos/portaria/service/snackbarService";
 import serviceTipoPessoa from "../../../../modulos/portaria/service/tipoPessoaApi/serviceTipoPessoa";
 import { subjet } from "../../../../jwt/jwtservice";
-
+export const ocupacoesLiberada = [
+    { id: 1, nome: "Somente Motorista", codigo: "PRES" },
+    { id: 2, nome: "Motorista e Passageiros", codigo: "DIR" },
+];
 type Props = {
   handleCancel: () => void;
   message: string;
@@ -23,6 +26,7 @@ type FormData = {
   bloco: any,
   tipoPessoa: string,
   tipoDeAcesso: string,
+  ocupacaoLiberada:string,
   dataAcesso?:any
 };
 type bloco = {
@@ -43,6 +47,8 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
   const usuario = subjet();
   const valorSelecionado = watch("bloco")
   const valorSelecionadoTipo = watch("tipoPessoa")
+    const ocupacao = watch("ocupacaoLiberada")
+
   const tipoAcesso = watch("tipoDeAcesso")
   const [blocos, setBlocos] = useState<bloco[]>([])
   const [ocupacoes, setOcupacao] = useState<any[]>([]);
@@ -90,6 +96,7 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
     setValue("nomeCompleto", data.nomeCompleto || "");
     setValue("placaVeiculo", data.placaVeiculo || "");
     setValue("numeroTelefone", data.visitante.numeroTelefone || "");
+     setValue("ocupacaoLiberada", data.ocupacaoLiberada || "");
     setValue("bloco", data.bloco || "");
     hendleBusca()
   }, [data, setValue])
@@ -97,53 +104,215 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
 
   const permissions: string[] = usuario?.permissoes || [];
   const permissionEdit = permissions.includes("GERENCIAR_USUARIOS")
-  return (
-    <Template.container>
-      <Template.container_int>
-        <Template.content>
-          <Template.CamposInput>
-            <Template.label>Nome *</Template.label>
-            <Template.Campos
-              type="text"
-              autoComplete="current-password"
-              placeholder="Nome completo"
+  // return (
+  //   <Template.container>
+  //     <Template.container_int>
+  //       <Template.content>
+  //         <Template.CamposInput>
+  //           <Template.label>Nome *</Template.label>
+  //           <Template.Campos
+  //             type="text"
+  //             autoComplete="current-password"
+  //             placeholder="Nome completo"
 
-              {...register("nomeCompleto", {
-                required: "Nome E obrigatorio"
-              })}
-            />
-          </Template.CamposInput>
-          <Template.CamposInput>
-            <Template.label>telefone *</Template.label>
-            <Template.Campos
-              type="text"
-              autoComplete="current-password"
-              placeholder="Placa do veiculo"
+  //             {...register("nomeCompleto", {
+  //               required: "Nome E obrigatorio"
+  //             })}
+  //           />
+  //         </Template.CamposInput>
+  //         <Template.CamposInput>
+  //           <Template.label>telefone *</Template.label>
+  //           <Template.Campos
+  //             type="text"
+  //             autoComplete="current-password"
+  //             placeholder="Placa do veiculo"
 
-              {...register("numeroTelefone", {
-              })}
-            />
-          </Template.CamposInput>
-          <Template.CamposInput>
-            <Template.label>Placa *</Template.label>
-            <Template.Campos
-              type="text"
-              autoComplete="current-password"
-              placeholder="Placa do veiculo"
-              {...register("placaVeiculo", {
-                required: "Placa E obrigatorio",
-                pattern: {
-                  value: /^([^0-9][^0-9][^0-9][0-9][A-Za-z0-9][0-9][0-9])/,
-                  message: "Formato de placa inválido. Ex: ABC1234 ou ABC1D23",
-                }
-              })}
-            />
-          </Template.CamposInput>
-          <Template.CamposInput>
-            <Template.label >Bloco</Template.label>
-            <Template.SelectItens {
-              ...register("bloco")} value={valorSelecionado} onChange={e => setValue("bloco", e.target.value)}>
-              {blocos.some(b => b.nome === valorSelecionado) ? null : (
+  //             {...register("numeroTelefone", {
+  //             })}
+  //           />
+  //         </Template.CamposInput>
+  //         <Template.CamposInput>
+  //           <Template.label>Placa *</Template.label>
+  //           <Template.Campos
+  //             type="text"
+  //             autoComplete="current-password"
+  //             placeholder="Placa do veiculo"
+  //             {...register("placaVeiculo", {
+  //               required: "Placa E obrigatorio",
+  //               pattern: {
+  //                 value: /^([^0-9][^0-9][^0-9][0-9][A-Za-z0-9][0-9][0-9])/,
+  //                 message: "Formato de placa inválido. Ex: ABC1234 ou ABC1D23",
+  //               }
+  //             })}
+  //           />
+  //         </Template.CamposInput>
+  //         <Template.CamposInput>
+  //           <Template.label >Bloco</Template.label>
+  //           <Template.SelectItens {
+  //             ...register("bloco")} value={valorSelecionado} onChange={e => setValue("bloco", e.target.value)}>
+  //             {blocos.some(b => b.nome === valorSelecionado) ? null : (
+  //               <Template.Options value={valorSelecionado}>
+  //                 {valorSelecionado}
+  //               </Template.Options>
+
+  //             )}
+
+  //             {blocos.map((item) => (
+  //               <Template.Options key={item.id} value={item.nome.toUpperCase()}>
+  //                 {item.nome}
+  //               </Template.Options>
+  //             ))}
+
+  //           </Template.SelectItens>
+  //         </Template.CamposInput>
+  //         <Template.CamposInput>
+  //           <Template.label >Ocupação Liberada</Template.label>
+  //           <Template.SelectItens {
+  //             ...register("ocupacaoLiberada")} value={ocupacao} onChange={e => setValue("ocupacaoLiberada", e.target.value)}>
+  //             {ocupacoesLiberada.some(b => b.nome === ocupacao) ? null : (
+  //               <Template.Options value={ocupacao}>
+  //                 {ocupacao}
+  //               </Template.Options>
+
+  //             )}
+
+  //             {ocupacoesLiberada.map((item) => (
+  //               <Template.Options key={item.id} value={item.nome.toUpperCase()}>
+  //                 {item.nome}
+  //               </Template.Options>
+  //             ))}
+
+  //           </Template.SelectItens>
+  //         </Template.CamposInput>
+  //         <Template.CamposInput>
+  //           <Template.label >Tipo Pessoa</Template.label>
+  //           <Template.SelectItens {
+  //             ...register("tipoPessoa")} value={valorSelecionadoTipo} onChange={e => setValue("tipoPessoa", e.target.value)}>
+  //             {ocupacoes.some(b => b.nome.toLowerCase() === valorSelecionado.toLowerCase()) ? null : (
+  //               <Template.Options value={valorSelecionadoTipo}>
+  //                 {valorSelecionadoTipo}
+  //               </Template.Options>
+
+  //             )}
+
+  //             {ocupacoes.map((item) => (
+  //               <Template.Options key={item.id} value={item.nome.toUpperCase()}>
+  //                 {item.nome}
+  //               </Template.Options>
+  //             ))}
+
+  //           </Template.SelectItens>
+  //         </Template.CamposInput>
+  //         {permissionEdit &&
+  //           <Fragment>
+  //             <Template.CamposInput>
+  //               <Template.label >Recorrencia de Acesso</Template.label>
+  //               <Template.SelectItens {
+  //                 ...register("tipoDeAcesso")} value={tipoAcesso} onChange={e => setValue("tipoDeAcesso", e.target.value)}>
+  //                 {recorrencia.some(b => b?.nome.toLowerCase() === tipoAcesso.toLowerCase()) ? null : (
+  //                   <Template.Options value={tipoAcesso}>
+  //                     {tipoAcesso}
+  //                   </Template.Options>
+
+  //                 )}
+
+  //                 {recorrencia.map((item) => (
+  //                   <Template.Options key={item.id} value={item.nome.toUpperCase()}>
+  //                     {item.nome}
+  //                   </Template.Options>
+  //                 ))}
+
+  //               </Template.SelectItens>
+  //             </Template.CamposInput>
+  //             {tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO" &&
+  //               <Template.CamposInput>
+  //                 <Template.label>Data </Template.label>
+  //                 <Template.Campos placeholder="data" type="date"
+  //                   autoComplete="current-password"
+  //                   {...register("dataAcesso")}
+
+  //                 />
+
+  //               </Template.CamposInput>
+  //             }
+  //           </Fragment>
+  //         }
+  //         <Template.buttons>
+  //           <Button
+  //             variant="contained"
+  //             color="error"
+  //             onClick={handleSubmit(henfleConfirm)}
+  //             sx={{ borderRadius: 2 }}
+  //           >
+  //             Atualizar
+  //           </Button>
+
+  //           <Button
+  //             variant="outlined"
+  //             onClick={handleCancel}
+  //             sx={{
+  //               borderRadius: 2,
+  //               color: "black",
+  //               borderColor: "#bdbdbd",
+  //               "&:hover": { backgroundColor: "#f5f5f5" },
+  //             }}
+  //           >
+  //             Cancelar
+  //           </Button>
+  //         </Template.buttons>
+  //       </Template.content>
+  //     </Template.container_int>
+  //   </Template.container>
+  // );
+  // Trecho do retorno do seu componente PopupUpdateResgistroComponent
+return (
+  <Template.container>
+    <Template.container_int>
+      <Template.header>
+        <h2>Editar Registro</h2>
+        <p>Atualize os dados de acesso do visitante abaixo.</p>
+      </Template.header>
+
+      <Template.content>
+        {/* Nome ocupa a linha toda */}
+        <Template.CamposInput className="full-width">
+          <Template.label>Nome Completo *</Template.label>
+          <Template.Campos
+            type="text"
+            placeholder="Ex: João Silva"
+            {...register("nomeCompleto", { required: "Nome é obrigatório" })}
+          />
+        </Template.CamposInput>
+
+        {/* Telefone e Placa lado a lado */}
+        <Template.CamposInput>
+          <Template.label>Telefone *</Template.label>
+          <Template.Campos
+            type="text"
+            placeholder="(00) 00000-0000"
+            {...register("numeroTelefone")}
+          />
+        </Template.CamposInput>
+
+        <Template.CamposInput>
+          <Template.label>Placa Veículo *</Template.label>
+          <Template.Campos
+            type="text"
+            placeholder="ABC1234"
+            {...register("placaVeiculo", {
+              required: "Obrigatório",
+              pattern: {
+                value: /^([^0-9][^0-9][^0-9][0-9][A-Za-z0-9][0-9][0-9])/,
+                message: "Formato inválido",
+              }
+            })}
+          />
+        </Template.CamposInput>
+
+        <Template.CamposInput>
+          <Template.label>Bloco</Template.label>
+          <Template.SelectItens {...register("bloco")} value={valorSelecionado} onChange={e => setValue("bloco", e.target.value)}>
+           {blocos.some(b => b.nome === valorSelecionado) ? null : (
                 <Template.Options value={valorSelecionado}>
                   {valorSelecionado}
                 </Template.Options>
@@ -155,14 +324,31 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
                   {item.nome}
                 </Template.Options>
               ))}
+          </Template.SelectItens>
+        </Template.CamposInput>
 
-            </Template.SelectItens>
-          </Template.CamposInput>
-          <Template.CamposInput>
-            <Template.label >Tipo Pessoa</Template.label>
-            <Template.SelectItens {
-              ...register("tipoPessoa")} value={valorSelecionadoTipo} onChange={e => setValue("tipoPessoa", e.target.value)}>
-              {ocupacoes.some(b => b.nome.toLowerCase() === valorSelecionado.toLowerCase()) ? null : (
+        <Template.CamposInput>
+          <Template.label>Ocupação</Template.label>
+          <Template.SelectItens {...register("ocupacaoLiberada")} value={ocupacao} onChange={e => setValue("ocupacaoLiberada", e.target.value)}>
+             {ocupacoesLiberada.some(b => b.nome === ocupacao) ? null : (
+                <Template.Options value={ocupacao}>
+                  {ocupacao}
+                </Template.Options>
+
+              )}
+
+              {ocupacoesLiberada.map((item) => (
+                <Template.Options key={item.id} value={item.nome.toUpperCase()}>
+                  {item.nome}
+                </Template.Options>
+              ))}
+          </Template.SelectItens>
+        </Template.CamposInput>
+
+        <Template.CamposInput className="full-width">
+          <Template.label>Tipo de Pessoa</Template.label>
+          <Template.SelectItens {...register("tipoPessoa")} value={valorSelecionadoTipo} onChange={e => setValue("tipoPessoa", e.target.value)}>
+            {ocupacoes.some(b => b.nome.toLowerCase() === valorSelecionado.toLowerCase()) ? null : (
                 <Template.Options value={valorSelecionadoTipo}>
                   {valorSelecionadoTipo}
                 </Template.Options>
@@ -174,16 +360,15 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
                   {item.nome}
                 </Template.Options>
               ))}
+          </Template.SelectItens>
+        </Template.CamposInput>
 
-            </Template.SelectItens>
-          </Template.CamposInput>
-          {permissionEdit &&
-            <Fragment>
-              <Template.CamposInput>
-                <Template.label >Recorrencia de Acesso</Template.label>
-                <Template.SelectItens {
-                  ...register("tipoDeAcesso")} value={tipoAcesso} onChange={e => setValue("tipoDeAcesso", e.target.value)}>
-                  {recorrencia.some(b => b?.nome.toLowerCase() === tipoAcesso.toLowerCase()) ? null : (
+        {permissionEdit && (
+          <Fragment>
+            <Template.CamposInput className="full-width">
+              <Template.label>Recorrência de Acesso</Template.label>
+              <Template.SelectItens {...register("tipoDeAcesso")} value={tipoAcesso} onChange={e => setValue("tipoDeAcesso", e.target.value)}>
+                 {recorrencia.some(b => b?.nome.toLowerCase() === tipoAcesso.toLowerCase()) ? null : (
                     <Template.Options value={tipoAcesso}>
                       {tipoAcesso}
                     </Template.Options>
@@ -195,47 +380,50 @@ export const PopupUpdateResgistroComponent = ({ handleCancel, data }: Props) => 
                       {item.nome}
                     </Template.Options>
                   ))}
+              </Template.SelectItens>
+            </Template.CamposInput>
 
-                </Template.SelectItens>
+            {tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO" && (
+              <Template.CamposInput className="full-width">
+                <Template.label>Data Expiração</Template.label>
+                <Template.Campos type="date" {...register("dataAcesso")} />
               </Template.CamposInput>
-              {tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO" &&
-                <Template.CamposInput>
-                  <Template.label>Data </Template.label>
-                  <Template.Campos placeholder="data" type="date"
-                    autoComplete="current-password"
-                    {...register("dataAcesso")}
+            )}
+          </Fragment>
+        )}
+      </Template.content>
 
-                  />
-
-                </Template.CamposInput>
-              }
-            </Fragment>
-          }
-          <Template.buttons>
-            <Button
-              variant="contained"
-              color="error"
-              onClick={handleSubmit(henfleConfirm)}
-              sx={{ borderRadius: 2 }}
-            >
-              Atualizar
-            </Button>
-
-            <Button
-              variant="outlined"
-              onClick={handleCancel}
-              sx={{
-                borderRadius: 2,
-                color: "black",
-                borderColor: "#bdbdbd",
-                "&:hover": { backgroundColor: "#f5f5f5" },
-              }}
-            >
-              Cancelar
-            </Button>
-          </Template.buttons>
-        </Template.content>
-      </Template.container_int>
-    </Template.container>
-  );
+      <Template.buttons>
+        <Button
+          variant="outlined"
+          onClick={handleCancel}
+          sx={{
+            borderRadius: "8px",
+            textTransform: "none",
+            fontWeight: 600,
+            color: "#64748b",
+            borderColor: "#e2e8f0",
+            "&:hover": { backgroundColor: "#f8fafc", borderColor: "#cbd5e1" },
+          }}
+        >
+          Cancelar
+        </Button>
+        <Button
+          variant="contained"
+          onClick={handleSubmit(henfleConfirm)}
+          sx={{
+            borderRadius: "8px",
+            textTransform: "none",
+            fontWeight: 600,
+            backgroundColor: "#2563eb",
+            boxShadow: "none",
+            "&:hover": { backgroundColor: "#1d4ed8", boxShadow: "none" },
+          }}
+        >
+          Salvar Alterações
+        </Button>
+      </Template.buttons>
+    </Template.container_int>
+  </Template.container>
+);
 };

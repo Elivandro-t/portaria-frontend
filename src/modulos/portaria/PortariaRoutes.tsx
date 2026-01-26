@@ -1,6 +1,6 @@
 import { lazy, type ComponentType } from "react";
 import { Route, Routes } from "react-router-dom";
-import { ControleDeAcesso } from "../../components/controleDeacesso/controledeAcesso";
+// import { ControleDeAcesso } from "../../components/controleDeacesso/controledeAcesso";
 import { MeusRegistroComponets } from "./factures/registros/meus_registros/meusRegistros";
 import { ProtectedRoute } from "./service/ProtectedRoute";
 import { HomeComponent } from "./factures/home/home";
@@ -24,6 +24,8 @@ function PortariaRoutes() {
             ]).then(([module]) => module)
         );
     };
+    const Controle = lazyWidth(() => import("../../components/controleDeacesso/controledeAcesso"), 500);
+
     const RegistrosPortariaAntigo = lazyWidth(() => import("./factures/novo registro/registroPortariaAntigo"), 500);
     const VisualizarRegistro = lazyWidth(() => import("./factures/registros/detalhes_registro/visualizar_registro"), 500);
     return (
@@ -80,7 +82,7 @@ function PortariaRoutes() {
             <Route path="/controle"
                 element={
                     <ProtectedRoute >
-                        <ControleDeAcesso key={Date.now()} />
+                        <Controle key={Date.now()} />
                     </ProtectedRoute>
                 } >
                 <Route path="registro-portaria-cd" element={

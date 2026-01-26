@@ -44,7 +44,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
             <Template.Card>
                 <Template.CardHeaderPrincipal>
                     <div className="info-title" style={{ paddingTop: 5 }}>
-                        <span className="tag">Resumo do Dia</span>
+                        <span className="tag">Resumo do Dia</span><span className="tag"> Criador: <small style={{color:"#000"}}>{c?.usuario}</small></span>
                         <h3>{c?.numeroFIlial} - {c?.nomeFilial}</h3>
                     </div>
                     <Template.info_date className="info-date">
