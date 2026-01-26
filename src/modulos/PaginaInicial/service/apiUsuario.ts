@@ -188,7 +188,6 @@ const BuscaUsuario = async (endpoint: any, usuarioId: any) => {
   }
 }
 const addFilial = async(endpoint:any,body:any)=>{
-  console.log(JSON.stringify(body))
   const resposta  = await axios.put(base+endpoint,body)
   return resposta.data;
 }

@@ -39,7 +39,6 @@ const ListaItensFiliasi = () => {
             if (resposta?.acess) {
                 setListaFiliais(resposta.acess);
                 setFilialFiltrada(resposta.acess)
-                console.log(resposta.acess)
             }
         } catch (error) {
             setLoadinInfor(false);
