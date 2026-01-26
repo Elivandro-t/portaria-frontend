@@ -4,7 +4,6 @@ export default {
     display: flex;
     flex-direction: column; 
     height: 100vh;
-    background: #f4f6f9;      
     position: relative; /* Garante que o botão se posicione em relação a este container */
     `,
     Main: styled.section`
