@@ -44,8 +44,9 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
             <Template.Card>
                 <Template.CardHeaderPrincipal>
                     <div className="info-title" style={{ paddingTop: 5 }}>
-                        <span className="tag">Resumo do Dia</span><span className="tag"> Criador: <small style={{color:"#000"}}>{c?.usuario}</small></span>
-                        <h3>{c?.numeroFIlial} - {c?.nomeFilial}</h3>
+                        <span className="tag">Resumo do Dia</span>
+                        <span className="tag"> Criador: <small style={{ color: "#000" }}>{c?.usuario}</small></span>
+                        <h4 className="titulo">{c?.numeroFIlial} - {c?.nomeFilial}</h4>
                     </div>
                     <Template.info_date className="info-date">
                         <span>📅  {handleConvertData(c?.dataCriacao)}</span>
@@ -70,9 +71,9 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                         {c.itens.map((item: any, i: any) => (
                             <Template.Tr key={i}>
                                 <td className="bold">{item?.tipo}</td>
-                                <td className="status-ativo">{item?.qtdAtivo} UND</td>
-                                <td className="status-manutencao">{item?.qtdManutencao} UND</td>
-                                <td className="status-total">Total: {item?.quantidadeTotal}</td>
+                                <td className="status-ativo">{item?.qtdAtivo}</td>
+                                <td className="status-manutencao">{item?.qtdManutencao}</td>
+                                <td className="status-total">{item?.quantidadeTotal}</td>
                                 {/* <td>
                                     <Template.ViewButton>Detalhes</Template.ViewButton>
                                 </td> */}

@@ -118,7 +118,7 @@ const Template = {
 
   Container: styled.div`
     width: 100%;
-    max-width: 900px;
+    max-width: 600px;
     margin: 0 auto;
   `,
 
@@ -131,11 +131,12 @@ const Template = {
     position: relative;
 
     @media (min-width: 768px) {
-      padding:40px 24px;
+      padding:20px 24px;
       margin-bottom: 20px;
     }
   `,
-  info_date:styled.div`
+  
+  info_date: styled.div`
   display: flex;
   gap: 5px;
   align-items: center;
@@ -143,7 +144,7 @@ const Template = {
    @media (max-width: 768px) {
       position: absolute;
       right: 0;
-      padding:0 25px;
+      padding:0 10px;
     }
   `,
 
@@ -154,6 +155,11 @@ const Template = {
     margin-bottom: 15px;
     border-bottom: 1px solid #f1f5f9;
     padding-bottom: 12px;
+    .titulo{
+    font-size: 10px;
+    padding: 10px;
+    color:#3a3737;
+  }
 
     .tag {
       background: #f5f3ff;
@@ -239,7 +245,7 @@ const Template = {
   ViewButton: styled.button`
     background: #fff;
     border: 1px solid #e2e8f0;
-    padding: 8px 10px;
+    padding: 8px 5px;
     border-radius: 6px;
     color: #4f46e5;
     font-weight: 600;
