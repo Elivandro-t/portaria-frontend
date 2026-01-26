@@ -208,7 +208,7 @@ const Template = {
     }
 
     td {
-      padding: 12px 10px;
+      padding: 7px 10px;
       border-bottom: 1px solid #f1f5f9;
       font-size: 13px;
       color: #475569;
