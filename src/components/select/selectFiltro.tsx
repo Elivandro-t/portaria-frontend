@@ -30,12 +30,9 @@ export default function SelectVariants({ value, onChange, list, titulo }: props)
                         ".MuiSelect-select": { paddingTop: 4, paddingBottom: 4 } // reduz espaço interno
                     }}
                 >
-                    <MenuItem value="">
-                        <em>None</em>
-                    </MenuItem>
                     {list.map((ItemsRow, index) => (
                         <MenuItem key={index}
-                            value={ItemsRow.value !== undefined ? ItemsRow.value : ItemsRow.numeroFilial}
+                            value={ItemsRow.value !== undefined ? ItemsRow.value : ItemsRow.filial}
                         >{ItemsRow?.nome}</MenuItem>
                     ))}
 

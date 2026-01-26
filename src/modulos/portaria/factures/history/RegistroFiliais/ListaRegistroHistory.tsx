@@ -7,8 +7,6 @@ import portariaApi from "../../../service/api"
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import ImageIcon from '@mui/icons-material/Image';
 import DeleteIcon from '@mui/icons-material/Delete';
-
-import apiFiliais from "../../../service/filiaisApi/filiasAPi"
 // Versão mais recente do MUI
 import DownloadIcon from '@mui/icons-material/Download';
 import { ModalGlobalComponent } from "../../../../../components/modalGlobal/modalGlobalComponent";
@@ -23,6 +21,7 @@ import SelectVariants from "../../../../../components/select/selectFiltro";
 import { PopupComponent } from "../../../../../components/popup/popupComponent";
 import { subjet } from "../../../../../jwt/jwtservice";
 import { Avatar, Box, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import apiUsuario from "../../../../PaginaInicial/service/apiUsuario";
 export const ListaRegistroComponent = () => {
   const [lista, setLista] = useState<any[]>([])
   const [ativo, setAtivo] = useState(false);
@@ -35,7 +34,7 @@ export const ListaRegistroComponent = () => {
   const [exibeImagem, setExibeImagem] = useState(false);
   const [loading, setLoading] = useState(false);
   const [selectedValue, setSelectedValue] = useState<any | null>(null);
-  const [selectedFilial, setSelectedFilial] = useState<number | null>(null);
+  const [selectedFilial, setSelectedFilial] = useState<number | null>(user?.filial);
 
 
 
@@ -45,9 +44,6 @@ export const ListaRegistroComponent = () => {
 
 
   const onSubmit = async (pageUnique?: any) => {
-    if (selectedValue) {
-      console.log(selectedValue)
-    }
     setLoading(true)
     const resposta = await Api.findAll(selectedFilial as any, busca, selectedValue as any, pageUnique);
     if (resposta) {
@@ -66,9 +62,14 @@ export const ListaRegistroComponent = () => {
   }, [busca])
   const [filiais, setFiliais] = useState<any[]>([]);
   const handleSearchFiliais = async () => {
-    const resposta = await apiFiliais.lista();
-    if (resposta?.filial) {
-      setFiliais(resposta?.filial)
+    // const resposta = await apiFiliais.lista();
+    // if (resposta?.filial) {
+    //   setFiliais(resposta?.filial)
+    // }
+
+    const resposta = await apiUsuario.FiliaisUsuario(user?.id);
+    if (resposta?.acess) {
+      setFiliais(resposta.acess);
     }
 
   }
@@ -119,7 +120,7 @@ export const ListaRegistroComponent = () => {
       case "SAIDA_LIBERADA": return "#22c55e";     // Verde esmeralda
       default: return "#ef4444";                    // Vermelho
     }
-}
+  }
   const handleVisualItem = (id: any) => {
     setLoading(true)
     setTimeout(() => {
@@ -140,10 +141,10 @@ export const ListaRegistroComponent = () => {
       <Paper elevation={0} sx={{ p: 2, borderRadius: '16px', border: '1px solid #e2e8f0' }}>
         <Template.FormSub>
           {/* Barra de Busca e Filtros Otimizada */}
-          <Box sx={{ 
-            display: 'flex', 
-            gap: 2, 
-            alignItems: 'center', 
+          <Box sx={{
+            display: 'flex',
+            gap: 2,
+            alignItems: 'center',
             flexWrap: 'wrap',
             bgcolor: '#f8fafc',
             p: 2,
@@ -157,13 +158,13 @@ export const ListaRegistroComponent = () => {
               onChange={(e) => setBusca(e.target.value)}
               sx={{ bgcolor: 'white', minWidth: 250 }}
             />
-            
+
             <SelectVariants value={selectedValue} onChange={setSelectedValue} titulo={"Status"} list={listaSelect} />
             <SelectVariants value={selectedFilial} onChange={setSelectedFilial} titulo={"Filial"} list={filiais} />
-            
+
             <Tooltip title="Pesquisar">
-              <IconButton 
-                onClick={() => onSubmit()} 
+              <IconButton
+                onClick={() => onSubmit()}
                 sx={{ bgcolor: '#6366f1', color: 'white', '&:hover': { bgcolor: '#4f46e5' } }}
               >
                 <SearchIcon />
@@ -205,9 +206,9 @@ export const ListaRegistroComponent = () => {
                     <tr key={key}>
                       <td>
                         <Stack direction="row" spacing={1.5} alignItems="center">
-                          <Avatar 
-                            sx={{ width: 40, height: 40, border: '2px solid #e2e8f0' }} 
-                            src={item?.visitante?.imagem || "/static/images/avatar/2.jpg"} 
+                          <Avatar
+                            sx={{ width: 40, height: 40, border: '2px solid #e2e8f0' }}
+                            src={item?.visitante?.imagem || "/static/images/avatar/2.jpg"}
                           />
                           <Box>
                             <Typography variant="body2" sx={{ fontWeight: 600 }}>{item?.nomeCompleto || "---"}</Typography>
@@ -257,7 +258,7 @@ export const ListaRegistroComponent = () => {
               <Avatar src={item?.visitante?.imagem} sx={{ width: 60, height: 60 }} />
               <Typography variant="h6">Evidências: {item?.visitante.nomeCompleto}</Typography>
             </Stack>
-            
+
             <Template.imagemArea>
               {['entrada', 'saida'].map((tipo) => item?.[tipo]?.imagem && (
                 <Template.divArea key={tipo}>
