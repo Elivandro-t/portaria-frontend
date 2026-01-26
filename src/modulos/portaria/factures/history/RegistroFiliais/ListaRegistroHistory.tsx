@@ -123,7 +123,7 @@ export const ListaRegistroComponent = () => {
   const handleVisualItem = (id: any) => {
     setLoading(true)
     setTimeout(() => {
-      navigate(`/controle/detalhes-registro?order=${id}`, { replace: false, state: { refresh: Date.now() } })
+      navigate(`/portaria/controle/detalhes-registro?order=${id}`, { replace: false, state: { refresh: Date.now() } })
     }, 2000)
   }
 
