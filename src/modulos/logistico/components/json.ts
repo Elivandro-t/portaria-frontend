@@ -1,3 +1,3 @@
 export const jsonMaterial =  [
-        "Pallet Madeira", "Container Platico", "Container Metalico"
+        "Pallet de Madeira", "Container Plástico", "Container Metálico"
     ]
