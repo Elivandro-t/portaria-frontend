@@ -118,7 +118,7 @@ const Template = {
 
   Container: styled.div`
     width: 100%;
-    max-width: 600px;
+    max-width: 800px;
     margin: 0 auto;
   `,
 
@@ -208,7 +208,7 @@ const Template = {
     }
 
     td {
-      padding: 7px 10px;
+      padding: 6px 10px;
       border-bottom: 1px solid #f1f5f9;
       font-size: 13px;
       color: #475569;
