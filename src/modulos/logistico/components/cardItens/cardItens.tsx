@@ -63,7 +63,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                             <th>Tipo</th>
                             <th>Disponível</th>
                             <th >Manutenção</th>
-                            <th>qtd estoque</th>
+                            <th>Total Geral</th>
                             {/* <th>Ações</th> */}
                         </tr>
                     </Template.Thead>
