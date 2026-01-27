@@ -220,7 +220,7 @@ export const ListaRegistroComponent = () => {
                       </td>
                       <td><Typography variant="caption" sx={{ fontFamily: 'monospace', fontWeight: 700 }}>#{item?.protocolo || 'PENDENTE'}</Typography></td>
                       <td>
-                        <Typography variant="body2">{item?.visitante?.tipoAcesso || "Visitante"}</Typography>
+                        <Typography variant="body2">{item?.visitante?.tipoPessoa || "Visitante"}</Typography>
                         <Typography variant="caption" sx={{ bgcolor: '#f1f5f9', px: 0.5, borderRadius: 1 }}>{item?.placaVeiculo || "Sem Veículo"}</Typography>
                       </td>
                       <td>
