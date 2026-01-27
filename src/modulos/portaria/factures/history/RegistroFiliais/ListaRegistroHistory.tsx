@@ -182,11 +182,13 @@ export const ListaRegistroComponent = () => {
                   <th>Visitante</th>
                   <th>Protocolo</th>
                   <th>Tipo / Placa</th>
+                  <th>Ocupação Liberada / Tipo de Acesso</th>
                   <th>Local</th>
                   <th>Status</th>
                   <th>Entrada</th>
                   <th>Saída</th>
-                  <th>Fiscal</th>
+                  <th>Fiscal Entrada</th>
+                  <th>Fiscal Saida</th>
                   <th style={{ textAlign: 'right' }}>Ações</th>
                 </tr>
               </thead>
@@ -221,11 +223,17 @@ export const ListaRegistroComponent = () => {
                         <Typography variant="body2">{item?.visitante?.tipoAcesso || "Visitante"}</Typography>
                         <Typography variant="caption" sx={{ bgcolor: '#f1f5f9', px: 0.5, borderRadius: 1 }}>{item?.placaVeiculo || "Sem Veículo"}</Typography>
                       </td>
+                      <td>
+                        <Typography variant="body2">{item?.ocupacaoLiberada || "Visitante"}</Typography>
+                        <Typography variant="caption" sx={{ bgcolor: '#f1f5f9', px: 0.5, borderRadius: 1 }}>{item?.visitante?.recorrencia?.nome || "Sem Recorrencia"}</Typography>
+                      </td>
                       <td>{item?.bloco}</td>
                       <td><Template.Chip color={retornaCorStatus(item?.status)}>{item?.status.replace("_", " ")}</Template.Chip></td>
                       <td><Typography variant="caption">{item?.entrada?.dataEntrada ? new Date(item.entrada.dataEntrada).toLocaleString() : "---"}</Typography></td>
                       <td><Typography variant="caption">{item?.saida?.dataSaida ? new Date(item.saida.dataSaida).toLocaleString() : "---"}</Typography></td>
                       <td><Typography variant="caption" sx={{ fontWeight: 500 }}>{item?.entrada?.nomeFiscal || "---"}</Typography></td>
+                      <td><Typography variant="caption" sx={{ fontWeight: 500 }}>{item?.saida?.nomeFiscal || "---"}</Typography></td>
+
                       <td>
                         <Template.trBTN>
                           <Tooltip title="Visualizar Detalhes">

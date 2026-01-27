@@ -32,7 +32,7 @@ function MeusRegistros() {
             setLoadingItens(false);
         }
     }
-        const buscaAnterior = useRef<string | null>(null);
+    const buscaAnterior = useRef<string | null>(null);
 
     const exibirMais = () => {
         if (!loadingItens && lista.length < totalElements) {
@@ -41,21 +41,20 @@ function MeusRegistros() {
             carregarRegistros(novoSize);
         }
     }
-      useEffect(() => {
-    // 🔍 se a busca foi LIMPA agora (antes tinha valor)
-    if (
-        buscaAnterior.current &&
-        (!context?.busca || context.busca.trim() === "")
-    ) {
-        setStatus("aguardando entrada"); // volta para geral
-    }
-    buscaAnterior.current = context?.busca ?? null;
+    useEffect(() => {
+        if (
+            buscaAnterior.current &&
+            (!context?.busca || context.busca.trim() === "")
+        ) {
+            setStatus("aguardando entrada"); // volta para geral
+        }
+        buscaAnterior.current = context?.busca ?? null;
 
-    setLista([]);
-    setSize(20);
-    carregarRegistros(20);
+        setLista([]);
+        setSize(20);
+        carregarRegistros(20);
 
-}, [user?.filial, status, context?.busca]);
+    }, [user?.filial, status, context?.busca]);
 
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);
@@ -64,20 +63,19 @@ function MeusRegistros() {
         setLoading(true);
         setTimeout(() => {
             navigate(`/portaria/controle/detalhes-registro?order=${numeroDoRegistro}`)
-        }, 500)
+        }, 500);
     }
     const handleFiltroEntrada = () => {
         setStatus("aguardando entrada");
     }
     const handleFiltroSaida = () => {
         setStatus("aguardando saida");
-
     }
     return (
         <Template.container>
             <Template.container_int>
-                <BtnGlobal titulo={"Entrada"} click={handleFiltroEntrada} isvalid={status==="aguardando entrada"}></BtnGlobal>
-                <BtnGlobal titulo={"Saida"} click={handleFiltroSaida} isvalid={status=="aguardando saida"}> </BtnGlobal>
+                <BtnGlobal titulo={"Entrada"} click={handleFiltroEntrada} isvalid={status === "aguardando entrada"}></BtnGlobal>
+                <BtnGlobal titulo={"Saida"} click={handleFiltroSaida} isvalid={status == "aguardando saida"}> </BtnGlobal>
 
             </Template.container_int>
             <ItensRegistro lista={lista} hendleDetalhesPedidos={hendleDetalhesPedidos} hendleBusca={exibirMais} visibleCount={totalElements} loading={loadingItens}></ItensRegistro>
