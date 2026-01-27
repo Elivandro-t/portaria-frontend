@@ -219,7 +219,7 @@ const VisualizarRegistro = () => {
                 <Template.tituloPedido>PRT: #{item?.protocolo}</Template.tituloPedido>
                 <Template.status>
                   <Template.p></Template.p><Template.Chip color={retornaCorStatus(item?.status)}>{item?.status.replace("_", " ")}</Template.Chip>
-                  {permissionEdit && !item.status.includes("SAIDA_LIBERADA") &&
+                  {permissionEdit && !item.status.includes("SAIDA_LIBERADA") && !item.status.includes("AGUARDANDO_SAIDA") &&
                     <Template.edit onClick={hendleUpdate}>
                       <IconButton aria-label="mais opções" sx={{ color: "#000" }}>
                         <EditIcon />
