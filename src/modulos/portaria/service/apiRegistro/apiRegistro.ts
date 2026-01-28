@@ -3,13 +3,13 @@ const base = import.meta.env.VITE_API_URL;
 
 const findAll = async(endpoint:any,filial:any,busca:any,ativo:any,page:any)=>{
     const params:any = {
-        sort:"id,desc"
-
+        sort:"status,asc"
     }
     if(filial) params.filial = filial;
     if(ativo!=null) params.ativo = ativo;
     if(busca) params.busca = busca;
     if(page!=null) params.page = page;
+    params.size=100
 
     const json = await axios.get(base+endpoint,{params});
     return json.data;

@@ -18,7 +18,6 @@ export default {
         padding: 24px 40px;
         background-color: #f8fafc;
         width: 100%;
-
         @media (max-width: 768px) {
             padding: 15px;
         }
@@ -38,9 +37,9 @@ export default {
         flex-direction: column;
         gap: 15px;
         background: #ffffff;
-        padding: 20px;
+        padding: 20px 0;
         border-radius: 12px;
-        box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+        /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
     `,
 
     // Alinhamento corrigido da barra de busca e filtros
@@ -79,34 +78,72 @@ export default {
     `,
 
     Table: styled.table`
-        width: 100%;
-        border-collapse: collapse;
-        font-family: "Inter", sans-serif;
-        
-        th {
-            background-color: #f8fafc;
-            padding: 12px 16px;
-            text-align: left;
-            font-size: 0.7rem;
-            font-weight: 700;
-            color: #64748b;
-            text-transform: uppercase;
-            border-bottom: 2px solid #e2e8f0;
-            white-space: nowrap;
-        }
+  width: 100%;
+  border-collapse: collapse;
+  table-layout: fixed;
+  font-family: "Inter", sans-serif;
 
-        td {
-            padding: 12px 16px;
-            font-size: 0.8rem;
-            color: #334155;
-            border-bottom: 1px solid #f1f5f9;
-            vertical-align: middle;
-        }
+  thead {
+    display: table;
+    width: calc(100% - 8px); /* compensa scrollbar */
+    table-layout: fixed;
+    background-color: #f8fafc;
+  }
 
-        tr:hover {
-            background-color: #f8fafc;
-        }
-    `,
+  tbody {
+    display: block;
+    max-height: 60vh;
+    overflow-y: auto;
+    width: 100%;
+  }
+
+  tbody tr {
+    display: table;
+    width: 100%;
+    table-layout: fixed;
+  }
+
+  th {
+    padding: 12px 12px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    color: #64748b;
+    text-transform: uppercase;
+    border-bottom: 2px solid #e2e8f0;
+    text-align: left;
+  }
+
+  td {
+    padding: 12px 12px;
+    font-size: 0.8rem;
+    color: #334155;
+    border-bottom: 1px solid #f1f5f9;
+    vertical-align: middle;
+
+    /* 👇 ESSENCIAL PRA NÃO SUMIR TEXTO */
+    white-space: normal;
+    word-break: break-word;
+  }
+
+  tbody tr:hover {
+    background-color: #f8fafc;
+  }
+`,
+loadingRow: styled.tr`
+  td {
+    padding: 40px 0;
+    text-align: center;
+    border-bottom: none;
+  }
+`,
+
+loadingContainer: styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 12px;
+  color: #64748b;
+`,
 
     trBTN: styled.div`
         display: flex;

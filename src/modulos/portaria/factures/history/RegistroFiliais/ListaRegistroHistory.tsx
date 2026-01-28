@@ -11,7 +11,6 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import DownloadIcon from '@mui/icons-material/Download';
 import { ModalGlobalComponent } from "../../../../../components/modalGlobal/modalGlobalComponent";
 import { Paginator } from "../../../../../components/paginator/paginator";
-import { LoadingSecundary } from "../../../../../components/LoadingSecundary/LoadingSecundary";
 import { useNavigate } from "react-router-dom";
 const listaSelect = [
   { nome: "Aberto", value: true },
@@ -20,7 +19,7 @@ const listaSelect = [
 import SelectVariants from "../../../../../components/select/selectFiltro";
 import { PopupComponent } from "../../../../../components/popup/popupComponent";
 import { subjet } from "../../../../../jwt/jwtservice";
-import { Avatar, Box, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
+import { Avatar, Box, CircularProgress, IconButton, Paper, Stack, TextField, Tooltip, Typography } from "@mui/material";
 import apiUsuario from "../../../../PaginaInicial/service/apiUsuario";
 export const ListaRegistroComponent = () => {
   const [lista, setLista] = useState<any[]>([])
@@ -36,12 +35,9 @@ export const ListaRegistroComponent = () => {
   const [selectedValue, setSelectedValue] = useState<any | null>(null);
   const [selectedFilial, setSelectedFilial] = useState<number | null>(user?.filial);
 
-
-
   const [totaPage, setTotalPage] = useState(0)
 
   const [item, setItem] = useState<any>()
-
 
   const onSubmit = async (pageUnique?: any) => {
     setLoading(true)
@@ -193,17 +189,29 @@ export const ListaRegistroComponent = () => {
                 </tr>
               </thead>
               <tbody>
-                {lista.length === 0 ? (
-                  <tr>
-                    <td colSpan={10}>
-                      <Template.semItens>
-                        <Template.iconSemItens />
-                        <Typography variant="h6" color="textSecondary">Nenhum registro encontrado</Typography>
-                        <Typography variant="body2" color="textSecondary">Tente ajustar seus filtros de busca.</Typography>
-                      </Template.semItens>
+                {loading ? (
+                  <Template.loadingRow>
+                    <td colSpan={11}>
+                      <Template.loadingContainer>
+                        <CircularProgress size={28} />
+                        <Typography variant="body2">
+                          Carregando registros...
+                        </Typography>
+                      </Template.loadingContainer>
                     </td>
-                  </tr>
-                ) : (
+                  </Template.loadingRow>
+                ) : lista.length === 0 ? 
+                  (
+                    <tr>
+                      <td colSpan={10}>
+                        <Template.semItens>
+                          <Template.iconSemItens />
+                          <Typography variant="h6" color="textSecondary">Nenhum registro encontrado</Typography>
+                          <Typography variant="body2" color="textSecondary">Tente ajustar seus filtros de busca.</Typography>
+                        </Template.semItens>
+                      </td>
+                    </tr>
+                  ) : (
                   lista.map((item, key) => (
                     <tr key={key}>
                       <td>
@@ -284,7 +292,6 @@ export const ListaRegistroComponent = () => {
         </ModalGlobalComponent>
       )}
 
-      {loading && <LoadingSecundary />}
       {ativo && <PopupComponent handleCancel={() => setAtivo(false)} handleConfirm={handleDeleteHistory} message={msg} ativoBtn={ativoBtn} />}
     </Template.container>
   );
