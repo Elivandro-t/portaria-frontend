@@ -23,10 +23,10 @@ export const ResetComponets = () => {
         <Template.titulo>Reset senha de Usuario </Template.titulo>
         <Template.FormSub >
           <Template.CamposInput>
-            <Template.label>Email usuario *</Template.label>
+            <Template.label>Email*</Template.label>
             <Template.Campos
               autoComplete="current-password"
-              placeholder="Senha"
+              placeholder="Informe  o E-mail"
               onChange={(e)=>setBusca(e.target.value)}
               onKeyDown={(e) => {
                                 if (e.key === 'Enter') {
