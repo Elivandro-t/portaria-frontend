@@ -35,7 +35,7 @@ export default {
   heander: styled.div`
     display: grid;
     /* Alinhado com o grid do formulário */
-    grid-template-columns: 2fr 1fr 1fr auto ; 
+    grid-template-columns:1.4fr 1fr 1fr 30px; 
     gap: 15px;
     background: #1e40af; /* Azul Royal */
     color: #fff;
@@ -53,7 +53,7 @@ export default {
 
   form: styled.section`
     display: grid;
-      grid-template-columns: 2fr 1fr 1fr auto;
+      grid-template-columns: 1.4fr 1fr 1fr 30px;
       gap: 10px;
       align-items: center;
       margin-bottom: 15px;

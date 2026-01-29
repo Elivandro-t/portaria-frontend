@@ -11,12 +11,13 @@ const Template = {
   Main: styled.div`
     display: flex;
     flex-direction: column;
-    padding: 5px 0; /* Reduzi o padding lateral no mobile */
+    padding: 10px; /* Reduzi o padding lateral no mobile */
+    background-color: #f8fafc;
     min-height: 100vh;
     position: relative;
 
     @media (min-width: 768px) {
-      padding: 10px 5px;
+      padding: 10px 20px;
     }
   `,
 
@@ -50,10 +51,10 @@ const Template = {
     h2 {
       margin: 4px 0 0 0;
       color: #1e293b;
-      font-size: 1.2rem; /* Menor no mobile */
+      font-size: 1rem; /* Menor no mobile */
     }
     @media (min-width: 768px) {
-      h2 { font-size: 1.4rem; }
+      h2 { font-size: 0.5; }
     }
   `,
 
@@ -118,33 +119,20 @@ const Template = {
 
   Container: styled.div`
     width: 100%;
-    max-width: 800px;
+    max-width: 1100px;
     margin: 0 auto;
   `,
 
   Card: styled.div`
     background: #fff;
     border-radius: 12px;
-    padding: 10px; /* Compacto no mobile */
+    padding: 15px; /* Compacto no mobile */
     margin-bottom: 15px;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-    position: relative;
 
     @media (min-width: 768px) {
-      padding:20px 24px;
+      padding: 24px;
       margin-bottom: 20px;
-    }
-  `,
-  
-  info_date: styled.div`
-  display: flex;
-  gap: 5px;
-  align-items: center;
-  margin-bottom: 10px;
-   @media (max-width: 768px) {
-      position: absolute;
-      right: 0;
-      padding:0 10px;
     }
   `,
 
@@ -155,11 +143,6 @@ const Template = {
     margin-bottom: 15px;
     border-bottom: 1px solid #f1f5f9;
     padding-bottom: 12px;
-    .titulo{
-    font-size: 10px;
-    padding: 10px;
-    color:#3a3737;
-  }
 
     .tag {
       background: #f5f3ff;
@@ -198,22 +181,21 @@ const Template = {
       color: #64748b;
       text-transform: uppercase;
       font-size: 10px;
-      padding: 10px 2px;
+      padding: 10px;
       text-align: left;
        @media (max-width: 768px) {
                  padding:5px;
-                 word-break: break-all;
-                 text-transform: capitalize;
+                 word-wrap: break-word;
     }
     }
 
     td {
-      padding: 2px 10px;
+      padding: 12px 10px;
       border-bottom: 1px solid #f1f5f9;
       font-size: 13px;
       color: #475569;
        @media (max-width: 768px) {
-                 padding: 10px 4px;
+                 padding: 12px 4px;
                  font-size: 12px;
 
     }
@@ -222,8 +204,6 @@ const Template = {
     .bold { font-weight: 600; color: #1e293b; }
     .status-ativo { color: #16a34a; font-weight: 700; }
     .status-manutencao { color: #ca8a04; font-weight: 700; }
-    .status-total { color: #5964fc; font-weight: 700; }
-     /* #ca8a04 */
     @media (max-width: 768px) {
                  padding: 12px 5px;
 
@@ -245,7 +225,7 @@ const Template = {
   ViewButton: styled.button`
     background: #fff;
     border: 1px solid #e2e8f0;
-    padding: 8px 5px;
+    padding: 8px 10px;
     border-radius: 6px;
     color: #4f46e5;
     font-weight: 600;

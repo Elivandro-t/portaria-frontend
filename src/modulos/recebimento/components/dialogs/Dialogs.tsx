@@ -1,5 +1,5 @@
 import { useEffect, type ReactNode } from "react"
-import Modal from "./dialog.styles"
+import Modal from "./dialog"
 
 type children = {
     children: ReactNode,

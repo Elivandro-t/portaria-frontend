@@ -61,6 +61,7 @@ export const RegistrosPortaria = () => {
     const [loading, setLoading] = useState(false)
     const permissions: string[] = usuario?.permissoes || [];
     const [blocos, setBlocos] = useState<any[]>([])
+    
     const permissionEdit = permissions.includes("GERENCIAR_USUARIOS")
     const handleSearchFiliais = async () => {
         const resposta = await filiaçApi.lista();

@@ -1,28 +1,25 @@
 import { useEffect, useState } from "react";
-import Template from "./registroCss";
+import Template from "./registroCardRecebimento.styled";
 import { Select, MenuItem, FormControl, InputLabel, Button, TextField, IconButton, CircularProgress } from '@mui/material';
 import DeleteIcon from '@mui/icons-material/Delete';
 import AddIcon from '@mui/icons-material/Add';
 import SendIcon from '@mui/icons-material/Send';
-
 import filiasUsuaro from "../../../PaginaInicial/service/apiUsuario";
-import { jsonMaterial } from "../../components/json";
-import apiCadastro from "../../service/apiLogistico";
 import { subjet } from "../../../../jwt/jwtservice";
 import { notify } from "../../../portaria/service/snackbarService";
-
+import {jsonMaterial} from "../../components/json"
 interface FilialItem {
-    tipo: string;
-    qtdAtivo: number | string;
-    qtdManutencao: number | string;
+    tipoBloco: string;
+    descarregado: number | string;
+    pendente: number | string;
 }
+const RegistroCardRecebimento = () => {
 
-const RegistroLogistico = () => {
     const user = subjet();
-    const [campos, setCampos] = useState<FilialItem[]>([{ tipo: "", qtdAtivo: 0, qtdManutencao: 0 }]);
     const [filial, setFilial] = useState<any>("");
     const [filiais, setFiliais] = useState<any[]>([]);
-    const [loading, setLoading] = useState(false);
+    const [loading, setLoading] = useState(false);        
+    const [campos, setCampos] = useState<FilialItem[]>([{ tipoBloco: "", pendente: 0, descarregado: 0 }]);
 
     // Carregar filiais
     useEffect(() => {
@@ -34,8 +31,8 @@ const RegistroLogistico = () => {
     }, []);
 
     const adicionarCampo = () => {
-        if (campos.length < 8) {
-            setCampos([...campos, { tipo: "", qtdAtivo: 0, qtdManutencao: 0 }]);
+        if (campos.length < 4) {
+            setCampos([...campos, { tipoBloco: "", pendente: 0, descarregado: 0}]);
         }
     };
 
@@ -54,7 +51,7 @@ const RegistroLogistico = () => {
     const enviarCampos = async () => {
         if (!filial) return notify("Selecione uma filial","error");
         
-        const invalido = campos.some(item => !item.tipo || item.qtdAtivo === "" || item.qtdManutencao === "");
+        const invalido = campos.some(item => !item.tipoBloco || item.pendente === "" || item.descarregado === "");
         if (invalido) return notify("Preencha todos os campos corretamente","error");
 
         setLoading(true);
@@ -66,20 +63,21 @@ const RegistroLogistico = () => {
                 usuarioId: user?.id,
                 itens: campos
             };
-            const resposta = await apiCadastro.cadastro(data);
-            if (resposta?.msg) {
-                notify(resposta.msg,"success");
-                setCampos([{ tipo: "", qtdAtivo: 0, qtdManutencao: 0 }]);
-                setFilial("");
-            }
+            console.log("data "+JSON.stringify(data))
+            // const resposta = await apiCadastro.cadastro(data);
+            // if (resposta?.msg) {
+            //     notify(resposta.msg,"success");
+            //     setCampos([{ nome: "", pendente: 0, descarregado: 0,portoDescarregado:0 }]);
+            //     setFilial("");
+            // }
         } finally {
             setLoading(false);
         }
     };
 
     const getMateriaisDisponiveis = (indexAtual: number) => {
-        const selecionados = campos.filter((_, i) => i !== indexAtual).map(c => c.tipo);
-        return jsonMaterial.filter(m => !selecionados.includes(m.descricao) || campos[indexAtual].tipo === m.descricao);
+        const selecionados = campos.filter((_, i) => i !== indexAtual).map(c => c.tipoBloco);
+        return jsonMaterial.filter(m => !selecionados.includes(m) || campos[indexAtual].tipoBloco === m);
     };
 
     return (
@@ -97,7 +95,7 @@ const RegistroLogistico = () => {
                     >
                         {filiais.map((item) => (
                             <MenuItem key={item.id} value={item}>
-                                {item.filial} - {item.nome}
+                                {item.filial} - {item?.nome}
                             </MenuItem>
                         ))}
                     </Select>
@@ -108,34 +106,33 @@ const RegistroLogistico = () => {
                     {campos.map((item, index) => (
                         <Template.form  key={index} >
                             <FormControl fullWidth size="small">
-                                <InputLabel>Material</InputLabel>
+                                <InputLabel>Bloco</InputLabel>
                                 <Select
-                                    value={item.tipo}
+                                    value={item?.tipoBloco}
                                     label="Tipo.Logistico"
-                                    onChange={(e) => atualizarCampos(index, "tipo", e.target.value)}
+                                    onChange={(e) => atualizarCampos(index, "tipoBloco", e.target.value)}
                                 >
                                     {getMateriaisDisponiveis(index).map((m, i) => (
-                                        <MenuItem key={i} value={m.descricao}>{m.descricao}</MenuItem>
+                                        <MenuItem key={i} value={m}>{m}</MenuItem>
                                     ))}
                                 </Select>
                             </FormControl>
 
                             <TextField
-                                label="Qtd.Disponivel"
+                                label="Qtd.pendente"
                                 type="number"
                                 size="small"
-                                value={item.qtdAtivo}
-                                onChange={(e) => atualizarCampos(index, "qtdAtivo", e.target.value)}
+                                value={item.pendente}
+                                onChange={(e) => atualizarCampos(index, "pendente", e.target.value)}
                             />
 
                             <TextField
-                                label="Qtd.Manutenção"
+                                label="Qtd.descarregado"
                                 type="number"
                                 size="small"
-                                value={item.qtdManutencao}
-                                onChange={(e) => atualizarCampos(index, "qtdManutencao", e.target.value)}
+                                value={item.descarregado}
+                                onChange={(e) => atualizarCampos(index, "descarregado", e.target.value)}
                             />
-
                             <IconButton 
                                 color="error" 
                                 onClick={() => removerCampo(index)}
@@ -146,13 +143,13 @@ const RegistroLogistico = () => {
                         </Template.form>
                     ))}
 
-                    {campos.length < 8 && (
+                    {campos.length < 4 && (
                         <Button 
                             startIcon={<AddIcon />} 
                             onClick={adicionarCampo}
                             sx={{ mt: 1, mb: 3 }}
                         >
-                            Adicionar outro material
+                            Adicionar outro Bloco
                         </Button>
                     )}
                 </Template.container_int>
@@ -173,4 +170,4 @@ const RegistroLogistico = () => {
     );
 };
 
-export default RegistroLogistico;
+export default RegistroCardRecebimento;

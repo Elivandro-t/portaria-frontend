@@ -2,12 +2,12 @@ import { useCallback, useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import apiUsuario from "../../../PaginaInicial/service/apiUsuario";
 import { notify } from "../../../portaria/service/snackbarService";
-import Template from "./../Dashboard/Dashboard.css"; // Certifique-se que o caminho está correto
+import Template from "../Dashboard/Painel.styles"; // Certifique-se que o caminho está correto
 import { SemItens } from "../../components/SemItens";
 import { Loading } from "../../components/Loading/loading";
 import { MdAdd, MdRefresh } from "react-icons/md";
 import { subjet } from "../../../../jwt/jwtservice";
-const ListaItensFiliasi = () => {
+const ListaItensFiliasRecebimento = () => {
     const [loadingInfor, setLoadinInfor] = useState(false);
 
     const { filial } = useParams();
@@ -134,4 +134,4 @@ const ListaItensFiliasi = () => {
     );
 };
 
-export default ListaItensFiliasi;
+export default ListaItensFiliasRecebimento;

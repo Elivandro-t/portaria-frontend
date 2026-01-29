@@ -208,12 +208,12 @@ const Template = {
     }
 
     td {
-      padding: 2px 10px;
+      padding: 6px 10px;
       border-bottom: 1px solid #f1f5f9;
       font-size: 13px;
       color: #475569;
        @media (max-width: 768px) {
-                 padding: 10px 4px;
+                 padding: 12px 4px;
                  font-size: 12px;
 
     }

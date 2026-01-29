@@ -1,5 +1,5 @@
 import { useState } from "react";
-import Template from "../../factures/Dashboard/Dashboard.css"
+import Template from "../../factures/Dashboard/Painel.styles"
 import { Dialogs } from "../dialogs/Dialogs";
 import { UpdateRegistro } from "../update/update";
 import PositionedMenu from "../btn/btnMenu";
@@ -63,7 +63,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                             <th>Tipo</th>
                             <th>Disponível</th>
                             <th >Manutenção</th>
-                            <th>Total</th>
+                            <th>Total Geral</th>
                             {/* <th>Ações</th> */}
                         </tr>
                     </Template.Thead>
@@ -83,7 +83,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                     </Template.Tbody>
                 </Template.Table>
                 {activeModal &&
-                    <Dialogs handleInative={handeClick} ><UpdateRegistro closed={handleFunction} onClickhTogle={handleFunction} registroId={c.id} itemMP={c.itens} ></UpdateRegistro></Dialogs>
+                    <Dialogs handleInative={handeClick} ><UpdateRegistro onClickhTogle={handleFunction} registroId={c.id} itemMP={c.itens} ></UpdateRegistro></Dialogs>
                 }
             </Template.Card>
         </Template.Container>
