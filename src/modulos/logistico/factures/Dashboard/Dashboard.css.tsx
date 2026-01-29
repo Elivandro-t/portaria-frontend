@@ -206,6 +206,12 @@ const Template = {
                  text-transform: capitalize;
     }
     }
+    tr{
+       &:hover{
+                  background-color: #c2fcd7;
+                  cursor: pointer;
+                 }
+    }
 
     td {
       padding: 2px 10px;
@@ -217,6 +223,8 @@ const Template = {
                  font-size: 12px;
 
     }
+   
+    
     }
 
     .bold { font-weight: 600; color: #1e293b; }
