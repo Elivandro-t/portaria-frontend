@@ -54,7 +54,7 @@ const Dashboard = () => {
     useEffect(() => {
         sessionStorage.setItem("redirectAfterLogin", from);
         carregarFiliais();
-    }, [carregarFiliais]);
+    }, []);
     useEffect(() => {
         if (listaFiliais.length > 0) {
             carregarDadosLogistico(filial);
