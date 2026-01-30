@@ -51,7 +51,7 @@ const ListaItensFiliasi = () => {
 
     useEffect(() => {
         carregarFiliais();
-    }, [carregarFiliais]);
+    }, [filial]);
 
     const handerNavigate = (number:any) => {
         setTimeout(() => {
@@ -79,7 +79,7 @@ const ListaItensFiliasi = () => {
             }
         }
         const numero = Number(value);
-        var filtrada = listaFiliais.filter(item => item.numeroFilial === numero);
+        var filtrada = listaFiliais.filter(item => item.filial === numero);
         setFilialFiltrada(filtrada);
     }
 
@@ -97,8 +97,8 @@ const ListaItensFiliasi = () => {
                         <Template.Select onChange={(e) => handleFiltroFilial(e.target.value)}>
                             <option value="">Selecione uma filial para filtrar...</option>
                             {listaFiliais.map((f, i) => (
-                                <option key={i} value={f?.numeroFilial}>
-                                    {f?.numeroFilial} - {f?.nome}
+                                <option key={i} value={f?.filial}>
+                                    {f?.filial} - {f?.nome}
                                 </option>
                             ))}
                         </Template.Select>
