@@ -9,7 +9,7 @@ type colorProps = {
     color: string;
 }
 
-export default {
+const Styles = {
     container: styled.div`
         min-height: 100vh;
         display: flex;
@@ -18,8 +18,11 @@ export default {
         padding: 24px 40px;
         background-color: #f8fafc;
         width: 100%;
+        box-sizing: border-box;
+
         @media (max-width: 768px) {
-            padding: 15px;
+            padding: 16px;
+            gap: 15px;
         }
     `,
 
@@ -39,10 +42,8 @@ export default {
         background: #ffffff;
         padding: 20px 0;
         border-radius: 12px;
-        /* box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1); */
     `,
 
-    // Alinhamento corrigido da barra de busca e filtros
     CamposInput: styled.div`
         display: flex;
         align-items: center;
@@ -52,9 +53,13 @@ export default {
         background: #f1f5f9;
         border-radius: 12px;
         border: 1px solid #e2e8f0;
+        & > * {
+            @media (max-width: 480px) {
+                flex: 1 1 100%;
+            }
+        }
     `,
 
-    // Chips de Status com visual corporativo
     Chip: styled.div<colorProps>`
         display: inline-flex;
         align-items: center;
@@ -69,81 +74,81 @@ export default {
         white-space: nowrap;
     `,
 
+    // --- LÓGICA DO SCROLL NO TOPO ---
     TableContainer: styled.div`
         width: 100%;
         overflow-x: auto;
+        -webkit-overflow-scrolling: touch;
         border: 1px solid #e2e8f0;
         border-radius: 10px;
         background: #fff;
+
+        /* Inverte o container para o scroll ir para o topo */
+        transform: rotateX(180deg); 
+        
+        /* Personalização da barra para mobile/web */
+        &::-webkit-scrollbar {
+            height: 8px;
+        }
+        &::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
     `,
 
     Table: styled.table`
-  width: 100%;
-  border-collapse: collapse;
-  table-layout: fixed;
-  font-family: "Inter", sans-serif;
+        width: 100%;
+        border-collapse: collapse;
+        font-family: "Inter", sans-serif;
+        min-width: 800px; 
 
-  thead {
-    display: table;
-    width: calc(100% - 8px); /* compensa scrollbar */
-    table-layout: fixed;
-    background-color: #f8fafc;
-  }
+        /* Inverte o conteúdo da tabela de volta ao normal */
+        transform: rotateX(180deg); 
 
-  tbody {
-    display: block;
-    max-height: 60vh;
-    overflow-y: auto;
-    width: 100%;
-  }
+        thead {
+            background-color: #f8fafc;
+        }
 
-  tbody tr {
-    display: table;
-    width: 100%;
-    table-layout: fixed;
-  }
+        th {
+            padding: 14px 16px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            border-bottom: 2px solid #e2e8f0;
+            text-align: left;
+        }
 
-  th {
-    padding: 12px 12px;
-    font-size: 0.7rem;
-    font-weight: 700;
-    color: #64748b;
-    text-transform: uppercase;
-    border-bottom: 2px solid #e2e8f0;
-    text-align: left;
-  }
+        td {
+            padding: 12px 16px;
+            font-size: 0.85rem;
+            color: #334155;
+            border-bottom: 1px solid #f1f5f9;
+            vertical-align: middle;
+            white-space: nowrap; 
+        }
 
-  td {
-    padding: 12px 12px;
-    font-size: 0.8rem;
-    color: #334155;
-    border-bottom: 1px solid #f1f5f9;
-    vertical-align: middle;
+        tbody tr:hover {
+            background-color: #f8fafc;
+        }
+    `,
+    // --- FIM DA LÓGICA DO SCROLL ---
 
-    /* 👇 ESSENCIAL PRA NÃO SUMIR TEXTO */
-    white-space: normal;
-    word-break: break-word;
-  }
+    loadingRow: styled.tr`
+        td {
+            padding: 40px 0;
+            text-align: center;
+            border-bottom: none;
+        }
+    `,
 
-  tbody tr:hover {
-    background-color: #f8fafc;
-  }
-`,
-loadingRow: styled.tr`
-  td {
-    padding: 40px 0;
-    text-align: center;
-    border-bottom: none;
-  }
-`,
-
-loadingContainer: styled.div`
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 12px;
-  color: #64748b;
-`,
+    loadingContainer: styled.div`
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        gap: 12px;
+        color: #64748b;
+    `,
 
     trBTN: styled.div`
         display: flex;
@@ -151,7 +156,6 @@ loadingContainer: styled.div`
         gap: 4px;
     `,
 
-    // Estilos do Modal de Imagens
     visitante: styled.div`
         display: flex;
         align-items: center;
@@ -177,6 +181,7 @@ loadingContainer: styled.div`
         max-height: 500px;
         @media (max-width: 768px) {
             flex-direction: column;
+            max-height: 70vh;
         }
     `,
 
@@ -203,7 +208,9 @@ loadingContainer: styled.div`
         height: 220px;
         object-fit: cover;
         border-radius: 8px;
-        box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        @media (max-width: 768px) {
+            height: auto;
+        }
     `,
 
     btnDownload: styled.div`
@@ -213,7 +220,6 @@ loadingContainer: styled.div`
         z-index: 10;
     `,
 
-    // Área de estado vazio (Empty State)
     erro: styled.div`
         width: 100%;
         display: flex;
@@ -235,7 +241,6 @@ loadingContainer: styled.div`
         color: #cbd5e1;
     `,
 
-    // Adicionais para evitar quebras
     Options: styled.option``,
     Select: styled.div`
         width: 100%;
@@ -255,9 +260,12 @@ loadingContainer: styled.div`
         border-radius: 8px;
         border: 1px solid ${({ hasError }) => (hasError ? '#ef4444' : '#e2e8f0')};
         padding: 8px 12px;
+        box-sizing: border-box;
         &:focus {
             outline: none;
             border-color: #6366f1;
         }
     `
 };
+
+export default Styles;
