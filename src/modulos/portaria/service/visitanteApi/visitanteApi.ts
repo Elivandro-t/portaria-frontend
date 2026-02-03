@@ -13,9 +13,10 @@ const visitanteBuscaPlaca= async (endpoint:any,visitanteID?:any,nome?:any)=>{
 }
 
 const visitanteFiltro= async (endpoint:any)=>{
-    // const params = new URLSearchParams();
-    // params.append("size",data)
-    const resposta = await axios.get(base+endpoint)
+    const params = new URLSearchParams();
+    const sze = 1000;
+    params.append("size",sze as any)
+    const resposta = await axios.get(base+endpoint,{params:Object.fromEntries(params)})
     return resposta.data;
 }
 const deleteVisitante = async (endpoint: string, id: any, usuarioId: any,type:any) => {

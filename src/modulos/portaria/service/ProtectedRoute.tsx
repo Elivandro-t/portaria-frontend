@@ -31,19 +31,19 @@ export const ProtectedRoute = ({ children, allowedPermissions }: ProtectedRouteP
     }
     setLoading(false)
 
-  },[])
+  },[]);
   if (loading) {
     return <div>Carregando...</div>; // opcional: pode ser um spinner
-  }
+  };
   // Se o usuário não está autenticado
   if (!isAuthenticated) {
     return <Navigate to="/verify" replace />;
-  }
+  };
 
   // Se a rota exige permissões específicas
   if (allowedPermissions && !allowedPermissions.some(p => userPermissions.includes(p))) {
     return <Navigate to="/unauthorized" replace />;
-  }
+  };
 
   return <>{children}</>;
 };
