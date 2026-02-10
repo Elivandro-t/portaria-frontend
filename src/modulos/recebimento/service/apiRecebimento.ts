@@ -52,44 +52,27 @@ const deleteContainer = async (enpoint: any, registroId?: any,
     } else {
         return null;
     }
-}
 
-const listaItensTipo = async (enpoint: any, tipo: any, filial: any) => {
-    const params = new URLSearchParams();
-    if (tipo !== null && filial != null) {
-        params.append("tipo", tipo)
-        params.append("filial", filial)
-    }
-    const resposta = await axios.get(base + enpoint, { params: Object.fromEntries(params) });
-    if (resposta.data) {
-        return resposta.data;
-    } else {
-        return null;
-    }
 }
 export default {
     lista: async (filial:any,listaFiliais:any) => {
-        const json = await listaItens("/communit/v1/runmit/lista",filial,listaFiliais);
+        const json = await listaItens("/communit/v1/recebimento/lista",filial,listaFiliais);
         return json;
     },
     listaGerais: async (filial:any) => {
-        const json = await listaItensGerais("/communit/v1/runmit/lista/geral",filial);
-        return json;
-    },
-    findItensMaterial: async (tipo: string, filial: any) => {
-        const json = await listaItensTipo("/material/v1/findOne", tipo, filial);
+        const json = await listaItensGerais("/communit/v1/recebimento/lista/geral",filial);
         return json;
     },
     cadastro: async (data: any) => {
-        const json = await cadastro("/communit/v1/runmit/registro", data);
+        const json = await cadastro("/communit/v1/recebimento/registro", data);
         return json; 
     },
     update: async (data: any) => {
-        const json = await update("/communit/v1/runmit/update", data);
+        const json = await update("/communit/v1/recebimento/update", data);
         return json; 
     },
     delete: async (id: any,filial:any) => {
-        const json = await deleteContainer("/communit/v1/runmit/delete/cardlogistico", id,filial);
+        const json = await deleteContainer("/communit/v1/recebimento/delete/cardlogistico", id,filial);
         return json; 
     }
 }

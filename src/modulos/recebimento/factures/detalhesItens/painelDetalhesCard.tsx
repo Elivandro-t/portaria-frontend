@@ -1,6 +1,6 @@
 import {useEffect, useState } from "react";
 import {  useParams } from "react-router-dom";
-import api from "../../service/apiLogistico";
+import api from "../../service/apiRecebimento";
 import { notify } from "../../../portaria/service/snackbarService";
 import Template from "./painelDetalhesCard.styled"; // Certifique-se que o caminho está correto
 import { SemItens } from "../../components/SemItens";

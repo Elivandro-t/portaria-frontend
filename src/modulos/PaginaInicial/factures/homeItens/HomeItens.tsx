@@ -11,7 +11,7 @@ export const HomeItens = () => {
     const usuario = subjet();
     const navigate = useNavigate();
     const handlenavigate = (router: any) => {
-        navigate(router,{replace:false})
+        navigate(router, { replace: false })
     }
     const [menu, setModule] = useState<any[]>([]);
     useEffect(() => {
@@ -19,31 +19,30 @@ export const HomeItens = () => {
         const handleApi = async () => {
             const json = await apiModulos.modulo(usuario?.id);
             if (json) {
-                setModule(json?.acess);
+                const acessos = json.acess;
+                if (acessos.length === 1) {
+                    navigate(json?.acess[0].router, { replace: false });
+                    return;
+                }
+                setModule(acessos);
 
             }
         }
         handleApi()
     }, [])
     // p=>perfil.permissoes.includes(p))
-
-    useEffect(() => {
-        if (menu?.length === 1) {
-            navigate(menu[0].router,{replace:false});
-        };
-    }, [menu]);
     function retornaIcone(modulo: string, valor: any) {
-            switch (modulo) {
-                case "PORTARIA_ACCESS":
-                    return <FaTruck color="#5B7FFF" size={valor} />
-                case "INVENTARIO_ACCESS":
-                    return <InventoryIcon sx={{ color: '#5B7FFF', fontSize: valor }} />
-                case "RECEBIMENTO_ACCESS":
-                    return <SouthWestIcon sx={{ color: '#5B7FFF', fontSize: valor, fontWeight: "bold" }} />
-                    case "LOGISTICO_ACCESS":
-                    return <Inventory2Icon sx={{ color: '#5B7FFF', fontSize: valor, fontWeight: "bold" }} />
-            }
+        switch (modulo) {
+            case "PORTARIA_ACCESS":
+                return <FaTruck color="#5B7FFF" size={valor} />
+            case "INVENTARIO_ACCESS":
+                return <InventoryIcon sx={{ color: '#5B7FFF', fontSize: valor }} />
+            case "RECEBIMENTO_ACCESS":
+                return <SouthWestIcon sx={{ color: '#5B7FFF', fontSize: valor, fontWeight: "bold" }} />
+            case "LOGISTICO_ACCESS":
+                return <Inventory2Icon sx={{ color: '#5B7FFF', fontSize: valor, fontWeight: "bold" }} />
         }
+    }
     return (
         <Template.container_2>
             {menu.length === 0 &&
@@ -64,10 +63,10 @@ export const HomeItens = () => {
                                 <Template.card_title>{item?.titulo}</Template.card_title>
                                 <Template.card_desc>{item?.subtitulo}</Template.card_desc>
                             </Template.link>
-                            
+
 
                         ))}
-                        
+
 
 
                     </Template.grid>

@@ -3,7 +3,7 @@ import Template from "../../factures/Dashboard/Painel.styles"
 import { Dialogs } from "../dialogs/Dialogs";
 import { UpdateRegistro } from "../update/update";
 import PositionedMenu from "../btn/btnMenu";
-import apiMaterial from "../../service/apiLogistico"
+import apiMaterial from "../../service/apiRecebimento"
 import { notify } from "../../../portaria/service/snackbarService";
 import { subjet } from "../../../../jwt/jwtservice";
 
@@ -33,7 +33,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
     }
     const handeClickDelete = async () => {
         // setActiveModal(!activeModal);
-        const resposta = await apiMaterial.delete(c.id, c.numeroFIlial);
+        const resposta = await apiMaterial.delete(c.id, c.filial);
         if (resposta) {
             handleFunction();
             notify("Deletado", "success")
@@ -45,11 +45,11 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                 <Template.CardHeaderPrincipal>
                     <div className="info-title" style={{ paddingTop: 5 }}>
                         <span className="tag">Resumo do Dia</span>
-                        <span className="tag"> Criador: <small style={{ color: "#000" }}>{c?.usuario}</small></span>
-                        <h4 className="titulo">{c?.numeroFIlial} - {c?.nomeFilial}</h4>
+                        <span className="tag"> Criador: <small style={{ color: "#000" }}>{c?.nomeUsuario}</small></span>
+                        <h4 className="titulo">{c?.filial} - {c?.nomeFilial}</h4>
                     </div>
                     <Template.info_date className="info-date">
-                        <span>📅  {handleConvertData(c?.dataCriacao)}</span>
+                        <span>📅  {handleConvertData(c?.dataAt)}</span>
                         {permission?.includes("DELETE_LOGISTICO") &&
                             <PositionedMenu hendleClick={handeClick} hendleClickDelete={handeClickDelete} />
 
@@ -61,19 +61,17 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                     <Template.Thead>
                         <tr>
                             <th>Tipo</th>
-                            <th>Disponível</th>
-                            <th >Manutenção</th>
-                            <th>Total Geral</th>
+                            <th>Chamado</th>
+                            <th>Pendentes</th>
                             {/* <th>Ações</th> */}
                         </tr>
                     </Template.Thead>
                     <Template.Tbody>
                         {c.itens.map((item: any, i: any) => (
                             <Template.Tr key={i}>
-                                <td className="bold">{item?.tipo}</td>
-                                <td className="status-ativo">{item?.qtdAtivo}</td>
-                                <td className="status-manutencao">{item?.qtdManutencao}</td>
-                                <td className="status-total">{item?.quantidadeTotal}</td>
+                                <td className="bold">{item?.TipoBloco}</td>
+                                <td className="status-ativo">{item?.qtdChamado}</td>
+                                <td className="status-manutencao">{item?.qtdPendentes}</td>
                                 {/* <td>
                                     <Template.ViewButton>Detalhes</Template.ViewButton>
                                 </td> */}

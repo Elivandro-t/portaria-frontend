@@ -55,7 +55,7 @@ const ListaItensFiliasRecebimento = () => {
 
     const handerNavigate = (number:any) => {
         setTimeout(() => {
-            nav(`/logistico/detalhes-filial/${number}`);
+            nav(`/recebimento/detalhes-filial/${number}`);
         }, 300);
     };
     const [loadingred, setLoadingRef] = useState(false);

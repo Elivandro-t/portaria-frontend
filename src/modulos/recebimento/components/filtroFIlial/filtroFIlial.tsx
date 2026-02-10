@@ -12,7 +12,7 @@ interface Props {
 export function FiltroFIlial({ listaFiliais, loadingRel, carregarDadosLogistico, handleClick }: Props) {
     const nav = useNavigate()
     const onAddClick = () => {
-        nav("/Logistico/novo-logistico")
+        nav("/recebimento/novo-logistico")
     }
     return (
         <Template.FilterArea style={{ gap: '15px', flexWrap: 'wrap' }}>

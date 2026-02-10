@@ -8,10 +8,11 @@ import filiasUsuaro from "../../../PaginaInicial/service/apiUsuario";
 import { subjet } from "../../../../jwt/jwtservice";
 import { notify } from "../../../portaria/service/snackbarService";
 import {jsonMaterial} from "../../components/json"
+import apiRecebimento from "../../service/apiRecebimento";
 interface FilialItem {
-    tipoBloco: string;
-    descarregado: number | string;
-    pendente: number | string;
+    TipoBloco: string;
+    qtdChamado: number | string;
+    qtdPendentes: number | string;
 }
 const RegistroCardRecebimento = () => {
 
@@ -19,7 +20,7 @@ const RegistroCardRecebimento = () => {
     const [filial, setFilial] = useState<any>("");
     const [filiais, setFiliais] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);        
-    const [campos, setCampos] = useState<FilialItem[]>([{ tipoBloco: "", pendente: 0, descarregado: 0 }]);
+    const [campos, setCampos] = useState<FilialItem[]>([{ TipoBloco: "", qtdPendentes: 0, qtdChamado: 0 }]);
 
     // Carregar filiais
     useEffect(() => {
@@ -32,7 +33,7 @@ const RegistroCardRecebimento = () => {
 
     const adicionarCampo = () => {
         if (campos.length < 4) {
-            setCampos([...campos, { tipoBloco: "", pendente: 0, descarregado: 0}]);
+            setCampos([...campos, { TipoBloco: "", qtdPendentes: 0, qtdChamado: 0}]);
         }
     };
 
@@ -51,33 +52,32 @@ const RegistroCardRecebimento = () => {
     const enviarCampos = async () => {
         if (!filial) return notify("Selecione uma filial","error");
         
-        const invalido = campos.some(item => !item.tipoBloco || item.pendente === "" || item.descarregado === "");
+        const invalido = campos.some(item => !item.TipoBloco || item.qtdPendentes === "" || item.qtdChamado === "");
         if (invalido) return notify("Preencha todos os campos corretamente","error");
 
         setLoading(true);
         try {
             const data = {
-                usuario: user?.nome,
-                numeroFIlial: filial?.filial,
+                nomeUsuario: user?.nome,
+                filial: filial?.filial,
                 nomeFilial: filial.nome,
                 usuarioId: user?.id,
                 itens: campos
             };
-            console.log("data "+JSON.stringify(data))
-            // const resposta = await apiCadastro.cadastro(data);
-            // if (resposta?.msg) {
-            //     notify(resposta.msg,"success");
-            //     setCampos([{ nome: "", pendente: 0, descarregado: 0,portoDescarregado:0 }]);
-            //     setFilial("");
-            // }
+            const resposta = await apiRecebimento.cadastro(data);
+            if (resposta?.msg) {
+                notify(resposta.msg,"success");
+                setCampos([{TipoBloco: "", qtdPendentes: 0, qtdChamado: 0 }]);
+                setFilial("");
+            }
         } finally {
             setLoading(false);
         }
     };
 
     const getMateriaisDisponiveis = (indexAtual: number) => {
-        const selecionados = campos.filter((_, i) => i !== indexAtual).map(c => c.tipoBloco);
-        return jsonMaterial.filter(m => !selecionados.includes(m) || campos[indexAtual].tipoBloco === m);
+        const selecionados = campos.filter((_, i) => i !== indexAtual).map(c => c.TipoBloco);
+        return jsonMaterial.filter(m => !selecionados.includes(m) || campos[indexAtual].TipoBloco === m);
     };
 
     return (
@@ -108,9 +108,9 @@ const RegistroCardRecebimento = () => {
                             <FormControl fullWidth size="small">
                                 <InputLabel>Bloco</InputLabel>
                                 <Select
-                                    value={item?.tipoBloco}
+                                    value={item?.TipoBloco}
                                     label="Tipo.Logistico"
-                                    onChange={(e) => atualizarCampos(index, "tipoBloco", e.target.value)}
+                                    onChange={(e) => atualizarCampos(index, "TipoBloco", e.target.value)}
                                 >
                                     {getMateriaisDisponiveis(index).map((m, i) => (
                                         <MenuItem key={i} value={m}>{m}</MenuItem>
@@ -122,16 +122,16 @@ const RegistroCardRecebimento = () => {
                                 label="Qtd.pendente"
                                 type="number"
                                 size="small"
-                                value={item.pendente}
-                                onChange={(e) => atualizarCampos(index, "pendente", e.target.value)}
+                                value={item.qtdPendentes}
+                                onChange={(e) => atualizarCampos(index, "qtdPendentes", e.target.value)}
                             />
 
                             <TextField
                                 label="Qtd.descarregado"
                                 type="number"
                                 size="small"
-                                value={item.descarregado}
-                                onChange={(e) => atualizarCampos(index, "descarregado", e.target.value)}
+                                value={item.qtdChamado}
+                                onChange={(e) => atualizarCampos(index, "qtdChamado", e.target.value)}
                             />
                             <IconButton 
                                 color="error" 

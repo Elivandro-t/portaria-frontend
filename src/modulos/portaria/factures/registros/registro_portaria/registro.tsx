@@ -14,7 +14,7 @@ function MeusRegistros() {
     const context = useContext(contextProvider);
     const [lista, setLista] = useState<any[]>([])
     const [loadingItens, setLoadingItens] = useState(false);
-    const [status, setStatus] = useState("aguardando entrada")
+    const [status, setStatus] = useState("")
     const carregarRegistros = async (novoSize?: number) => {
         if (loadingItens) return; // Se já estiver carregando, bloqueia novas chamadas
 
@@ -69,7 +69,9 @@ function MeusRegistros() {
         setStatus("aguardando entrada");
     }
     const handleFiltroSaida = () => {
+        setLista([])
         setStatus("aguardando saida");
+        setSize(10)
     }
     return (
         <Template.container>

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
-import api from "../../service/apiLogistico";
+import api from "../../service/apiRecebimento";
 import apiUsuario from "../../../PaginaInicial/service/apiUsuario";
 import { notify } from "../../../portaria/service/snackbarService";
 import Template from "./Painel.styles"; // Certifique-se que o caminho está correto
@@ -30,8 +30,8 @@ const PainelRecebimento = () => {
         const filiais = listaFiliais.flatMap(item => item.filial);
         try {
             const resposta = await api.lista(filial,filiais);
-            if (resposta?.logisticoFilias) {
-                setItens(resposta.logisticoFilias);
+            if (resposta) {
+                setItens(resposta);
             }
         } catch (error) {
             notify("Erro ao carregar dados logísticos", "error");

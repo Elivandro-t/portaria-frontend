@@ -101,7 +101,6 @@ export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle,closed }: pro
         return jsonMaterial.filter(m => {
             // nunca pode repetir item que já veio da API
             if (tiposApi.includes(m.descricao)) return false;
-
             // verifica se já foi selecionado em outro campo
             const usadoEmOutroCampo = campos.some(
                 (c, i) => i !== indexAtual && c.tipo === m.descricao
