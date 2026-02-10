@@ -1,3 +1,3 @@
 export const jsonMaterial =  [
-        "HortFruti", "Congelado", "Resfriado","Secos"
+        "HortiFruti", "Congelados","Resfriados","Secos"
     ]
