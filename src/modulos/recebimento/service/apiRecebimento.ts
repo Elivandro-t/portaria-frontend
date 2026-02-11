@@ -1,25 +1,24 @@
 import axios from "axios";
 const base = import.meta.env.VITE_API_URL_LOGISTICO
-const listaItens = async (endpoint: any,filial:any,listaFiliais:any) => {
-     const params = new URLSearchParams();
-     if(listaFiliais!=null){
-        params.append("filiais",listaFiliais)
-     }
-
-    if(filial!=null){
-       params.append("filial",filial)
+const listaItens = async (endpoint: any, filial: any, listaFiliais: any) => {
+    const params = new URLSearchParams();
+    if (listaFiliais != null) {
+        params.append("filiais", listaFiliais)
     }
-    const json = await axios.get(base + endpoint,{params:Object.fromEntries(params)});
+    if (filial != null) {
+        params.append("filial", filial)
+    }
+    const json = await axios.get(base + endpoint, { params: Object.fromEntries(params) });
 
     return json.data;
 }
-const listaItensGerais = async (endpoint: any,filial:any) => {
-     const params = new URLSearchParams();
+const listaItensGerais = async (endpoint: any, filial: any) => {
+    const params = new URLSearchParams();
 
-    if(filial!=null){
-       params.append("filial",filial)
+    if (filial != null) {
+        params.append("filial", filial)
     }
-    const json = await axios.get(base + endpoint,{params:Object.fromEntries(params)});
+    const json = await axios.get(base + endpoint, { params: Object.fromEntries(params) });
 
     return json.data;
 }
@@ -40,40 +39,39 @@ const update = async (enpoint: any, body: any) => {
     }
 }
 const deleteContainer = async (enpoint: any, registroId?: any,
-  filial?: any) => {
+    filial?: any) => {
     const params = new URLSearchParams();
-    if(registroId!=null && filial!=null){
-        params.append("registroId",registroId);
-        params.append("filial",filial);
+    if (registroId != null && filial != null) {
+        params.append("registroId", registroId);
+        params.append("filial", filial);
     }
-    const resposta = await axios.delete(base + enpoint,{params:Object.fromEntries(params)});
+    const resposta = await axios.delete(base + enpoint, { params: Object.fromEntries(params) });
     if (resposta.data) {
         return resposta.data;
     } else {
         return null;
     }
-
 }
 export default {
-    lista: async (filial:any,listaFiliais:any) => {
-        const json = await listaItens("/communit/v1/recebimento/lista",filial,listaFiliais);
+    lista: async (filial: any, listaFiliais: any) => {
+        const json = await listaItens("/communit/v1/recebimento/lista", filial, listaFiliais);
         return json;
     },
-    listaGerais: async (filial:any) => {
-        const json = await listaItensGerais("/communit/v1/recebimento/lista/geral",filial);
+    listaGerais: async (filial: any) => {
+        const json = await listaItensGerais("/communit/v1/recebimento/lista/geral", filial);
         return json;
     },
     cadastro: async (data: any) => {
         const json = await cadastro("/communit/v1/recebimento/registro", data);
-        return json; 
+        return json;
     },
     update: async (data: any) => {
         const json = await update("/communit/v1/recebimento/update", data);
-        return json; 
+        return json;
     },
-    delete: async (id: any,filial:any) => {
-        const json = await deleteContainer("/communit/v1/recebimento/delete/cardlogistico", id,filial);
-        return json; 
+    delete: async (id: any, filial: any) => {
+        const json = await deleteContainer("/communit/v1/recebimento/delete", id, filial);
+        return json;
     }
 }
 

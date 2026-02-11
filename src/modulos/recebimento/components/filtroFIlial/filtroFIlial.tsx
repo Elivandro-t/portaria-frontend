@@ -1,6 +1,7 @@
-import { MdRefresh, MdAdd } from "react-icons/md"; // Importei o MdAdd
+import { MdRefresh } from "react-icons/md"; // Importei o MdAdd
 import Template from "./Dashboard.css";
 import { useNavigate } from "react-router-dom";
+import { BtnComponent } from "../globalBTN/globalBTNRecebimento";
 
 interface Props {
     listaFiliais: any[],
@@ -10,18 +11,15 @@ interface Props {
 }
 
 export function FiltroFIlial({ listaFiliais, loadingRel, carregarDadosLogistico, handleClick }: Props) {
-    const nav = useNavigate()
+    const nav = useNavigate();
     const onAddClick = () => {
-        nav("/recebimento/novo-logistico")
+        nav("/recebimento/novo");
     }
     return (
         <Template.FilterArea style={{ gap: '15px', flexWrap: 'wrap' }}>
 
             <div style={{ display: 'flex', alignItems: 'center', gap: '10px' }}>
-                <Template.AddButton onClick={onAddClick}>
-                    <MdAdd />
-                    Novo Card
-                </Template.AddButton>
+                <BtnComponent tituloBtn={"Novo Card"} onAddClick={onAddClick} IconeType={"sucess"}  def={true}/>
                 <Template.SelectGroup>
                     {/* <Template.Label>Filiais</Template.Label> */}
                     <Template.Select onChange={(e) => carregarDadosLogistico(e.target.value)}>

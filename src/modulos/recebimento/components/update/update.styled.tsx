@@ -4,7 +4,7 @@ export default {
   container: styled.div`
     background-color: #f8fafc; /* Fundo levemente cinza para destacar o card */
     min-height: 100vh;
-    padding: 40px 20px;
+    padding:  20px;
     display: flex;
     justify-content: center;
     font-family: 'Inter', sans-serif;

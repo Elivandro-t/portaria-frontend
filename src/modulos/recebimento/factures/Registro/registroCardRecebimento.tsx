@@ -13,6 +13,8 @@ interface FilialItem {
     TipoBloco: string;
     qtdChamado: number | string;
     qtdPendentes: number | string;
+    qtdDescarregado:any;
+    
 }
 const RegistroCardRecebimento = () => {
 
@@ -20,7 +22,7 @@ const RegistroCardRecebimento = () => {
     const [filial, setFilial] = useState<any>("");
     const [filiais, setFiliais] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);        
-    const [campos, setCampos] = useState<FilialItem[]>([{ TipoBloco: "", qtdPendentes: 0, qtdChamado: 0 }]);
+    const [campos, setCampos] = useState<FilialItem[]>([{ TipoBloco: "", qtdPendentes: 0, qtdChamado: 0,qtdDescarregado:0 }]);
 
     // Carregar filiais
     useEffect(() => {
@@ -33,7 +35,7 @@ const RegistroCardRecebimento = () => {
 
     const adicionarCampo = () => {
         if (campos.length < 4) {
-            setCampos([...campos, { TipoBloco: "", qtdPendentes: 0, qtdChamado: 0}]);
+            setCampos([...campos, { TipoBloco: "", qtdPendentes: 0, qtdChamado: 0,qtdDescarregado:0}]);
         }
     };
 
@@ -64,10 +66,11 @@ const RegistroCardRecebimento = () => {
                 usuarioId: user?.id,
                 itens: campos
             };
+            console.log(data)
             const resposta = await apiRecebimento.cadastro(data);
             if (resposta?.msg) {
                 notify(resposta.msg,"success");
-                setCampos([{TipoBloco: "", qtdPendentes: 0, qtdChamado: 0 }]);
+                setCampos([{TipoBloco: "", qtdPendentes: 0, qtdChamado: 0,qtdDescarregado:0 }]);
                 setFilial("");
             }
         } finally {
@@ -127,11 +130,18 @@ const RegistroCardRecebimento = () => {
                             />
 
                             <TextField
-                                label="Qtd.descarregado"
+                                label="Qtd.Chamado"
                                 type="number"
                                 size="small"
                                 value={item.qtdChamado}
                                 onChange={(e) => atualizarCampos(index, "qtdChamado", e.target.value)}
+                            />
+                            <TextField
+                                label="Qtd.descarregado"
+                                type="number"
+                                size="small"
+                                value={item.qtdDescarregado}
+                                onChange={(e) => atualizarCampos(index, "qtdDescarregado", e.target.value)}
                             />
                             <IconButton 
                                 color="error" 

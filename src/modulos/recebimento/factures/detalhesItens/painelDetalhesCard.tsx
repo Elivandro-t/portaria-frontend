@@ -7,7 +7,7 @@ import { SemItens } from "../../components/SemItens";
 import { Loading } from "../../components/Loading/loading";
 import { MdRefresh } from "react-icons/md";
 import { CardItensComponents } from "../../components/cardItens/cardItens";
-const paineDetalhesCard =  () => {
+const PainelDetalhesCard =  () => {
     const [loadingInfor, setLoadinInfor] = useState(false);
     const [itens, setItens] = useState<any[]>([]);
 
@@ -18,8 +18,8 @@ const paineDetalhesCard =  () => {
         setLoadinInfor(true);
         try {
             const resposta = await api.listaGerais(filial);
-            if (resposta?.logisticoFilias.content) {
-                setItens(resposta.logisticoFilias.content);
+            if (resposta?.recebimentpFilias.content) {
+                setItens(resposta.recebimentpFilias.content);
             }
         } catch (error) {
             notify("Erro ao carregar dados logísticos", "error");
@@ -81,4 +81,4 @@ const paineDetalhesCard =  () => {
     );
 };
 
-export default paineDetalhesCard;
+export default PainelDetalhesCard;

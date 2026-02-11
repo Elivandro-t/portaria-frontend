@@ -1,136 +1,75 @@
 import { useCallback, useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import apiUsuario from "../../../PaginaInicial/service/apiUsuario";
-import { notify } from "../../../portaria/service/snackbarService";
-import Template from "../Dashboard/Painel.styles"; // Certifique-se que o caminho está correto
-import { SemItens } from "../../components/SemItens";
+import Template from "./Painel.styles";
 import { Loading } from "../../components/Loading/loading";
-import { MdAdd, MdRefresh } from "react-icons/md";
+import { MdRefresh, MdBusiness, MdChevronRight } from "react-icons/md";
 import { subjet } from "../../../../jwt/jwtservice";
+
 const ListaItensFiliasRecebimento = () => {
-    const [loadingInfor, setLoadinInfor] = useState(false);
-
-    const { filial } = useParams();
+    const [loading, setLoading] = useState(false);
+    const [filiais, setFiliais] = useState<any[]>([]);
+    const [filtradas, setFiltradas] = useState<any[]>([]);
     const nav = useNavigate();
-        const [listaFiliais, setListaFiliais] = useState<any[]>([]);
+    const user = subjet();
 
-
-    // const carregarDadosLogistico = async (filial?: any) => {
-    //     setItens([]);
-    //     setLoadinInfor(true);
-    //     try {
-    //         const resposta = await api.listaGerais(filial);
-    //         if (resposta?.logisticoFilias?.content) {
-    //             setItens(resposta?.logisticoFilias.content);
-    //         }
-    //     } catch (error) {
-    //         notify("Erro ao carregar dados logísticos", "error");
-    //     } finally {
-    //         setLoadinInfor(false);
-    //     }
-    // };
-    const user = subjet()
-
-    const [filialFiltrada, setFilialFiltrada] = useState<any[]>([])
-    const carregarFiliais = useCallback(async () => {
+    const loadData = useCallback(async () => {
         try {
-            setListaFiliais([])
-            setLoadinInfor(true);
-            const resposta = await apiUsuario.FiliaisUsuario(user?.id);
-            if (resposta?.acess) {
-                setListaFiliais(resposta.acess);
-                setFilialFiltrada(resposta.acess)
+            setLoading(true);
+            const res = await apiUsuario.FiliaisUsuario(user?.id);
+            if (res?.acess) {
+                setFiliais(res.acess);
+                setFiltradas(res.acess);
             }
-        } catch (error) {
-            setLoadinInfor(false);
-            notify("Erro ao carregar filiais", "error");
         } finally {
-            setLoadinInfor(false);
+            setLoading(false);
         }
-    }, []);
+    }, [user?.id]);
 
-    useEffect(() => {
-        carregarFiliais();
-    }, [carregarFiliais]);
-
-    const handerNavigate = (number:any) => {
-        setTimeout(() => {
-            nav(`/recebimento/detalhes-filial/${number}`);
-        }, 300);
-    };
-    const [loadingred, setLoadingRef] = useState(false);
-
-    const handleClick = async () => {
-
-        setLoadingRef(true);
-
-        try {
-            setLoadingRef(true);
-            // ou qualquer função async
-        } finally {
-            setLoadingRef(false);
-        }
-    };
-    function handleFiltroFilial(value: any) {
-        if (!value) {
-            if (!value) {
-                setFilialFiltrada(listaFiliais);
-                return;
-            }
-        }
-        const numero = Number(value);
-        var filtrada = listaFiliais.filter(item => item.numeroFilial === numero);
-        setFilialFiltrada(filtrada);
-    }
-
+    useEffect(() => { loadData(); }, [loadData]);
     return (
         <Template.Main>
-            {/* ÁREA DA FILIAL (FILTRO) */}
-            <Template.HeaderCard>
+            <Template.Header>
                 <Template.TitleSection>
-                    <h2>Painel Logístico - Unidade {filial || "Geral"}</h2>
+                    <h2>Painel Logístico</h2>
+                    <p>Unidades disponíveis para recebimento</p>
                 </Template.TitleSection>
 
-                <Template.FilterArea>
-                    <Template.SelectGroup>
-                        <Template.Label>Filiais:</Template.Label>
-                        <Template.Select onChange={(e) => handleFiltroFilial(e.target.value)}>
-                            <option value="">Selecione uma filial para filtrar...</option>
-                            {listaFiliais.map((f, i) => (
-                                <option key={i} value={f?.numeroFilial}>
-                                    {f?.numeroFilial} - {f?.nome}
-                                </option>
-                            ))}
-                        </Template.Select>
-                    </Template.SelectGroup>
-                    <Template.RefreshButton loading={loadingred} disabled={loadingred} onClick={handleClick}>
-                        <MdRefresh />
+                <Template.FilterGroup>
+                    <Template.Select onChange={(e) => {
+                        const val = e.target.value;
+                        setFiltradas(val ? filiais.filter(f => String(f.filial) === val) : filiais);
+                    }}>
+                        <option value="">Filtrar unidade...</option>
+                        {filiais.map((f, i) => (
+                            <option key={i} value={f?.filial}>{f?.nome}</option>
+                        ))}
+                    </Template.Select>
+                    <Template.RefreshButton loading={loading} onClick={loadData}>
+                        <MdRefresh size={20} />
                     </Template.RefreshButton>
-                </Template.FilterArea>
+                </Template.FilterGroup>
+            </Template.Header>
 
-            </Template.HeaderCard>
-
-            {loadingInfor && <Loading />}
-            {!loadingInfor && listaFiliais.length === 0 && <SemItens />}
-
-            {/* LISTAGEM DE RESUMOS */}
-            {filialFiltrada.map((c, index) => (
-                <Template.Container key={index}>
-                    <Template.Card style={{cursor:"pointer"}} onClick={()=>handerNavigate(c?.filial)}>
-                        <Template.CardHeaderPrincipal>
-                            <div className="info-title">
-                                <span className="tag">Resumo  CD-{c.numeroFilial}</span>
-                                <h3>{c?.nome}</h3>
-                            </div>
-                            <div className="info-date">
-                                <span><MdAdd /></span>
-                            </div>
-                        </Template.CardHeaderPrincipal>
-                    </Template.Card>
-                </Template.Container>
-            ))
-            }
-        </Template.Main >
+            {loading ? <Loading /> : (
+                <Template.Grid>
+                    {filtradas.map((c, index) => (
+                        <Template.Card key={index} onClick={() => nav(`/recebimento/detalhes-filial/${c?.filial}`)}>
+                            <Template.CardInfo>
+                                <div className="icon-wrapper">
+                                    <MdBusiness size={24} />
+                                </div>
+                                <div className="text-content">
+                                    <span className="tag">RESUMO CD - {c?.filial}</span>
+                                    <h3>{c?.nomeFilial}</h3>
+                                </div>
+                            </Template.CardInfo>
+                            <MdChevronRight size={24} color="#D0D5DD" />
+                        </Template.Card>
+                    ))}
+                </Template.Grid>
+            )}
+        </Template.Main>
     );
 };
 

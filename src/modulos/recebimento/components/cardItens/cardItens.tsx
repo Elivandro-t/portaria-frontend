@@ -32,11 +32,10 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
         setActiveModal(!activeModal)
     }
     const handeClickDelete = async () => {
-        // setActiveModal(!activeModal);
         const resposta = await apiMaterial.delete(c.id, c.filial);
         if (resposta) {
             handleFunction();
-            notify("Deletado", "success")
+            notify("Deletado", "success");
         }
     }
     return (
@@ -62,6 +61,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                         <tr>
                             <th>Tipo</th>
                             <th>Chamado</th>
+                            <th>Descarregado</th>
                             <th>Pendentes</th>
                             {/* <th>Ações</th> */}
                         </tr>
@@ -71,6 +71,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                             <Template.Tr key={i}>
                                 <td className="bold">{item?.TipoBloco}</td>
                                 <td className="status-ativo">{item?.qtdChamado}</td>
+                                <td className="status-ativo">{item?.qtdDescarregado?item?.qtdDescarregado:0}</td>
                                 <td className="status-manutencao">{item?.qtdPendentes}</td>
                                 {/* <td>
                                     <Template.ViewButton>Detalhes</Template.ViewButton>

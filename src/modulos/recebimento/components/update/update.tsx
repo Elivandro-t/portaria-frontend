@@ -1,4 +1,4 @@
-import Template from "../../factures/Registro/registroCardRecebimento.styled";
+import Template from "./update.styled";
 import { Button, TextField, CircularProgress, FormControl, InputLabel, Select, MenuItem, IconButton } from '@mui/material';
 import SendIcon from '@mui/icons-material/Send';
 import { useForm } from "react-hook-form";
@@ -19,6 +19,7 @@ type ItemForm = {
     id: number
     qtdChamado: any;
     qtdPendentes: any;
+    qtdDescarregado:any
 };
 type FormData = {
     registroId: any,
@@ -30,6 +31,7 @@ interface FilialItem {
     TipoBloco: string;
     qtdChamado: number | string;
     qtdPendentes: number | string;
+    qtdDescarregado:any
 }
 
 export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => {
@@ -40,8 +42,9 @@ export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => 
         defaultValues: {
             itens: itemMP.map(item => ({
                 id: Number(item.id),
-                qtdChamado: Number(item.qtdChamado),
-                qtdPendentes: Number(item.qtdPendentes)
+                qtdChamado: Number(item?.qtdChamado),
+                qtdPendentes: Number(item?.qtdPendentes),
+                qtdDescarregado:Number(item?.qtdDescarregado)
             }))
         }
     })
@@ -54,16 +57,18 @@ export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => 
         data.registroId = registroId;
         data.usuarioId = order?.id;
         data.itens = data.itens.map(item => ({
-            id: Number(item.id),
-            qtdChamado: Number(item.qtdChamado),
-            qtdPendentes: Number(item.qtdPendentes)
+            id: Number(item?.id),
+            qtdChamado: Number(item?.qtdChamado),
+            qtdPendentes: Number(item?.qtdPendentes),
+            qtdDescarregado:Number(item?.qtdDescarregado)
         }));
         const invalido = campos.some(item => !item.TipoBloco || item.qtdChamado === "" || item.qtdPendentes === "");
         if (invalido) return notify("Preencha todos os campos corretamente", "error");
         data.save = campos.map(item => ({
-            TipoBloco: item.TipoBloco,
-            qtdChamado: Number(item.qtdChamado),
-            qtdPendentes: Number(item.qtdPendentes)
+            TipoBloco: item?.TipoBloco,
+            qtdChamado: Number(item?.qtdChamado),
+            qtdPendentes: Number(item?.qtdPendentes),
+            qtdDescarregado:Number(item?.qtdDescarregado)
         }));
 
         console.log(JSON.stringify(data))
@@ -88,7 +93,8 @@ const adicionarCampo = () => {
     setCampos(prev => [...prev, {
         TipoBloco: "",
         qtdChamado: 0,
-        qtdPendentes: 0
+        qtdPendentes: 0,
+        qtdDescarregado:0
     }])
 }
 //// verifica se ainda tem o item do array disponivel
@@ -114,44 +120,56 @@ const usadosFront = campos.length;
 const totalUsados = usadosApi + usadosFront;
 return (
     <Template.Card>
-        <h2 style={{ marginBottom: '20px', color: '#334155' }}>Registro de Movimentação</h2>
-        <Template.container_int onSubmit={handleSubmit(handleClick)}>
+        <h2>Registro de Movimentação</h2>
+        
+        {/* Seção de Itens Existentes (API) */}
+        <Template.container_int>
             {itemMP.map((item, index) => (
                 <Template.form key={item.id} >
                     <TextField
                         disabled
-                        label="Tipo"
-                        type="txt"
+                        label="Tipo de Material"
+                        variant="filled"
                         size="small"
+                        fullWidth
                         value={item?.TipoBloco}
                     />
                     <TextField
-                        label="Qtd.Chamados"
+                        label="Qtd. Chamados"
                         type="number"
                         size="small"
+                        fullWidth
                         {...register(`itens.${index}.qtdChamado`)}
                     />
                     <TextField
-                        label="Qtd.Pendentes"
+                        label="Qtd. Pendentes"
                         type="number"
                         size="small"
+                        fullWidth
                         {...register(`itens.${index}.qtdPendentes`)}
                     />
-                    <input
-                        type="hidden"
-                        {...register(`itens.${index}.id`)}
+                     <TextField
+                        label="Qtd. Descarregado"
+                        type="number"
+                        size="small"
+                        fullWidth
+                        {...register(`itens.${index}.qtdDescarregado`)}
                     />
+                    <div style={{ width: '40px' }} /> {/* Espaçador para alinhar com o botão de deletar abaixo */}
+                    <input type="hidden" {...register(`itens.${index}.id`)} />
                 </Template.form>
             ))}
         </Template.container_int>
+
+        {/* Seção de Novos Itens (Campos Dinâmicos) */}
         <Template.container_int>
             {campos.map((item, index) => (
                 <Template.form key={index} >
                     <FormControl fullWidth size="small">
-                        <InputLabel>Bloco</InputLabel>
+                        <InputLabel>Selecionar Bloco</InputLabel>
                         <Select
                             value={item.TipoBloco}
-                            label="Tipo.bloco"
+                            label="Selecionar Bloco"
                             onChange={(e) => atualizarCampos(index, "TipoBloco", e.target.value)}
                         >
                             {getMateriaisDisponiveis(index).map((m, i) => (
@@ -161,25 +179,35 @@ return (
                     </FormControl>
 
                     <TextField
-                        label="Qtd.qtdChamado"
+                        label="Qtd. Chamado"
                         type="number"
                         size="small"
+                        fullWidth
                         value={item.qtdChamado}
                         onChange={(e) => atualizarCampos(index, "qtdChamado", e.target.value)}
                     />
                     <TextField
-                        label="Qtd.qtdPendentes"
+                        label="Qtd. Pendente"
                         type="number"
                         size="small"
+                        fullWidth
                         value={item.qtdPendentes}
                         onChange={(e) => atualizarCampos(index, "qtdPendentes", e.target.value)}
                     />
+                     <TextField
+                        label="Qtd. Descarregado"
+                        type="number"
+                        size="small"
+                        fullWidth
+                        value={item.qtdDescarregado}
+                        onChange={(e) => atualizarCampos(index, "qtdDescarregado", e.target.value)}
+                    />
                     <IconButton
                         color="error"
-                        disabled={campos.length === 0}
                         onClick={() => removerCampo(index)}
+                        sx={{ marginTop: '4px' }}
                     >
-                        <DeleteIcon />
+                        <DeleteIcon size={20} />
                     </IconButton>
                 </Template.form>
             ))}
@@ -188,7 +216,14 @@ return (
                 <Button
                     startIcon={<AddIcon />}
                     onClick={adicionarCampo}
-                    sx={{ mt: 1, mb: 3 }}
+                    variant="text"
+                    sx={{ 
+                        mt: 1, 
+                        mb: 3, 
+                        color: '#16a34a', 
+                        '&:hover': { bgcolor: '#f0fdf4' },
+                        fontWeight: 600
+                    }}
                 >
                     Adicionar outro material
                 </Button>
@@ -202,9 +237,18 @@ return (
             size="large"
             endIcon={loading ? <CircularProgress size={20} color="inherit" /> : <SendIcon />}
             disabled={loading}
-            sx={{ bgcolor: '#5B7FFF', '&:hover': { bgcolor: '#4a6cf0' } }}
+            sx={{ 
+                bgcolor: '#2563eb', 
+                py: 1.5,
+                borderRadius: '10px',
+                boxShadow: '0 4px 14px rgba(37, 99, 235, 0.3)',
+                '&:hover': { bgcolor: '#1d4ed8', boxShadow: 'none' },
+                textTransform: 'none',
+                fontSize: '16px',
+                fontWeight: 600
+            }}
         >
-            {loading ? 'Enviando...' : 'Atualizar Registro'}
+            {loading ? 'Processando...' : 'Salvar Alterações'}
         </Button>
     </Template.Card>
 );
