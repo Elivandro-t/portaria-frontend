@@ -11,7 +11,7 @@ import {jsonMaterial} from "../../components/json"
 import apiRecebimento from "../../service/apiRecebimento";
 interface FilialItem {
     TipoBloco: string;
-    qtdChamado: number | string;
+    qtdPorto: number | string;
     qtdPendentes: number | string;
     qtdDescarregado:any;
     
@@ -22,7 +22,7 @@ const RegistroCardRecebimento = () => {
     const [filial, setFilial] = useState<any>("");
     const [filiais, setFiliais] = useState<any[]>([]);
     const [loading, setLoading] = useState(false);        
-    const [campos, setCampos] = useState<FilialItem[]>([{ TipoBloco: "", qtdPendentes: 0, qtdChamado: 0,qtdDescarregado:0 }]);
+    const [campos, setCampos] = useState<FilialItem[]>([{ TipoBloco: "", qtdPendentes: 0, qtdPorto: 0,qtdDescarregado:0 }]);
 
     // Carregar filiais
     useEffect(() => {
@@ -35,7 +35,7 @@ const RegistroCardRecebimento = () => {
 
     const adicionarCampo = () => {
         if (campos.length < 4) {
-            setCampos([...campos, { TipoBloco: "", qtdPendentes: 0, qtdChamado: 0,qtdDescarregado:0}]);
+            setCampos([...campos, { TipoBloco: "", qtdPendentes: 0, qtdPorto: 0,qtdDescarregado:0}]);
         }
     };
 
@@ -54,7 +54,7 @@ const RegistroCardRecebimento = () => {
     const enviarCampos = async () => {
         if (!filial) return notify("Selecione uma filial","error");
         
-        const invalido = campos.some(item => !item.TipoBloco || item.qtdPendentes === "" || item.qtdChamado === "");
+        const invalido = campos.some(item => !item.TipoBloco || item.qtdPendentes === "" || item.qtdPorto === "");
         if (invalido) return notify("Preencha todos os campos corretamente","error");
 
         setLoading(true);
@@ -70,7 +70,7 @@ const RegistroCardRecebimento = () => {
             const resposta = await apiRecebimento.cadastro(data);
             if (resposta?.msg) {
                 notify(resposta.msg,"success");
-                setCampos([{TipoBloco: "", qtdPendentes: 0, qtdChamado: 0,qtdDescarregado:0 }]);
+                setCampos([{TipoBloco: "", qtdPendentes: 0, qtdPorto: 0,qtdDescarregado:0 }]);
                 setFilial("");
             }
         } finally {
@@ -130,11 +130,11 @@ const RegistroCardRecebimento = () => {
                             />
 
                             <TextField
-                                label="Qtd.Chamado"
+                                label="Qtd.Porto"
                                 type="number"
                                 size="small"
-                                value={item.qtdChamado}
-                                onChange={(e) => atualizarCampos(index, "qtdChamado", e.target.value)}
+                                value={item.qtdPorto}
+                                onChange={(e) => atualizarCampos(index, "qtdPorto", e.target.value)}
                             />
                             <TextField
                                 label="Qtd.descarregado"

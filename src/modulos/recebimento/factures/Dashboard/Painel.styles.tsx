@@ -118,7 +118,7 @@ const Template = {
 
   Container: styled.div`
     width: 100%;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
   `,
 
@@ -127,11 +127,11 @@ const Template = {
     border-radius: 12px;
     padding: 10px; /* Compacto no mobile */
     margin-bottom: 15px;
-    box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+    box-shadow: 0 1px 4px -1px rgba(0,0,0,0.4);
     position: relative;
 
     @media (min-width: 768px) {
-      padding:20px 24px;
+      padding:20px 15px;
       margin-bottom: 20px;
     }
   `,
@@ -208,12 +208,12 @@ const Template = {
     }
 
     td {
-      padding: 6px 10px;
+      padding: 3px 10px;
       border-bottom: 1px solid #f1f5f9;
       font-size: 13px;
       color: #475569;
        @media (max-width: 768px) {
-                 padding: 12px 4px;
+                 padding: 0px 4px;
                  font-size: 12px;
 
     }

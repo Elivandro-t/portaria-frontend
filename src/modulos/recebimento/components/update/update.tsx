@@ -17,7 +17,7 @@ type props = {
 }
 type ItemForm = {
     id: number
-    qtdChamado: any;
+    qtdPorto: any;
     qtdPendentes: any;
     qtdDescarregado:any
 };
@@ -29,7 +29,7 @@ type FormData = {
 };
 interface FilialItem {
     TipoBloco: string;
-    qtdChamado: number | string;
+    qtdPorto: number | string;
     qtdPendentes: number | string;
     qtdDescarregado:any
 }
@@ -42,7 +42,7 @@ export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => 
         defaultValues: {
             itens: itemMP.map(item => ({
                 id: Number(item.id),
-                qtdChamado: Number(item?.qtdChamado),
+                qtdChamado: Number(item?.qtdPorto),
                 qtdPendentes: Number(item?.qtdPendentes),
                 qtdDescarregado:Number(item?.qtdDescarregado)
             }))
@@ -58,15 +58,15 @@ export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => 
         data.usuarioId = order?.id;
         data.itens = data.itens.map(item => ({
             id: Number(item?.id),
-            qtdChamado: Number(item?.qtdChamado),
+            qtdPorto: Number(item?.qtdPorto),
             qtdPendentes: Number(item?.qtdPendentes),
             qtdDescarregado:Number(item?.qtdDescarregado)
         }));
-        const invalido = campos.some(item => !item.TipoBloco || item.qtdChamado === "" || item.qtdPendentes === "");
+        const invalido = campos.some(item => !item.TipoBloco || item.qtdPorto === "" || item.qtdPendentes === "");
         if (invalido) return notify("Preencha todos os campos corretamente", "error");
         data.save = campos.map(item => ({
             TipoBloco: item?.TipoBloco,
-            qtdChamado: Number(item?.qtdChamado),
+            qtdPorto: Number(item?.qtdPorto),
             qtdPendentes: Number(item?.qtdPendentes),
             qtdDescarregado:Number(item?.qtdDescarregado)
         }));
@@ -92,7 +92,7 @@ const adicionarCampo = () => {
     if (disponiveis.length === 0) return;
     setCampos(prev => [...prev, {
         TipoBloco: "",
-        qtdChamado: 0,
+        qtdPorto: 0,
         qtdPendentes: 0,
         qtdDescarregado:0
     }])
@@ -135,11 +135,11 @@ return (
                         value={item?.TipoBloco}
                     />
                     <TextField
-                        label="Qtd. Chamados"
+                        label="Qtd. Porto"
                         type="number"
                         size="small"
                         fullWidth
-                        {...register(`itens.${index}.qtdChamado`)}
+                        {...register(`itens.${index}.qtdPorto`)}
                     />
                     <TextField
                         label="Qtd. Pendentes"
@@ -179,12 +179,12 @@ return (
                     </FormControl>
 
                     <TextField
-                        label="Qtd. Chamado"
+                        label="Qtd. Porto"
                         type="number"
                         size="small"
                         fullWidth
-                        value={item.qtdChamado}
-                        onChange={(e) => atualizarCampos(index, "qtdChamado", e.target.value)}
+                        value={item.qtdPorto}
+                        onChange={(e) => atualizarCampos(index, "qtdPorto", e.target.value)}
                     />
                     <TextField
                         label="Qtd. Pendente"

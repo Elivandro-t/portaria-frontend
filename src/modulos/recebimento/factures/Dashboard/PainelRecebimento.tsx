@@ -77,7 +77,7 @@ const PainelRecebimento = () => {
             {/* ÁREA DA FILIAL (FILTRO) */}
             <Template.HeaderCard>
                 <Template.TitleSection>
-                    <small>Recebimento de Mercadorias</small>
+                    <small>Portaria Recebimento</small>
                     <h2>Painel Diario  {filial}</h2>
                 </Template.TitleSection>
                 <FiltroFIlial listaFiliais={listaFiliais} loadingRel={loadingred} carregarDadosLogistico={(n: any) => carregarDadosLogistico(n)} handleClick={handleClick} />

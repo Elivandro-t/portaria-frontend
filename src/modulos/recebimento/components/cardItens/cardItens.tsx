@@ -6,25 +6,20 @@ import PositionedMenu from "../btn/btnMenu";
 import apiMaterial from "../../service/apiRecebimento"
 import { notify } from "../../../portaria/service/snackbarService";
 import { subjet } from "../../../../jwt/jwtservice";
-
 type props = {
     c: any,
-    handleFunction: () => void,
+    handleFunction: () => void
 }
-
 export const CardItensComponents = ({ c, handleFunction }: props) => {
     const user = subjet();
     const permission = user?.permissoes;
     function handleConvertData(data: any) {
         const date = new Date(data);
-
         const hora = date.toLocaleTimeString("pt-BR", {
             hour: "2-digit",
             minute: "2-digit",
         });
-
         const dia = date.toLocaleDateString("pt-BR");
-
         return `${hora} ${dia}`;
     }
     const [activeModal, setActiveModal] = useState(false);
@@ -60,7 +55,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                     <Template.Thead>
                         <tr>
                             <th>Tipo</th>
-                            <th>Chamado</th>
+                            <th>Porto</th>
                             <th>Descarregado</th>
                             <th>Pendentes</th>
                             {/* <th>Ações</th> */}
@@ -70,13 +65,12 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                         {c.itens.map((item: any, i: any) => (
                             <Template.Tr key={i}>
                                 <td className="bold">{item?.TipoBloco}</td>
-                                <td className="status-ativo">{item?.qtdChamado}</td>
+                                <td className="status-ativo">{item?.qtdPorto?item.qtdPorto:0}</td>
                                 <td className="status-ativo">{item?.qtdDescarregado?item?.qtdDescarregado:0}</td>
                                 <td className="status-manutencao">{item?.qtdPendentes}</td>
                                 {/* <td>
                                     <Template.ViewButton>Detalhes</Template.ViewButton>
                                 </td> */}
-
                             </Template.Tr>
                         ))}
                     </Template.Tbody>

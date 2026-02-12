@@ -118,7 +118,7 @@ const Template = {
 
   Container: styled.div`
     width: 100%;
-    max-width: 800px;
+    max-width: 700px;
     margin: 0 auto;
   `,
 
@@ -198,10 +198,10 @@ const Template = {
       color: #64748b;
       text-transform: uppercase;
       font-size: 10px;
-      padding: 10px 2px;
+      padding: 5px 2px;
       text-align: left;
        @media (max-width: 768px) {
-                 padding:5px;
+                 padding:4px;
                  word-break: break-all;
                  text-transform: capitalize;
     }
@@ -219,7 +219,7 @@ const Template = {
       font-size: 13px;
       color: #475569;
        @media (max-width: 768px) {
-                 padding: 10px 4px;
+                 padding: 0px 4px;
                  font-size: 12px;
 
     }
