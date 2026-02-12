@@ -17,9 +17,9 @@ type props = {
 }
 type ItemForm = {
     id: number
-    qtdPorto: any;
-    qtdPendentes: any;
-    qtdDescarregado:any
+    qtdPortoDescarregado: any;
+    qtdDescargasPendentes: any;
+    qtdPortariaDescarregada:any
 };
 type FormData = {
     registroId: any,
@@ -29,9 +29,9 @@ type FormData = {
 };
 interface FilialItem {
     TipoBloco: string;
-    qtdPorto: number | string;
-    qtdPendentes: number | string;
-    qtdDescarregado:any
+    qtdPortoDescarregado: number | string;
+    qtdDescargasPendentes: number | string;
+    qtdPortariaDescarregada:any
 }
 
 export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => {
@@ -42,9 +42,9 @@ export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => 
         defaultValues: {
             itens: itemMP.map(item => ({
                 id: Number(item.id),
-                qtdChamado: Number(item?.qtdPorto),
-                qtdPendentes: Number(item?.qtdPendentes),
-                qtdDescarregado:Number(item?.qtdDescarregado)
+                qtdPortoDescarregado:Number(item?.qtdPortoDescarregado),
+                qtdDescargasPendentes: Number(item?.qtdDescargasPendentes),
+                qtdPortariaDescarregada:Number(item?.qtdPortariaDescarregada)
             }))
         }
     })
@@ -58,17 +58,17 @@ export const UpdateRegistro = ({ itemMP, registroId, onClickhTogle }: props) => 
         data.usuarioId = order?.id;
         data.itens = data.itens.map(item => ({
             id: Number(item?.id),
-            qtdPorto: Number(item?.qtdPorto),
-            qtdPendentes: Number(item?.qtdPendentes),
-            qtdDescarregado:Number(item?.qtdDescarregado)
+            qtdPortoDescarregado: Number(item?.qtdPortoDescarregado),
+            qtdDescargasPendentes: Number(item?.qtdDescargasPendentes),
+            qtdPortariaDescarregada:Number(item?.qtdPortariaDescarregada)
         }));
-        const invalido = campos.some(item => !item.TipoBloco || item.qtdPorto === "" || item.qtdPendentes === "");
+        const invalido = campos.some(item => !item.TipoBloco || item.qtdPortoDescarregado === "" || item.qtdDescargasPendentes === "");
         if (invalido) return notify("Preencha todos os campos corretamente", "error");
         data.save = campos.map(item => ({
             TipoBloco: item?.TipoBloco,
-            qtdPorto: Number(item?.qtdPorto),
-            qtdPendentes: Number(item?.qtdPendentes),
-            qtdDescarregado:Number(item?.qtdDescarregado)
+            qtdPortoDescarregado: Number(item?.qtdPortoDescarregado),
+            qtdDescargasPendentes: Number(item?.qtdDescargasPendentes),
+            qtdPortariaDescarregada:Number(item?.qtdPortariaDescarregada)
         }));
 
         console.log(JSON.stringify(data))
@@ -92,9 +92,7 @@ const adicionarCampo = () => {
     if (disponiveis.length === 0) return;
     setCampos(prev => [...prev, {
         TipoBloco: "",
-        qtdPorto: 0,
-        qtdPendentes: 0,
-        qtdDescarregado:0
+        qtdDescargasPendentes: 0, qtdPortoDescarregado: 0,qtdPortariaDescarregada:0 
     }])
 }
 //// verifica se ainda tem o item do array disponivel
@@ -102,7 +100,7 @@ function getMateriaisDisponiveis(indexCampo?: any) {
     const tipoApi = itemMP.map(item => item.TipoBloco);
     return jsonMaterial.filter(s => {
         if (tipoApi.includes(s)) return false;
-        const outroCampo = campos.some((item, index) => index !== indexCampo && item.TipoBloco === s);
+        const outroCampo = campos.some((item, index) => index !== indexCampo && item.TipoBloco === s.descricao);
         return !outroCampo;
     })
 }
@@ -139,21 +137,21 @@ return (
                         type="number"
                         size="small"
                         fullWidth
-                        {...register(`itens.${index}.qtdPorto`)}
+                        {...register(`itens.${index}.qtdPortoDescarregado`)}
                     />
                     <TextField
                         label="Qtd. Pendentes"
                         type="number"
                         size="small"
                         fullWidth
-                        {...register(`itens.${index}.qtdPendentes`)}
+                        {...register(`itens.${index}.qtdDescargasPendentes`)}
                     />
                      <TextField
-                        label="Qtd. Descarregado"
+                        label="Qtd. portaria descarregado"
                         type="number"
                         size="small"
                         fullWidth
-                        {...register(`itens.${index}.qtdDescarregado`)}
+                        {...register(`itens.${index}.qtdPortariaDescarregada`)}
                     />
                     <div style={{ width: '40px' }} /> {/* Espaçador para alinhar com o botão de deletar abaixo */}
                     <input type="hidden" {...register(`itens.${index}.id`)} />
@@ -173,7 +171,7 @@ return (
                             onChange={(e) => atualizarCampos(index, "TipoBloco", e.target.value)}
                         >
                             {getMateriaisDisponiveis(index).map((m, i) => (
-                                <MenuItem key={i} value={m}>{m}</MenuItem>
+                                <MenuItem key={i} value={m.descricao}>{m.descricao}</MenuItem>
                             ))}
                         </Select>
                     </FormControl>
@@ -183,24 +181,24 @@ return (
                         type="number"
                         size="small"
                         fullWidth
-                        value={item.qtdPorto}
-                        onChange={(e) => atualizarCampos(index, "qtdPorto", e.target.value)}
+                        value={item.qtdPortoDescarregado}
+                        onChange={(e) => atualizarCampos(index, "qtdPortoDescarregado", e.target.value)}
                     />
                     <TextField
                         label="Qtd. Pendente"
                         type="number"
                         size="small"
                         fullWidth
-                        value={item.qtdPendentes}
-                        onChange={(e) => atualizarCampos(index, "qtdPendentes", e.target.value)}
+                        value={item.qtdDescargasPendentes}
+                        onChange={(e) => atualizarCampos(index, "qtdDescargasPendentes", e.target.value)}
                     />
                      <TextField
                         label="Qtd. Descarregado"
                         type="number"
                         size="small"
                         fullWidth
-                        value={item.qtdDescarregado}
-                        onChange={(e) => atualizarCampos(index, "qtdDescarregado", e.target.value)}
+                        value={item.qtdPortariaDescarregada}
+                        onChange={(e) => atualizarCampos(index, "qtdPortariaDescarregada", e.target.value)}
                     />
                     <IconButton
                         color="error"

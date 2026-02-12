@@ -56,7 +56,7 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                         <tr>
                             <th>Tipo</th>
                             <th>Porto</th>
-                            <th>Descarregado</th>
+                            <th>portaria</th>
                             <th>Pendentes</th>
                             {/* <th>Ações</th> */}
                         </tr>
@@ -65,9 +65,9 @@ export const CardItensComponents = ({ c, handleFunction }: props) => {
                         {c.itens.map((item: any, i: any) => (
                             <Template.Tr key={i}>
                                 <td className="bold">{item?.TipoBloco}</td>
-                                <td className="status-ativo">{item?.qtdPorto?item.qtdPorto:0}</td>
-                                <td className="status-ativo">{item?.qtdDescarregado?item?.qtdDescarregado:0}</td>
-                                <td className="status-manutencao">{item?.qtdPendentes}</td>
+                                <td className="status-ativo">{item?.qtdPortoDescarregado?item.qtdPortoDescarregado:0}</td>
+                                <td className="status-ativo">{item?.qtdPortariaDescarregada?item?.qtdPortariaDescarregada:0}</td>
+                                <td className="status-manutencao">{item?.qtdDescargasPendentes}</td>
                                 {/* <td>
                                     <Template.ViewButton>Detalhes</Template.ViewButton>
                                 </td> */}
