@@ -152,7 +152,7 @@ const Template = {
     display: flex;
     flex-direction: column; /* Coluna no mobile */
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     border-bottom: 1px solid #f1f5f9;
     padding-bottom: 12px;
     .titulo{

@@ -125,7 +125,7 @@ const Template = {
   Card: styled.div`
     background: #fff;
     border-radius: 12px;
-    padding: 10px; /* Compacto no mobile */
+    padding: 5px; /* Compacto no mobile */
     margin-bottom: 15px;
     box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
     position: relative;
@@ -152,9 +152,9 @@ const Template = {
     display: flex;
     flex-direction: column; /* Coluna no mobile */
     gap: 10px;
-    margin-bottom: 15px;
+    margin-bottom: 10px;
     border-bottom: 1px solid #f1f5f9;
-    padding-bottom: 12px;
+    padding-bottom: 2px;
     .titulo{
     font-size: 10px;
     padding: 10px;
