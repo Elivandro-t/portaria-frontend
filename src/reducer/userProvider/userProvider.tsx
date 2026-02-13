@@ -13,7 +13,9 @@ type usuario = {
   busca:string, 
   usuario:any;
   setBusca:(n:any)=>void,
-  perfil:any
+  perfil:any,
+  filial:any,
+  setFilial:(n:any)=>void
 }
 
 export const contextProvider = createContext<usuario|null>(null)
@@ -21,6 +23,7 @@ export const contextProvider = createContext<usuario|null>(null)
 export const ProviderUser = ({children,onReset}:children)=>{
      const [user, setUser] = useState<any | null>(null);
      const [busca, setBusca] = useState<any | null>(null);
+     const [filial, setFilial] = useState<any | null>(null);
      const [permission,setPermission] = useState<any[] | null>(null);
      const [perfil,setPerfil] = useState<any[] | null>(null);
 
@@ -59,7 +62,7 @@ useEffect(()=>{
   hendleBuscaUsuario()
 },[])
     return(
-        <contextProvider.Provider value={{user,setUser,perfil,usuario,logout,permission,busca,setBusca}}>
+        <contextProvider.Provider value={{user,setUser,perfil,usuario,logout,permission,busca,setBusca,filial,setFilial}}>
             {children}
         </contextProvider.Provider>
     )

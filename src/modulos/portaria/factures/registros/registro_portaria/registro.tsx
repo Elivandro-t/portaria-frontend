@@ -17,12 +17,19 @@ function MeusRegistros() {
     const [status, setStatus] = useState("")
     const carregarRegistros = async (novoSize?: number) => {
         if (loadingItens) return; // Se já estiver carregando, bloqueia novas chamadas
+        const filLocal = localStorage.getItem("@App:filial");
+        const filial = filLocal && filLocal !== "undefined"
+            ? filLocal
+            : user?.filial;
 
+        if (!filial) {
+            console.warn("Filial inválida, busca cancelada");
+            return;
+        }
         setLoadingItens(true);
         const tamanho = novoSize ?? size;
-
         try {
-            const resposta = await Api.Solicitacoes(user?.filial, context?.busca, tamanho, status);
+            const resposta = await Api.Solicitacoes(filial, context?.busca, tamanho, status);
             if (resposta.content) {
                 setLista(resposta.content);
                 setTotalElements(resposta.totalElements);
@@ -54,7 +61,7 @@ function MeusRegistros() {
         setSize(20);
         carregarRegistros(20);
 
-    }, [user?.filial, status, context?.busca]);
+    }, [user?.filial, status, context?.busca, context?.filial]);
 
     const navigate = useNavigate()
     const [loading, setLoading] = useState(false);

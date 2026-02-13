@@ -1,6 +1,4 @@
-import { MdRefresh, MdAdd } from "react-icons/md"; // Importei o MdAdd
 import Template from "./Dashboard.css";
-import { useNavigate } from "react-router-dom";
 
 interface Props {
     listaFiliais: any[],
