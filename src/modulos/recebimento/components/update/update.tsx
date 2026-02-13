@@ -126,7 +126,7 @@ return (
                 <Template.form key={item.id} >
                     <TextField
                         disabled
-                        label="Tipo de Material"
+                        label="Tipo de Bloco"
                         variant="filled"
                         size="small"
                         fullWidth
@@ -139,19 +139,19 @@ return (
                         fullWidth
                         {...register(`itens.${index}.qtdPortoDescarregado`)}
                     />
-                    <TextField
-                        label="Qtd. Pendentes"
-                        type="number"
-                        size="small"
-                        fullWidth
-                        {...register(`itens.${index}.qtdDescargasPendentes`)}
-                    />
                      <TextField
                         label="Qtd. portaria descarregado"
                         type="number"
                         size="small"
                         fullWidth
                         {...register(`itens.${index}.qtdPortariaDescarregada`)}
+                    />
+                    <TextField
+                        label="Qtd. Pendentes"
+                        type="number"
+                        size="small"
+                        fullWidth
+                        {...register(`itens.${index}.qtdDescargasPendentes`)}
                     />
                     <div style={{ width: '40px' }} /> {/* Espaçador para alinhar com o botão de deletar abaixo */}
                     <input type="hidden" {...register(`itens.${index}.id`)} />
@@ -184,14 +184,6 @@ return (
                         value={item.qtdPortoDescarregado}
                         onChange={(e) => atualizarCampos(index, "qtdPortoDescarregado", e.target.value)}
                     />
-                    <TextField
-                        label="Qtd. Pendente"
-                        type="number"
-                        size="small"
-                        fullWidth
-                        value={item.qtdDescargasPendentes}
-                        onChange={(e) => atualizarCampos(index, "qtdDescargasPendentes", e.target.value)}
-                    />
                      <TextField
                         label="Qtd. Descarregado"
                         type="number"
@@ -199,6 +191,14 @@ return (
                         fullWidth
                         value={item.qtdPortariaDescarregada}
                         onChange={(e) => atualizarCampos(index, "qtdPortariaDescarregada", e.target.value)}
+                    />
+                    <TextField
+                        label="Qtd. Pendente"
+                        type="number"
+                        size="small"
+                        fullWidth
+                        value={item.qtdDescargasPendentes}
+                        onChange={(e) => atualizarCampos(index, "qtdDescargasPendentes", e.target.value)}
                     />
                     <IconButton
                         color="error"
