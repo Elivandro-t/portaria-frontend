@@ -1,4 +1,4 @@
-import { Fragment, useEffect, useRef, useState } from "react";
+import { Fragment, useCallback, useEffect, useRef, useState } from "react";
 import Template from "./RegistroPortariaCss"
 import { useForm } from "react-hook-form";
 import Api from "../../service/apiRegistro/apiRegistro"
@@ -16,6 +16,9 @@ import { SlidePortariaComponent } from "./slideVisitanteExiste/slideVisitante";
 import { AlertComponent } from "../../../../components/alert/alertaComponent";
 import { LoadingSecundary } from "../../../../components/LoadingSecundary/LoadingSecundary";
 import { AutoCompleteComponet } from "./BuscaAutoComplete/autoComplete";
+import apiUsuario from "../../../PaginaInicial/service/apiUsuario";
+import { FiltroFIlialUsuario } from "./filtroFIlial/filtroFIlial";
+
 type FormData = {
     typeMethod: string,
     placaVeiculo: string;
@@ -23,6 +26,7 @@ type FormData = {
     numeroTelefone: string,
     tipoAcesso: string,
     filial: number,
+    filialSolicitado: any,
     bloco: string,
     tipPessoa: string,
     descricao?: string,
@@ -45,7 +49,8 @@ type ModoTela = "BUSCA" | "CADASTRO" | "SLIDER";
 export const RegistrosPortaria = () => {
     const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm<FormData>({
         defaultValues: {
-            globalAtivo: "false",   // ou "true"
+            globalAtivo: "false", 
+            filialSolicitado:""  // ou "true"
         }
     });
     const [visitanteId, setVisitanteID] = useState<any>(null);
@@ -61,7 +66,7 @@ export const RegistrosPortaria = () => {
     const [loading, setLoading] = useState(false)
     const permissions: string[] = usuario?.permissoes || [];
     const [blocos, setBlocos] = useState<any[]>([])
-    
+    const [listaFiliais, setListaFiliais] = useState<any[]>([])
     const permissionEdit = permissions.includes("GERENCIAR_USUARIOS")
     const handleSearchFiliais = async () => {
         const resposta = await filiaçApi.lista();
@@ -76,34 +81,39 @@ export const RegistrosPortaria = () => {
     };
     const [bloqueioBTN, setbloqueioBTN] = useState(false);
     const onSubmit = async (data: FormData) => {
-       try{
-         setbloqueioBTN(true);
-        const usaurio = subjet();
-        if (!data.descricao) {
-            delete data.descricao;
-        }
-        if (selectedFile != null) {
-            data.criadorId = usaurio?.id as any;
-            const acess = tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO";
-            if (!acess) {
-                delete data.dataAcesso
+        try {
+            setbloqueioBTN(true);
+            const usaurio = subjet();
+            if (!data.descricao) {
+                delete data.descricao;
             }
-            data.typeMethod = "NAO_VISITANTE";
-            const resposta = await Api.RegistroFactory(data, selectedFile as any)
-            if (resposta) {
-                setbloqueioBTN(false)
-                notify(resposta.msg, "success")
-                reset()
-                setResetCounter(prev => prev + 1)
 
+            if (selectedFile != null) {
+                data.criadorId = usaurio?.id as any;
+                const acess = tipoAcesso?.toUpperCase() === "RECORRENTE TEMPORARIO";
+                if (!acess) {
+                    delete data.dataAcesso
+                }
+                data.typeMethod = "NAO_VISITANTE";
+                if (!data.filialSolicitado) {
+                    notify("Selecione a filial da Solicitação", "error")
+                    return;
+                }
+                const resposta = await Api.RegistroFactory(data, selectedFile as any)
+                if (resposta) {
+                    setbloqueioBTN(false)
+                    notify(resposta.msg, "success")
+                    reset()
+                    setResetCounter(prev => prev + 1)
+
+                }
+            } else {
+                setbloqueioBTN(false)
+                notify("Selecione uma imagem", "error")
             }
-        } else {
+        } finally {
             setbloqueioBTN(false)
-            notify("Selecione uma imagem", "error")
         }
-       }finally{
-        setbloqueioBTN(false)
-       }
 
     };
     const handleCancelar = () => {
@@ -183,13 +193,26 @@ export const RegistrosPortaria = () => {
         handleSearchFiliais()
         hendleBusca();
     }, []);
+    const carregarFiliais = useCallback(async () => {
+        try {
+            const resposta = await apiUsuario.FiliaisUsuario(usuario?.id);
+            if (resposta?.acess) {
+                setListaFiliais(resposta.acess);
+            }
+        } catch (error) {
+            notify("Erro ao carregar filiais", "error");
+        }
+    }, []);
+    useEffect(() => {
+        carregarFiliais();
+    }, [])
     return (
         <Fragment>
             <Template.container_principal>
                 {modo === "BUSCA" &&
                     <Template.AreaBuscaPlaca style={{ display: "flex" }}>
                         {/* linkRouter={"/portaria/controle/registro"} */}
-                        <AlertComponent link={true}  titulo={"info"} msg={"Cadastro de visitante!"}></AlertComponent>
+                        <AlertComponent link={true} titulo={"info"} msg={"Cadastro de visitante!"}></AlertComponent>
                         <Template.busca>
 
                             {/* <input
@@ -203,8 +226,8 @@ export const RegistrosPortaria = () => {
                             <IconButton onClick={buscaVisitante}>
                                 🔍
                             </IconButton> */}
-                            <AutoCompleteComponet handleBusca={buscaVisitante} value={value} setValue={setValueS} onSelectData={setVisitanteID}  />
-                           
+                            <AutoCompleteComponet handleBusca={buscaVisitante} value={value} setValue={setValueS} onSelectData={setVisitanteID} />
+
                         </Template.busca>
 
                         {value == "" &&
@@ -216,7 +239,7 @@ export const RegistrosPortaria = () => {
                 }
                 {modo === "SLIDER" &&
                     <SlidePortariaComponent visitante={{
-                        id:visitante.id,
+                        id: visitante.id,
                         nomeCompleto: visitante?.nomeCompleto,
                         imagem: visitante?.imagem,
                         tipoPessoa: visitante?.tipoPessoa,
@@ -232,6 +255,13 @@ export const RegistrosPortaria = () => {
                         <Template.pedidos>
                             <Template.FormSub >
                                 <Template.CamposInput>
+                                    <FiltroFIlialUsuario
+                                        listaFiliais={listaFiliais}
+                                        carregarDadosLogistico={(valor) => {
+                                            setValue("filialSolicitado", valor);
+                                        }}
+                                    />
+                                    {/* <FiltroFIlialUsuario listaFiliais={listaFiliais} carregarDadosLogistico={setFiliaisSolicitado} /> */}
                                     <Template.label>Placa <Resize>*</Resize></Template.label>
                                     <Template.Campos
                                         hasError={!!errors.placaVeiculo} type="text"
@@ -294,7 +324,7 @@ export const RegistrosPortaria = () => {
                                 </Template.CamposInput>
                                 <Template.leftArea>
                                     <Template.CamposInput>
-                                        <Template.label >Filial <Resize>*</Resize>
+                                        <Template.label >Filial Visita<Resize>*</Resize>
                                         </Template.label>
                                         <Template.SelectItens {
                                             ...register("filial", { required: "Selecione uma filial" })}>
