@@ -11,17 +11,17 @@ import apiUsuario from "../../modulos/PaginaInicial/service/apiUsuario";
 
 type props = {
     ativoBusca?: any,
-    filial?: any 
+    filial?: any
 }
 
 export const HeaderComponent = ({ ativoBusca, filial }: props) => {
-    const { setBusca,setFilial } = useContext(contextProvider) as any;
+    const { setBusca, setFilial } = useContext(contextProvider) as any;
     const usuario = subjet();
     const navigate = useNavigate();
     const [filialAtiva, setFilialAtiva] = useState(
         localStorage.getItem("@App:filial") || filial || ""
     );
-const [filias,setFiliaiss]=useState<any[]>([])
+    const [filias, setFiliaiss] = useState<any[]>([])
     const temPermissaoGerenciar = usuario?.permissoes?.includes("GERENCIAR_USUARIOS");
     const handleHome = () => {
         navigate("/");
@@ -35,70 +35,63 @@ const [filias,setFiliaiss]=useState<any[]>([])
     };
 
     const carregarFiliais = useCallback(async () => {
-            try {
-                const resposta = await apiUsuario.FiliaisUsuario(usuario?.id);
-                if (resposta?.acess) {
-                    setFiliaiss(resposta?.acess);
-                }
-            } catch (error) {
-                notify("Erro ao carregar filiais", "error");
+        try {
+            const resposta = await apiUsuario.FiliaisUsuario(usuario?.id);
+            if (resposta?.acess) {
+                setFiliaiss(resposta?.acess);
             }
-        }, []);
-        useEffect(()=>{
-            carregarFiliais();
-        },[])
+        } catch (error) {
+            notify("Erro ao carregar filiais", "error");
+        }
+    }, []);
+    useEffect(() => {
+        carregarFiliais();
+    }, [])
 
     return (
         <Header.areaHeader>
             <Header.container>
                 <Header.areaLogo>
                     <Header.logo src={logo} onClick={handleHome} />
-                    {temPermissaoGerenciar ? (
-                        <select 
-                            value={filialAtiva} 
-                            onChange={handleChangeFilial}
-                            style={{
-                                background: 'transparent',
-                                border: '1px solid #ddd',
-                                color: '#333',
-                                padding: '4px 8px',
-                                borderRadius: '6px',
-                                marginLeft: '10px',
-                                fontSize: '14px',
-                                fontWeight: 'bold',
-                                cursor: 'pointer'
-                            }}
-                        >
-                            <option value="">Selecionar CD</option>
-                            {filias.map(f => (
-                                <option key={f.id} value={f.filial}>{f.nome}</option>
-                            ))}
-                        </select>
-                    ) : (
-                        <span onClick={handleHome} style={{ cursor: 'pointer' }}>
-                            CD - {filialAtiva || filial}
-                        </span>
+                    {ativoBusca && (
+                        temPermissaoGerenciar ? (
+                            <Header.SelectFilial value={filialAtiva} onChange={handleChangeFilial}>
+                                <option value="">CD Principal</option>
+                                {filias.map(f => (
+                                    <option key={f.id} value={f.filial}>{f.filial}</option>
+                                ))}
+                            </Header.SelectFilial>
+                        ) : (
+                            <Header.BadgeFilial onClick={handleHome} style={{ cursor: 'pointer' }}>
+                                CD - {filialAtiva || filial}
+                            </Header.BadgeFilial>
+                        )
                     )}
                 </Header.areaLogo>
-                {ativoBusca &&
-                    <Header.busca 
-                        placeholder="Buscar por placa, visitante ou protocolo..." 
-                        type="search" 
-                        onChange={e => setBusca(e.target.value)} 
-                    />
-                }
+
+                {/* Wrapper da busca sempre visível */}
+                {ativoBusca && (
+                    <Header.wrapperBusca>
+                        <Header.busca
+                            placeholder="Buscar placa, visitante..."
+                            type="search"
+                            onChange={e => setBusca(e.target.value)}
+                        />
+                    </Header.wrapperBusca>
+                )}
 
                 {Logued() && (
                     <Header.perfil>
-                        {usuario && usuario?.nome &&
+                        {usuario?.nome && (
                             <Header.nomeUsuario>
-                                <strong>Olá</strong> {usuario?.nome.split(" ")[0]}
+                                <strong>Operador</strong>
+                                {usuario.nome.split(" ")[0]}
                             </Header.nomeUsuario>
-                        }
+                        )}
                         <PerfilComponet />
                     </Header.perfil>
                 )}
             </Header.container>
         </Header.areaHeader>
-    )
+    );
 }

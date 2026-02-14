@@ -49,8 +49,8 @@ type ModoTela = "BUSCA" | "CADASTRO" | "SLIDER";
 export const RegistrosPortaria = () => {
     const { register, handleSubmit, formState: { errors }, reset, watch, setValue } = useForm<FormData>({
         defaultValues: {
-            globalAtivo: "false", 
-            filialSolicitado:""  // ou "true"
+            globalAtivo: "false",
+            filialSolicitado: ""  // ou "true"
         }
     });
     const [visitanteId, setVisitanteID] = useState<any>(null);
@@ -187,6 +187,7 @@ export const RegistrosPortaria = () => {
 
         }
     }
+
     useEffect(() => {
         buscaApi();
         buscar_recorencia();
@@ -206,6 +207,11 @@ export const RegistrosPortaria = () => {
     useEffect(() => {
         carregarFiliais();
     }, [])
+    useEffect(() => {
+        if (usuario?.filial && listaFiliais.length > 0) {
+            setValue("filialSolicitado", String(usuario.filial));
+        }
+    }, [usuario, listaFiliais]);
     return (
         <Fragment>
             <Template.container_principal>
@@ -237,18 +243,20 @@ export const RegistrosPortaria = () => {
 
                     </Template.AreaBuscaPlaca>
                 }
-                {modo === "SLIDER" &&
-                    <SlidePortariaComponent visitante={{
-                        id: visitante.id,
-                        nomeCompleto: visitante?.nomeCompleto,
-                        imagem: visitante?.imagem,
-                        tipoPessoa: visitante?.tipoPessoa,
-                        categoriaAcesso: visitante?.recorrencia?.nome,
-                        placaVeiculo: visitante?.placaVeiculo,
-                        numeroTelefone: visitante?.numeroTelefone
-                    }} tipo={() => setModo("BUSCA")} />
-
-                }
+                {modo === "SLIDER" && (
+                        <SlidePortariaComponent
+                            visitante={{
+                                id: visitante.id,
+                                nomeCompleto: visitante?.nomeCompleto,
+                                imagem: visitante?.imagem,
+                                tipoPessoa: visitante?.tipoPessoa,
+                                categoriaAcesso: visitante?.recorrencia?.nome,
+                                placaVeiculo: visitante?.placaVeiculo,
+                                numeroTelefone: visitante?.numeroTelefone
+                            }}
+                            tipo={() => setModo("BUSCA")}
+                        />
+                )}
                 {modo === "CADASTRO" &&
                     <Template.container>
                         <Template.titulo>Novo Pedido de Acesso</Template.titulo>
@@ -256,6 +264,7 @@ export const RegistrosPortaria = () => {
                             <Template.FormSub >
                                 <Template.CamposInput>
                                     <FiltroFIlialUsuario
+                                        filialUsuario={usuario?.filial}
                                         listaFiliais={listaFiliais}
                                         carregarDadosLogistico={(valor) => {
                                             setValue("filialSolicitado", valor);

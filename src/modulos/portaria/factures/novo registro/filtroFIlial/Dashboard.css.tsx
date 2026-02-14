@@ -1,114 +1,65 @@
-import styled, { keyframes } from "styled-components";
-const rotate = keyframes`
-  from{
-    transform: rotate(0deg);
-  }
-  to{
-    transform: rotate(360deg);
-  }
-`;
-const Template = {
+import styled from "styled-components";
 
+const Template = {
   FilterArea: styled.div`
     display: flex;
     align-items: center;
-    width: 100%; /* Ocupa tudo no mobile */  
-    margin:10px 0;
+    width: 100%;
+    margin-bottom: 20px;
+    padding: 10px 0;
+
     @media (min-width: 768px) {
       width: auto;
-     
+      margin-bottom: 0;
     }
   `,
 
   SelectGroup: styled.div`
     display: flex;
     flex-direction: column;
-    gap: 4px;
+    gap: 6px;
     width: 100%;
   `,
-  RefreshButton: styled.button<{ loading: boolean }>`
-
-  background: transparent;
-  border: none;
-  cursor: pointer;
-  padding: 6px;
-  display: flex;
-  align-items: center;
-
-  svg {
-    font-size: 22px;
-    color: #2563eb;
-    animation: ${({ loading }) =>
-      loading ? `${rotate} 1s linear infinite` : "none"};
-  }
-
-  &:disabled {
-    cursor: not-allowed;
-    opacity: 0.6;
-  }
-`,
 
   Label: styled.label`
-    font-size: 11px;
+    font-size: 0.85rem;
     font-weight: 600;
-    color: #64748b;
+    color: #444;
+    font-family: "Inter", sans-serif;
   `,
 
   Select: styled.select`
-    padding: 12px;
+    width: 100%;
+    height: 48px; /* Altura confortável para mobile */
+    padding: 0 12px;
     border-radius: 8px;
-    border: 1px solid #e2e8f0;
-    background: #fff;
-    width: 100%; /* Full width no mobile */
-    font-size: 14px;
+    border: 1.5px solid #e1e1e1;
+    background: #fafafa;
+    font-size: 16px; /* Evita zoom chato no iPhone */
+    color: #333;
     outline: none;
+    transition: all 0.2s ease;
+    cursor: pointer;
+
+    &:focus {
+      border-color: #007BFF;
+      background: #fff;
+      box-shadow: 0 0 0 3px rgba(0, 123, 255, 0.1);
+    }
 
     @media (min-width: 768px) {
-      min-width: 250px;
-      width: auto;
+      height: 42px;
+      font-size: 14px;
+      min-width: 280px;
     }
   `,
 
+  // Container para envolver o componente se necessário
   Container: styled.div`
     width: 100%;
     max-width: 1100px;
     margin: 0 auto;
-  `,
-  AddButton: styled.button`
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 8px;
-    background: linear-gradient(135deg, #6d28d9 0%, #4c1d95 100%);
-    color: white;
-    border: none;
-    padding: 10px 18px;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 14px;
-    cursor: pointer;
-    transition: all 0.2s ease;
-    box-shadow: 0 4px 6px -1px rgba(109, 40, 217, 0.3);
-    white-space: nowrap;
-
-    &:hover {
-      transform: translateY(-1px);
-      box-shadow: 0 6px 12px -1px rgba(109, 40, 217, 0.4);
-      filter: brightness(1.1);
-    }
-
-    &:active {
-      transform: translateY(0);
-    }
-
-    svg {
-      font-size: 18px;
-    }
-
-    @media (max-width: 768px) {
-      width: 100%;
-      order: -1; /* No mobile, ele aparece no topo */
-    }
+    padding: 0 15px;
   `,
 };
 
