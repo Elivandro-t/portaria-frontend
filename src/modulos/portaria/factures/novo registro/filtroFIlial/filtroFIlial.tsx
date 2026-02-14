@@ -12,7 +12,6 @@ export function FiltroFIlialUsuario({ listaFiliais, carregarDadosLogistico, fili
             <Template.SelectGroup>
                 <Template.Label>Portaria Filial</Template.Label>
                 <Template.Select
-                    value={filialUsuario}
                     onChange={(e) => carregarDadosLogistico(e.target.value)}
                 >
                     {listaFiliais.some(s => s.filial == filialUsuario) ? (

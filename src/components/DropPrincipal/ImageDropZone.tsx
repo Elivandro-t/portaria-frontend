@@ -65,6 +65,7 @@ interface ImageDropZoneProps {
   resetSignal?: number;
   titulo?: string;
   aspectRatio?: number;
+  permission: any
 }
 
 // ================== COMPONENT ==================
@@ -73,6 +74,7 @@ const DropPrincipal: React.FC<ImageDropZoneProps> = ({
   resetSignal,
   titulo,
   aspectRatio = 1,
+  permission
 }) => {
   const [image, setImage] = useState<string | null>(null);
   const [isAvatarIcon, setIsAvatarIcon] = useState(false);
@@ -89,7 +91,7 @@ const DropPrincipal: React.FC<ImageDropZoneProps> = ({
   const avatarIcons = [
     "/avatar/man.png",
     "/avatar/user.png",
-    "/avatar/woman.png"  ];
+    "/avatar/woman.png"];
 
   // ================== DROP ==================
   const onDrop = useCallback((acceptedFiles: File[]) => {
@@ -136,20 +138,20 @@ const DropPrincipal: React.FC<ImageDropZoneProps> = ({
       setUploading(false);
     }
   };
-// Seleciono um avatar para exibir no drop
+  // Seleciono um avatar para exibir no drop
   const selecionarAvatar = async (src: string) => {
-  setIsAvatarIcon(true);
-  setImage(src);
+    setIsAvatarIcon(true);
+    setImage(src);
 
-  const response = await fetch(src);
-  const blob = await response.blob();
+    const response = await fetch(src);
+    const blob = await response.blob();
 
 
-  const file = new File([blob], "avatar.png", { type: blob.type });
+    const file = new File([blob], "avatar.png", { type: blob.type });
 
-  // FORM RECEBE UM FILE REAL
-  onFileSelect?.(file, null);
-};
+    // FORM RECEBE UM FILE REAL
+    onFileSelect?.(file, null);
+  };
 
   // ================== REMOVE ==================
   const removeImage = (e: React.MouseEvent) => {
@@ -191,35 +193,38 @@ const DropPrincipal: React.FC<ImageDropZoneProps> = ({
         ) : (
           <Box textAlign="center">
             <Template.Text>{titulo || "Selecione uma imagem"}</Template.Text>
+            {permission === "UNICO" && (
+              <>
+                <Typography variant="caption" color="text.secondary">
+                  ou escolha um avatar
+                </Typography>
 
-            <Typography variant="caption" color="text.secondary">
-              ou escolha um avatar
-            </Typography>
-
-            <Box mt={2} display="flex" gap={1} justifyContent="center">
-              {avatarIcons.map((avatar) => (
-                <Box
-                  key={avatar}
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    selecionarAvatar(avatar);
-                  }}
-                  sx={{
-                    width: 48,
-                    height: 48,
-                    borderRadius: "50%",
-                    border: "1px solid #e2e8f0",
-                    cursor: "pointer",
-                    display: "flex",
-                    alignItems: "center",
-                    justifyContent: "center",
-                    "&:hover": { borderColor: "#6366f1" },
-                  }}
-                >
-                  <img src={avatar} width={28} />
+                <Box mt={2} display="flex" gap={1} justifyContent="center">
+                  {avatarIcons.map((avatar) => (
+                    <Box
+                      key={avatar}
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        selecionarAvatar(avatar);
+                      }}
+                      sx={{
+                        width: 48,
+                        height: 48,
+                        borderRadius: "50%",
+                        border: "1px solid #e2e8f0",
+                        cursor: "pointer",
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        "&:hover": { borderColor: "#6366f1" },
+                      }}
+                    >
+                      <img src={avatar} width={28} />
+                    </Box>
+                  ))}
                 </Box>
-              ))}
-            </Box>
+              </>
+            )}
           </Box>
         )}
       </Container>
